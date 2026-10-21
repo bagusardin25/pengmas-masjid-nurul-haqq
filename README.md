@@ -1,5 +1,7 @@
 # Masjid Nurul Haqq
 
+![Home Page Masjid Nurul Haqq](/public/image-readme.png)
+
 ## Instalasi
 
 Clone Repo ini
