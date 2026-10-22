@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         // Tabel 1 baris (dipakai Beranda, Kontak, Footer, tombol WA).
-        Schema::create('contact', function (Blueprint $table) {
+        Schema::create('contact_settings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedTinyInteger('singleton')->default(1)->unique();
             $table->string('email')->nullable();
             $table->string('instagram')->nullable();            // username tanpa @
             $table->text('address')->nullable();
@@ -23,20 +24,13 @@ return new class extends Migration
             $table->string('youtube_url')->nullable();
             $table->timestamps();
         });
-
-        Schema::create('contact_phones', function (Blueprint $table) {
-            $table->id();
-            $table->string('label');                            // "Kontak takmir"
-            $table->string('number', 30);
-            $table->boolean('is_whatsapp')->default(false);
-            $table->unsignedInteger('order')->default(0);
-            $table->timestamps();
-        });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('contact_phones');
-        Schema::dropIfExists('contact');
+        Schema::dropIfExists('contact_settings');
     }
 };

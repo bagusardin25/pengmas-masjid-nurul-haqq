@@ -11,35 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gallery_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('image_id')->constrained('media')->cascadeOnDelete();
-            $table->string('title');
-            $table->string('category', 50)->nullable();         // kajian-rutin, sholat-berjamaah, kegiatan-tpq, pengajian-ahad-malam
-            $table->text('description')->nullable();
-            $table->date('date')->nullable();
-            $table->string('location')->nullable();
-            $table->timestamps();
-            $table->index(['category', 'date']);
-        });
-
         // Video dari link YouTube; thumbnail dari youtube_id.
         Schema::create('gallery_videos', function (Blueprint $table) {
             $table->id();
             $table->string('youtube_url');
             $table->string('youtube_id', 20);                   // di-parse dari URL saat simpan
             $table->string('title');
-            $table->string('category', 50)->nullable();
+            $table->string('duration', 20)->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('gallery_categories')->nullOnDelete();
             $table->text('description')->nullable();
             $table->string('speaker')->nullable();
             $table->date('date')->nullable();
+            $table->string('status', 20)->default('draft')->index();
+            $table->timestamp('published_at')->nullable();
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('gallery_videos');
-        Schema::dropIfExists('gallery_photos');
     }
 };

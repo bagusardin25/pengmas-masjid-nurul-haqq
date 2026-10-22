@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('media', function (Blueprint $table) {
+        Schema::create('tpq_faqs', function (Blueprint $table) {
             $table->id();
-            $table->string('path');
-            $table->string('alt')->nullable();
-            $table->string('mime_type', 100)->nullable();
-            $table->unsignedBigInteger('size')->nullable();
+            $table->string('question');
+            $table->text('answer');
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('media');
+        Schema::dropIfExists('tpq_faqs');
     }
 };

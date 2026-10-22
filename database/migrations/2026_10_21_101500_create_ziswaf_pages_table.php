@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Tabel 1 baris. Total = zakat + infaq + sedekah + wakaf (dihitung di model, tidak disimpan).
-        Schema::create('ziswaf', function (Blueprint $table) {
+        // Tabel 1 baris: halaman ZISWAF, rekening, dan QRIS. Angka per bulan ada di ziswaf_reports.
+        Schema::create('ziswaf_pages', function (Blueprint $table) {
             $table->id();
+            $table->unsignedTinyInteger('singleton')->default(1)->unique();
             $table->string('hero_title');
             $table->text('hero_description')->nullable();
-            $table->string('period')->nullable();               // "Periode Mei 2026"
-            $table->unsignedBigInteger('zakat')->default(0);     // Rupiah
-            $table->unsignedBigInteger('infaq')->default(0);
-            $table->unsignedBigInteger('sedekah')->default(0);
-            $table->unsignedBigInteger('wakaf')->default(0);
+            $table->string('zakat_note')->default('Mal & fitrah');
+            $table->string('infaq_note')->default('Kas & operasional');
+            $table->string('sedekah_note')->default('Kepedulian sosial');
+            $table->string('wakaf_note')->default('Aset produktif umat');
             // Rekening
             $table->string('bank_name')->nullable();
             $table->string('account_number', 50)->nullable();   // string agar nol depan aman
@@ -33,8 +33,11 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('ziswaf');
+        Schema::dropIfExists('ziswaf_pages');
     }
 };
