@@ -12,7 +12,7 @@ class HomePageSeeder extends Seeder
         (HomePage::current() ?? new HomePage)->fill([
             'hero_eyebrow' => 'MASJID JAMI · YAYASAN NURUL HAQQ',
             'hero_title' => "Masjid\nNurul Haqq",
-            'hero_description' => 'Menjadi pusat ibadah, pendidikan, dan pemberdayaan umat menuju masyarakat yang berakhlak mulia dan sejahtera di tengah keharmonisan lingkungan Griya Taman Asri.',
+            'hero_description' => "Tempat sholat berjamaah lima waktu, sholat Jumat, kajian kitab, dan pendidikan Al-Qur'an bagi warga Griya Taman Asri, Tawangsari. Terbuka untuk umum.",
             'hero_arabic_text' => 'إِنَّمَا يَعْمُرُ مَسَاجِدَ اللَّهِ مَنْ آمَنَ بِاللَّهِ وَالْيَوْمِ الْآخِرِ',
             'hero_translation' => '“Sesungguhnya yang memakmurkan masjid-masjid Allah hanyalah orang yang beriman kepada Allah dan hari akhir…”',
             'hero_citation' => 'QS. AT-TAUBAH: 18',
