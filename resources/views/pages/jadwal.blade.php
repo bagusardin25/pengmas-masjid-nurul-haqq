@@ -7,7 +7,7 @@
     <x-page-hero eyebrow="Jadwal & kegiatan" title="Ibadah dan kajian setiap pekan" description="Temukan jadwal sholat, kegiatan rutin jamaah, dan informasi agenda Masjid Jami Nurul Haqq." action-url="https://wa.me/6281239567390" action-label="Tanya jadwal ke pengurus" />
 
     <section class="section">
-        <div class="container">
+        <div class="site-container">
             <div class="prayer-banner">
                 <div><p class="eyebrow eyebrow-light">Jadwal sholat · simulasi</p><h2>Kamis, 15 Oktober 2026</h2><p>Sidoarjo dan sekitarnya · WIB</p></div>
                 <div class="prayer-grid">
@@ -21,7 +21,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Kegiatan jamaah" title="Bertemu dalam kebaikan" />
             <div class="schedule-columns">
                 <article class="content-panel">

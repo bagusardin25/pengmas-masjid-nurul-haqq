@@ -7,7 +7,7 @@
 ])
 
 <section class="page-hero">
-    <div class="container">
+    <div class="site-container">
         <p class="breadcrumb"><a href="{{ route('home') }}">Beranda</a> / {{ $eyebrow }}</p>
         <p class="eyebrow eyebrow-light">{{ $eyebrow }}</p>
         <h1>{{ $title }}</h1>

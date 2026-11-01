@@ -7,7 +7,7 @@
     <x-page-hero eyebrow="Galeri" title="Momen kebersamaan jamaah" description="Album foto, video kajian, dan artikel kegiatan Masjid Nurul Haqq. Seluruh konten merupakan ilustrasi demo." />
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <div class="gallery-heading">
                 <x-section-heading eyebrow="Galeri kegiatan" title="Dari ibadah hingga belajar mengaji" />
                 <span class="muted-text">Konten demo · visual ilustrasi</span>
@@ -31,7 +31,7 @@
     </section>
 
     <section class="section">
-        <div class="container">
+        <div class="site-container">
             <div class="gallery-heading">
                 <x-section-heading eyebrow="Video kajian" title="Tonton kajian pilihan" />
                 <a class="channel-card" href="https://youtube.com"><span class="channel-avatar">NH</span><span><strong>Nurul Haqq</strong><small>Kanal demo · 12 playlist</small></span><span class="tag">Kunjungi kanal</span></a>
@@ -48,7 +48,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Artikel kegiatan" title="Tulisan dari jamaah" />
             <div class="card-grid card-grid-two">
                 <article class="article-card"><div class="article-image" role="img" aria-label="Placeholder artikel Adab Menuntut Ilmu"></div><div class="article-copy"><p class="article-meta">Kajian · 5 Oktober 2026 · 4 menit baca</p><h3>Adab Menuntut Ilmu</h3><p>Rasulullah ﷺ bersabda bahwa menuntut ilmu adalah kewajiban setiap Muslim. Menjaga adab dalam perjalanan mencari ilmu sama pentingnya dengan ilmu itu sendiri.</p><strong>● Ust. Ahmad Fauzi</strong></div></article>
@@ -58,7 +58,7 @@
     </section>
 
     <section class="section">
-        <div class="container gallery-contact">
+        <div class="site-container gallery-contact">
             <div><h2>Ingin mengetahui kegiatan masjid?</h2><p>Lihat jadwal kegiatan rutin atau hubungi pengurus untuk informasi dokumentasi yang tersedia.</p></div>
             <div class="button-row"><a class="button button-dark" href="{{ route('jadwal') }}">Lihat jadwal</a><a class="button button-outline" href="https://wa.me/6281239567390">Hubungi pengurus</a></div>
         </div>
