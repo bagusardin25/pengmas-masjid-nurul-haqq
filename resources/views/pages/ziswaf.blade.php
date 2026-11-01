@@ -7,7 +7,7 @@
     <x-page-hero eyebrow="ZISWAF" title="Salurkan kebaikan, kuatkan kebersamaan" description="Salurkan zakat, infak, sedekah, dan wakaf melalui Yayasan Nurul Haqq. Dana dikelola amanah dan dilaporkan setiap bulan kepada jamaah." action-url="https://wa.me/6281239567390" action-label="Tanya layanan ZISWAF" />
 
     <section class="section">
-        <div class="container">
+        <div class="site-container">
             <p class="step-title"><span>1</span>Pilih jenis dana</p>
             <x-section-heading title="Setiap kebaikan punya peran" />
             <div class="fund-grid">
@@ -20,7 +20,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Cara menyalurkan dana" title="Mudah disalurkan, jelas dikonfirmasi" />
             <div class="transfer-grid">
                 <div>
@@ -50,7 +50,7 @@
     </section>
 
     <section class="section">
-        <div class="container report-grid">
+        <div class="site-container report-grid">
             <div>
                 <x-section-heading eyebrow="Amanah & transparan" title="Laporan dana untuk jamaah" description="Dana dikelola Yayasan Nurul Haqq secara amanah dan dilaporkan setiap bulan kepada jamaah, lengkap dengan rincian penyalurannya." />
                 <div class="report-note"><strong>Periode Mei 2026</strong><p>Simulasi laporan Mei 2026. Terkumpul Rp23.122.000, tersalurkan Rp18.000.000, saldo Rp5.122.000.</p></div>
@@ -64,7 +64,7 @@
                 <div class="report-summary"><div><span>Tersalurkan</span><strong>Rp 18.000.000</strong></div><div><span>Saldo</span><strong>Rp 5.122.000</strong></div></div>
                 <p class="eyebrow report-breakdown-title">Rincian per jenis</p>
                 @foreach ([['Zakat', '4.875.000', '20%'], ['Infaq', '6.342.000', '28%'], ['Sedekah', '3.215.000', '14%'], ['Wakaf', '8.690.000', '38%']] as [$name, $amount, $percent])
-                    <div class="report-line"><div><strong>{{ $name }}</strong><span>Rp {{ $amount }}</span></div><span class="progress-track"><span style="width: {{ $percent }}"></span></span></div>
+                    <div class="report-line"><div><strong>{{ $name }}</strong><span>Rp {{ $amount }}</span></div><span class="progress-track"><span @class(['w-[20%]' => $percent === '20%', 'w-[28%]' => $percent === '28%', 'w-[14%]' => $percent === '14%', 'w-[38%]' => $percent === '38%'])></span></span></div>
                 @endforeach
             </article>
         </div>

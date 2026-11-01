@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('hero_image_id')->nullable()->constrained('media')->nullOnDelete();
             $table->string('hero_badge')->nullable();          // "Sejak 2008"
             $table->string('intro_title')->nullable();
-            $table->text('intro_summary')->nullable();          // juga tampil di Beranda
+            $table->text('intro_description')->nullable();          // juga tampil di Beranda
             $table->string('history_title')->default('Sejarah');
             $table->longText('history_content')->nullable();    // rich text / HTML
             $table->timestamps();

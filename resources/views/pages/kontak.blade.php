@@ -5,7 +5,7 @@
 
 @section('content')
     <section class="contact-page-hero">
-        <div class="container contact-hero-inner">
+        <div class="site-container contact-hero-inner">
             <p class="breadcrumb"><a href="{{ route('home') }}">Beranda</a> / Kontak</p>
             <p class="eyebrow eyebrow-light">Kontak</p>
             <h1>Hubungi pengurus masjid</h1>
@@ -15,7 +15,7 @@
     </section>
 
     <section class="section">
-        <div class="container contact-grid">
+        <div class="site-container contact-grid">
             <div class="contact-left">
                 <p class="eyebrow">Kontak kami</p>
                 <h2>Kami siap terhubung</h2>
@@ -88,7 +88,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <p class="eyebrow">Layanan jamaah</p>
             <h2 class="section-heading-inline">Ada yang bisa kami bantu?</h2>
 

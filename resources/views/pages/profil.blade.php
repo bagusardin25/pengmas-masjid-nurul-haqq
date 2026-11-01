@@ -7,7 +7,7 @@
     <x-page-hero eyebrow="Profil" title="Rumah ibadah warga Griya Taman Asri" description="Mengenal Masjid Jami Nurul Haqq, di bawah naungan Yayasan Nurul Haqq, yang melayani jamaah lingkungan Griya Taman Asri, Tawangsari." />
 
     <section class="section">
-        <div class="container profile-overview">
+        <div class="site-container profile-overview">
             <div>
                 <x-section-heading eyebrow="Tentang Nurul Haqq" title="Pusat ibadah, pendidikan, dan pemberdayaan umat" description="Menjadi pusat ibadah, pendidikan, dan pemberdayaan umat menuju masyarakat yang berakhlak mulia dan sejahtera di tengah keharmonisan lingkungan Griya Taman Asri." />
             </div>
@@ -21,7 +21,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Bersama jamaah" title="Lebih dari tempat sholat" />
             <div class="card-grid card-grid-three">
                 <article class="info-card"><span class="card-icon">▤</span><h3>Ibadah &amp; pengajian</h3><p>Sholat berjamaah dan pengajian menjadi bagian dari kegiatan masjid untuk jamaah lingkungan Griya Taman Asri.</p></article>
@@ -32,7 +32,7 @@
     </section>
 
     <section class="section">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Fasilitas" title="Nyaman untuk beribadah" description="Sarana yang tersedia untuk kenyamanan ibadah jamaah." />
             <div class="facility-grid">
                 @foreach (['Ruang sholat', 'Tempat wudhu', 'Perpustakaan', 'Akses internet', 'Area parkir', 'Toilet bersih'] as $facility)
@@ -43,7 +43,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Sejarah & kepengurusan" title="Mengenal perjalanan masjid" />
             <div class="history-grid">
                 <article class="content-panel">

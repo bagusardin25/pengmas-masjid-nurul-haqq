@@ -23,10 +23,6 @@ return new class extends Migration
             $table->text('hero_arabic_text')->nullable();
             $table->text('hero_translation')->nullable();
             $table->string('hero_citation')->nullable();
-            $table->string('hero_primary_label')->nullable();
-            $table->string('hero_primary_url')->nullable();
-            $table->string('hero_secondary_label')->nullable();
-            $table->string('hero_secondary_url')->nullable();
             $table->timestamps();
         });
     }

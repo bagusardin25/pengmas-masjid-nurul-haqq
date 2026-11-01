@@ -7,7 +7,7 @@
     <x-page-hero eyebrow="Program TPQ" title="Tumbuh bersama Al-Qur'an sejak dini" description="Program TPQ Masjid Jami Nurul Haqq membantu anak-anak usia 6–15 tahun belajar membaca Al-Qur'an, membangun hafalan, dan mengamalkan akhlak mulia sejak dini." action-url="https://wa.me/6281239567390" action-label="Daftar TPQ" />
 
     <section class="section">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Program unggulan" title="Belajar mengaji, membangun akhlak" description="Program TPQ terdiri dari empat pilar utama: membaca Al-Qur'an, tahfidz, akhlak, dan kelas reguler/intensif." />
             <div class="card-grid card-grid-two">
                 <article class="info-card"><span class="card-icon">▣</span><h3>Belajar Iqro' &amp; Al-Qur'an</h3><p>Pembelajaran membaca Al-Qur'an dimulai dari Iqro' dasar hingga Al-Qur'an dengan metode yang interaktif dan terstruktur.</p></article>
@@ -19,7 +19,7 @@
     </section>
 
     <section class="section section-muted">
-        <div class="container registration-grid">
+        <div class="site-container registration-grid">
             <div>
                 <x-section-heading eyebrow="Informasi program" title="Kenali program sebelum mendaftar" description="Program TPQ Masjid Jami Nurul Haqq khusus anak usia 6–15 tahun. Kelas berlangsung Senin–Kamis pukul 15.30–17.00 WIB dengan biaya Rp50.000 per bulan." />
                 <dl class="detail-list">
@@ -40,7 +40,7 @@
     </section>
 
     <section class="section">
-        <div class="container">
+        <div class="site-container">
             <x-section-heading eyebrow="Sebelum mendaftar" title="Apa yang perlu ditanyakan?" />
             <div class="card-grid card-grid-three">
                 <article class="question-card"><h3>Usia &amp; pilihan kelas</h3><p>Tanyakan rentang usia serta informasi kelas reguler dan intensif yang sesuai untuk anak.</p></article>

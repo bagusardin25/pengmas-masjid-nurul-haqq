@@ -1,4 +1,4 @@
-<section class="container donation-cta" aria-label="Dukung kegiatan masjid">
+<section class="site-container donation-cta" aria-label="Dukung kegiatan masjid">
     <div>
         <h2>Mari bersama memakmurkan masjid</h2>
         <p>Untuk kebaikan dunia dan akhirat.</p>

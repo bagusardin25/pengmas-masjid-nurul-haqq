@@ -1,5 +1,5 @@
 <footer class="site-footer">
-    <div class="container footer-inner">
+    <div class="site-container footer-inner">
         <div class="footer-about">
             <a class="brand brand-inverted" href="{{ route('home') }}">
                 <span class="brand-mark" aria-hidden="true">

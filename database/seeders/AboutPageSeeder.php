@@ -17,9 +17,9 @@ class AboutPageSeeder extends Seeder
             'hero_title' => 'Rumah ibadah warga Griya Taman Asri',
             'hero_description' => 'Mengenal Masjid Jami Nurul Haqq, di bawah naungan Yayasan Nurul Haqq, yang melayani jamaah lingkungan Griya Taman Asri, Tawangsari.',
             'intro_title' => 'Pusat ibadah, pendidikan, dan pemberdayaan umat',
-            'intro_summary' => "Masjid Jami Nurul Haqq berada di bawah naungan Yayasan Nurul Haqq dan melayani jamaah di lingkungan Griya Taman Asri, Tawangsari. Selain sholat berjamaah, masjid menjadi tempat pengajian, pendidikan Al-Qur'an anak, dan pengelolaan dana umat.",
+            'intro_description' => "Menjadi pusat ibadah, pendidikan, dan pemberdayaan umat menuju masyarakat yang berakhlak mulia dan sejahtera di tengah keharmonisan lingkungan Griya Taman Asri.",
             'history_title' => 'Sejarah',
-            'history_content' => 'Masjid Nurul Haqq dirintis pada 2008 melalui gotong royong warga Griya Taman Asri. Ruang ibadah dikembangkan pada 2012, disusul program TPQ pada 2015 dan layanan sosial jamaah pada 2020. Catatan ini merupakan contoh ringkas dan dapat dilengkapi dengan data resmi masjid.',
+            'history_content' => "Masjid Jami Nurul Haqq berada di bawah naungan Yayasan Nurul Haqq dan melayani jamaah di lingkungan Griya Taman Asri, Tawangsari. Selain sholat berjamaah, masjid menjadi tempat pengajian, pendidikan Al-Qur'an anak, dan pengelolaan dana umat.Masjid Nurul Haqq dirintis pada 2008 melalui gotong royong warga Griya Taman Asri. Ruang ibadah dikembangkan pada 2012, disusul program TPQ pada 2015 dan layanan sosial jamaah pada 2020. Catatan ini merupakan contoh ringkas dan dapat dilengkapi dengan data resmi masjid.",
         ])->save();
 
         $stats = [
@@ -73,10 +73,9 @@ class AboutPageSeeder extends Seeder
 
         $sortOrder = 1;
 
-        foreach ($facilities as $name => $icon) {
+        foreach ($facilities as $name) {
             Facility::query()->updateOrCreate(
                 ['name' => $name],
-                ['icon' => $icon, 'sort_order' => $sortOrder++],
             );
         }
 
