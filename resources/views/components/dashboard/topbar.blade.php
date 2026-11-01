@@ -21,7 +21,7 @@
     </nav>
 
     <div class="dashboard-topbar-actions">
-        <a class="dashboard-site-link" href="{{ route('home') }}">
+        <a class="dashboard-site-link" href="{{ route('home') }}" target="_blank">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M14 3h7v7"></path>
