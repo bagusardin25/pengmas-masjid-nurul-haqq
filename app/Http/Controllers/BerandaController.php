@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AboutPage;
+use App\Models\ContactPhone;
+use App\Models\ContactSetting;
+use App\Models\Facility;
 use App\Models\HomePage;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Client\ConnectionException;
@@ -16,6 +20,10 @@ class BerandaController extends Controller
     public function index()
     {
         $hero = HomePage::first();
+        $contact = ContactSetting::first();
+        $phones = ContactPhone::all();
+        $about = AboutPage::first();
+        $facilities = Facility::all();
         $today = CarbonImmutable::now('Asia/Jakarta');
         $date = $today->toDateString();
         $prayerSchedule = null;
@@ -118,6 +126,6 @@ class BerandaController extends Controller
             }
         }
 
-        return view('pages.beranda', compact('hero', 'today', 'prayerSchedule', 'prayers', 'nextPrayer'));
+        return view('pages.beranda', compact('hero', 'today', 'prayerSchedule', 'prayers', 'nextPrayer', 'contact', 'phones', 'about', 'facilities'));
     }
 }
