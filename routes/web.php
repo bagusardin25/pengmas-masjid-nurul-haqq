@@ -3,6 +3,10 @@
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Dashboard\BerandaController as DashboardBerandaController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\Jadwal\AgendaController;
+use App\Http\Controllers\Dashboard\Jadwal\KitabScheduleController;
+use App\Http\Controllers\Dashboard\Jadwal\RoutineActivityController;
+use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
 use App\Http\Controllers\Dashboard\Profil\AboutRoleController;
 use App\Http\Controllers\Dashboard\Profil\AboutStatController;
 use App\Http\Controllers\Dashboard\Profil\FacilityController;
@@ -56,6 +60,24 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->only(['store', 'update', 'destroy'])
                 ->parameters(['pengurus' => 'member'])
                 ->names('members');
+        });
+
+        Route::get('/jadwal', [DashboardJadwalController::class, 'edit'])->name('jadwal');
+        Route::put('/jadwal', [DashboardJadwalController::class, 'update'])->name('jadwal.update');
+
+        Route::prefix('jadwal')->name('jadwal.')->group(function () {
+            Route::resource('kegiatan-rutin', RoutineActivityController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['kegiatan-rutin' => 'routine'])
+                ->names('routines');
+            Route::resource('ngaji-kitab', KitabScheduleController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['ngaji-kitab' => 'kitab'])
+                ->names('kitab');
+            Route::resource('agenda', AgendaController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['agenda' => 'agenda'])
+                ->names('agendas');
         });
     });
 });
