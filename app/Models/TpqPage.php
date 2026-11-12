@@ -28,4 +28,30 @@ class TpqPage extends Model
         'registration_phone',
         'registration_form_url',
     ];
+
+    /**
+     * Tautan WhatsApp dari nomor pendaftaran, mis. "0812-3956-7390" → https://wa.me/6281239567390.
+     */
+    public function whatsappUrl(): ?string
+    {
+        $digits = preg_replace('/\D+/', '', (string) $this->registration_phone);
+
+        if ($digits === '') {
+            return null;
+        }
+
+        if (str_starts_with($digits, '0')) {
+            $digits = '62'.substr($digits, 1);
+        }
+
+        return 'https://wa.me/'.$digits;
+    }
+
+    /**
+     * Tujuan tombol "Daftar TPQ": formulir online bila ada, selain itu WhatsApp pengurus.
+     */
+    public function registrationUrl(): ?string
+    {
+        return $this->registration_form_url ?: $this->whatsappUrl();
+    }
 }

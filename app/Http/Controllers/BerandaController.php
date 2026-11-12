@@ -10,6 +10,8 @@ use App\Models\Facility;
 use App\Models\HomePage;
 use App\Models\KitabSchedule;
 use App\Models\RoutineActivity;
+use App\Models\TpqPage;
+use App\Models\TpqPillar;
 use App\Services\PrayerSchedule;
 use Carbon\CarbonImmutable;
 
@@ -45,6 +47,9 @@ class BerandaController extends Controller
             ->limit(2)
             ->get();
 
+        $tpq = TpqPage::current();
+        $tpqPillars = TpqPillar::query()->ordered()->get();
+
         return view('pages.beranda', compact(
             'hero',
             'today',
@@ -58,6 +63,8 @@ class BerandaController extends Controller
             'routines',
             'kitabGroups',
             'upcomingAgendas',
+            'tpq',
+            'tpqPillars',
         ));
     }
 }
