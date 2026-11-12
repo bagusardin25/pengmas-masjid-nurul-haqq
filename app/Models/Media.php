@@ -6,6 +6,7 @@ use Database\Factories\MediaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -36,6 +37,27 @@ class Media extends Model
             'width' => 'integer',
             'height' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        // Berkas ikut terhapus saat datanya dihapus, agar folder storage tidak menumpuk.
+        static::deleted(function (Media $media): void {
+            Storage::disk($media->disk)->delete($media->path);
+        });
+    }
+
+    /**
+     * URL berkas. Untuk disk "public" dibuat relatif terhadap host yang sedang diakses
+     * (bukan APP_URL), jadi tetap benar di Laragon, pratinjau lokal, maupun server.
+     */
+    public function url(): string
+    {
+        if ($this->disk === 'public') {
+            return asset('storage/'.ltrim($this->path, '/'));
+        }
+
+        return Storage::disk($this->disk)->url($this->path);
     }
 
     public function homePages(): HasMany
