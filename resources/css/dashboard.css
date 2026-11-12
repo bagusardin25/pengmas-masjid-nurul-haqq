@@ -368,3 +368,536 @@
         transition: none;
     }
 }
+
+/* ------------------------------------------------------------------
+   Halaman kelola konten (form dashboard)
+   ------------------------------------------------------------------ */
+
+.dash-page {
+    display: grid;
+    max-width: 1080px;
+    gap: 20px;
+    color: var(--ink);
+}
+
+.dash-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px 24px;
+}
+
+.dash-page-header h1 {
+    margin: 4px 0 0;
+    color: var(--green);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+
+.dash-page-header p:not(.dash-eyebrow) {
+    max-width: 60ch;
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.dash-eyebrow {
+    margin: 0;
+    color: #8a6a12;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.dash-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid #cfe2d7;
+    border-radius: 10px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Notifikasi simpan: melayang agar tetap terlihat walau halaman di-scroll ke bagian bawah. */
+.dash-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 50;
+    max-width: min(420px, calc(100vw - 32px));
+    padding-right: 8px;
+    box-shadow: 0 12px 30px rgb(23 35 30 / 16%);
+}
+
+.dash-toast-close {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    place-items: center;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--green);
+    font: inherit;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.dash-toast-close:hover {
+    background: rgb(11 59 44 / 8%);
+}
+
+.dash-toast-close:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 1px;
+}
+
+.dash-section-nav {
+    position: sticky;
+    top: 64px;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: -4px 0;
+    padding: 10px 0;
+    background: var(--cream);
+}
+
+.dash-section-nav a {
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dash-section-nav a:hover {
+    background: var(--green-soft);
+}
+
+.dash-panel {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    scroll-margin-top: 128px;
+}
+
+.dash-panel-header {
+    margin-bottom: 18px;
+}
+
+.dash-panel-header h2 {
+    margin: 0;
+    color: var(--green);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.dash-panel-header p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.dash-form {
+    display: grid;
+    gap: 22px;
+}
+
+.dash-fieldset {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.dash-fieldset legend {
+    margin-bottom: 12px;
+    padding: 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dash-field {
+    display: grid;
+    min-width: 0;
+    align-content: start;
+    gap: 6px;
+}
+
+.dash-field label,
+.dash-check-label {
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
+}
+
+.dash-optional {
+    margin-left: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.dash-field input:not([type="checkbox"]),
+.dash-field select,
+.dash-field textarea {
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 11px;
+    border: 1px solid #d6d2c4;
+    border-radius: 9px;
+    background-color: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: none;
+}
+
+.dash-field select {
+    padding-right: 36px;
+}
+
+.dash-field textarea {
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.dash-field input::placeholder,
+.dash-field textarea::placeholder {
+    color: #8c978f;
+}
+
+.dash-field input:focus,
+.dash-field select:focus,
+.dash-field textarea:focus {
+    border-color: var(--green);
+    outline: 3px solid rgb(11 59 44 / 16%);
+    outline-offset: 0;
+    box-shadow: none;
+}
+
+.dash-field.has-error input,
+.dash-field.has-error select,
+.dash-field.has-error textarea {
+    border-color: #b42318;
+}
+
+.dash-hint {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.dash-error {
+    margin: 0;
+    color: #b42318;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dash-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.dash-button {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.dash-button:focus-visible,
+.dash-section-nav a:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-button-primary {
+    background: var(--green);
+    color: #fff;
+}
+
+.dash-button-primary:hover {
+    background: var(--green-deep);
+}
+
+.dash-button-secondary {
+    background: var(--gold);
+    color: var(--green-deep);
+}
+
+.dash-button-secondary:hover {
+    background: #d6a935;
+}
+
+.dash-button-ghost {
+    border-color: var(--line);
+    background: #fff;
+    color: var(--green);
+}
+
+.dash-button-ghost:hover {
+    background: var(--green-soft);
+}
+
+.dash-button-danger {
+    border-color: #efd2cd;
+    background: #fff;
+    color: #b42318;
+}
+
+.dash-button-danger:hover {
+    background: #fdf0ee;
+}
+
+.dash-list {
+    display: grid;
+    gap: 10px;
+}
+
+.dash-item,
+.dash-add {
+    container-type: inline-size;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fcfbf7;
+}
+
+.dash-item.is-hidden {
+    border-style: dashed;
+    background: #f4f3ee;
+}
+
+.dash-add {
+    margin-top: 14px;
+    border: 1px dashed #d6d2c4;
+    background: var(--cream);
+}
+
+.dash-add h3 {
+    margin: 0 0 12px;
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.dash-empty {
+    margin: 0;
+    padding: 16px;
+    border: 1px dashed #d6d2c4;
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+.dash-item-form {
+    display: grid;
+    align-items: start;
+    gap: 12px;
+}
+
+.dash-grid-stat {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1.3fr) 96px auto;
+}
+
+.dash-grid-role {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) 96px auto;
+}
+
+.dash-grid-facility {
+    grid-template-columns: minmax(0, 1fr) 96px 150px auto;
+}
+
+.dash-grid-member {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 96px 150px auto;
+}
+
+.dash-span-full {
+    grid-column: 1 / -1;
+}
+
+.dash-grid-role .dash-item-actions {
+    grid-row: 1;
+    grid-column: -2;
+}
+
+/* Sejajarkan tombol dengan kotak isian: tinggi label (18px) + jarak (6px). */
+.dash-item-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 24px;
+}
+
+.dash-switch {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    gap: 9px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dash-switch input[type="checkbox"] {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    flex: 0 0 auto;
+    margin: 0;
+    border: 0;
+    border-radius: 999px;
+    background: #cfd5d1;
+    background-image: none;
+    appearance: none;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.dash-switch input[type="checkbox"]::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(23 35 30 / 25%);
+    content: "";
+    transition: transform 150ms ease;
+}
+
+.dash-switch input[type="checkbox"]:checked {
+    background: var(--green);
+}
+
+.dash-switch input[type="checkbox"]:checked::after {
+    transform: translateX(16px);
+}
+
+.dash-switch input[type="checkbox"]:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-switch input[type="checkbox"]:checked + .dash-switch-text {
+    color: var(--green);
+}
+
+/* Item menyempit (tablet): 2 kolom. */
+@container (max-width: 760px) {
+    .dash-grid-stat,
+    .dash-grid-role,
+    .dash-grid-facility,
+    .dash-grid-member {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-grid-role .dash-item-actions {
+        grid-row: auto;
+    }
+
+    .dash-item-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-end;
+        padding-top: 0;
+    }
+}
+
+/* Item sempit (ponsel): 1 kolom. */
+@container (max-width: 460px) {
+    .dash-grid-stat,
+    .dash-grid-role,
+    .dash-grid-facility,
+    .dash-grid-member {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-item-actions .dash-button {
+        flex: 1;
+    }
+}
+
+@media (max-width: 760px) {
+    .dash-toast {
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
+        max-width: none;
+    }
+
+    .dash-section-nav {
+        top: 58px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .dash-section-nav a {
+        flex: 0 0 auto;
+    }
+
+    .dash-panel {
+        padding: 16px;
+        scroll-margin-top: 116px;
+    }
+
+    .dash-page-header h1 {
+        font-size: 21px;
+    }
+
+    /* Hindari zoom otomatis iOS saat fokus ke input. */
+    .dash-field input:not([type="checkbox"]),
+    .dash-field select,
+    .dash-field textarea {
+        font-size: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dash-switch input[type="checkbox"],
+    .dash-switch input[type="checkbox"]::after {
+        transition: none;
+    }
+}

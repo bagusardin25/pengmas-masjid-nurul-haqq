@@ -23,7 +23,7 @@ class BerandaController extends Controller
         $contact = ContactSetting::first();
         $phones = ContactPhone::all();
         $about = AboutPage::first();
-        $facilities = Facility::all();
+        $facilities = Facility::query()->where('is_active', true)->ordered()->get();
         $today = CarbonImmutable::now('Asia/Jakarta');
         $date = $today->toDateString();
         $prayerSchedule = null;
