@@ -84,11 +84,21 @@ class AboutPageSeeder extends Seeder
             );
         }
 
+        // Pengurus harian Takmir Masjid Nurul Haqq periode 2025–2030.
+        // Sumber: "SUSUNAN PENGURUS TA_MIR MNH 2025 - 2030.pdf". Seksi-seksi tidak dimasukkan
+        // agar daftar di halaman Profil tetap ringkas.
         $members = [
-            ['position' => 'Ketua', 'name' => 'Ahmad Fauzi'],
-            ['position' => 'Sekretaris', 'name' => 'Siti Aminah'],
-            ['position' => 'Bendahara', 'name' => 'Muhammad Ridwan'],
-            ['position' => 'Anggota', 'name' => 'Nur Hidayat'],
+            ['position' => 'Ketua', 'name' => 'H. Sholihul Ibadi, S.T', 'note' => null],
+            ['position' => 'Wakil Ketua I', 'name' => 'H. Iswanto, S.Pd', 'note' => 'Bidang Idaroh'],
+            ['position' => 'Wakil Ketua II', 'name' => 'Ali Tamam', 'note' => 'Bidang Imaroh'],
+            ['position' => 'Wakil Ketua III', 'name' => 'Noegroho Wisnoe Widodo, S.T', 'note' => 'Bidang Riayah'],
+            ['position' => 'Sekretaris', 'name' => 'Gatot Bambang', 'note' => null],
+            ['position' => 'Wakil Sekretaris I', 'name' => 'H. Nur Syarif Hidayat, S.T', 'note' => 'Bidang Idaroh'],
+            ['position' => 'Wakil Sekretaris II', 'name' => 'Samsul Hadi', 'note' => 'Bidang Imaroh'],
+            // Di dokumen tertulis "Wakil Sekretaris I (Bidang Riayah)"; urutannya menunjukkan III.
+            ['position' => 'Wakil Sekretaris III', 'name' => 'Jaka Arya Tri Wahyono', 'note' => 'Bidang Riayah'],
+            ['position' => 'Bendahara', 'name' => 'Budiyono', 'note' => null],
+            ['position' => 'Wakil Bendahara', 'name' => 'H. Yopi Yacob Isaac', 'note' => null],
         ];
 
         $sortOrder = 1;
@@ -96,7 +106,7 @@ class AboutPageSeeder extends Seeder
         foreach ($members as $member) {
             OrganizationMember::query()->updateOrCreate(
                 ['position' => $member['position'], 'name' => $member['name']],
-                ['note' => 'Pengurus masjid', 'sort_order' => $sortOrder++],
+                ['note' => $member['note'], 'sort_order' => $sortOrder++, 'is_active' => true],
             );
         }
     }
