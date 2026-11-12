@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgendaCalendarController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Dashboard\BerandaController as DashboardBerandaController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -26,6 +27,7 @@ Route::get('/', [BerandaController::class, 'index'])->name('home');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');
+Route::get('/agenda/{agenda:slug}/kalender.ics', AgendaCalendarController::class)->name('agenda.calendar');
 Route::get('/ziswaf', function () {
     return view('pages.ziswaf');
 })->name('ziswaf');
