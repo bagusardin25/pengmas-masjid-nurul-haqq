@@ -753,8 +753,74 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 96px 150px auto;
 }
 
+.dash-grid-routine {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(0, 1fr) 96px 150px auto;
+}
+
+/* Grid 6 kolom untuk form dengan banyak isian (ngaji kitab, agenda). */
+.dash-grid-six {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.dash-grid-six .dash-item-actions {
+    justify-content: flex-end;
+}
+
+.dash-span-2 {
+    grid-column: span 2;
+}
+
+.dash-span-3 {
+    grid-column: span 3;
+}
+
 .dash-span-full {
     grid-column: 1 / -1;
+}
+
+.dash-item-actions.dash-actions-row {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    padding-top: 0;
+}
+
+.dash-subheading {
+    margin: 0 0 10px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dash-add-hint {
+    margin: -6px 0 12px;
+}
+
+.dash-past {
+    margin-top: 18px;
+    border-top: 1px solid var(--line);
+}
+
+.dash-past summary {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    padding-top: 14px;
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dash-past summary:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-past[open] summary {
+    margin-bottom: 12px;
 }
 
 .dash-grid-role .dash-item-actions {
@@ -830,8 +896,15 @@
     .dash-grid-stat,
     .dash-grid-role,
     .dash-grid-facility,
-    .dash-grid-member {
+    .dash-grid-member,
+    .dash-grid-routine,
+    .dash-grid-six {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-span-2,
+    .dash-span-3 {
+        grid-column: 1 / -1;
     }
 
     .dash-grid-role .dash-item-actions {
@@ -850,7 +923,9 @@
     .dash-grid-stat,
     .dash-grid-role,
     .dash-grid-facility,
-    .dash-grid-member {
+    .dash-grid-member,
+    .dash-grid-routine,
+    .dash-grid-six {
         grid-template-columns: minmax(0, 1fr);
     }
 
