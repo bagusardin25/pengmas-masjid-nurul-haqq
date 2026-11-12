@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSortOrder;
+use App\Support\WhatsApp;
 use Database\Factories\ContactPhoneFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,13 @@ class ContactPhone extends Model
             'is_whatsapp' => 'boolean',
             'sort_order' => 'integer',
         ];
+    }
+
+    /**
+     * Tautan WhatsApp untuk nomor ini (format internasional, tanpa tanda baca).
+     */
+    public function whatsappUrl(): ?string
+    {
+        return WhatsApp::url($this->number);
     }
 }

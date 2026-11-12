@@ -13,7 +13,15 @@ class HomePage extends Model
     /** @use HasFactory<HomePageFactory> */
     use HasFactory, HasSingleRow;
 
+    /** Foto hero bawaan (ikut di repo) bila belum ada foto yang diunggah dari dashboard. */
+    public const DEFAULT_HERO_IMAGE = 'images/beranda/hero-masjid-pintu-1200.jpg';
+
+    public const DEFAULT_HERO_ALT = 'Pintu masuk Masjid Nurul Haqq dengan papan nama dan fasad yang diterangi lampu pada malam hari';
+
     /**
+     * Kolom tombol hero (hero_primary_*, hero_secondary_*) sudah dihapus dari migrasi,
+     * jadi tidak dicantumkan di sini.
+     *
      * @var list<string>
      */
     protected $fillable = [
@@ -24,10 +32,6 @@ class HomePage extends Model
         'hero_arabic_text',
         'hero_translation',
         'hero_citation',
-        'hero_primary_label',
-        'hero_primary_url',
-        'hero_secondary_label',
-        'hero_secondary_url',
     ];
 
     public function heroImage(): BelongsTo
