@@ -3,13 +3,12 @@
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Dashboard\BerandaController as DashboardBerandaController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('home');
-Route::get('/profil', function () {
-    return view('pages.profil');
-})->name('profil');
+Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', function () {
     return view('pages.jadwal');
 })->name('jadwal');
