@@ -23,6 +23,8 @@ trait IndonesianValidationMessages
             'integer' => ':Attribute harus berupa angka bulat.',
             'boolean' => ':Attribute tidak valid.',
             'enum' => 'Pilihan :attribute tidak valid.',
+            'url' => ':Attribute harus berupa tautan lengkap, diawali http:// atau https://.',
+            'date_format' => ':Attribute tidak sesuai format tanggal.',
             'max' => [
                 'string' => ':Attribute maksimal :max karakter.',
                 'numeric' => ':Attribute maksimal :max.',
