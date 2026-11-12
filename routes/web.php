@@ -12,6 +12,10 @@ use App\Http\Controllers\Dashboard\Profil\AboutStatController;
 use App\Http\Controllers\Dashboard\Profil\FacilityController;
 use App\Http\Controllers\Dashboard\Profil\OrganizationMemberController;
 use App\Http\Controllers\Dashboard\ProfilController as DashboardProfilController;
+use App\Http\Controllers\Dashboard\Tpq\TpqDocumentationController;
+use App\Http\Controllers\Dashboard\Tpq\TpqFaqController;
+use App\Http\Controllers\Dashboard\Tpq\TpqPillarController;
+use App\Http\Controllers\Dashboard\TpqController as DashboardTpqController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
@@ -77,6 +81,24 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->only(['store', 'update', 'destroy'])
                 ->parameters(['agenda' => 'agenda'])
                 ->names('agendas');
+        });
+
+        Route::get('/tpq', [DashboardTpqController::class, 'edit'])->name('tpq');
+        Route::put('/tpq', [DashboardTpqController::class, 'update'])->name('tpq.update');
+
+        Route::prefix('tpq')->name('tpq.')->group(function () {
+            Route::resource('program', TpqPillarController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['program' => 'pillar'])
+                ->names('pillars');
+            Route::resource('pertanyaan', TpqFaqController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['pertanyaan' => 'faq'])
+                ->names('faqs');
+            Route::resource('dokumentasi', TpqDocumentationController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['dokumentasi' => 'documentation'])
+                ->names('documentations');
         });
     });
 });
