@@ -374,7 +374,7 @@
         @apply [margin:0] [color:#c5d4cc] [font-size:11px];
     }
     .prayer-grid {
-        @apply [display:grid] [grid-template-columns:repeat(6,_minmax(0,_1fr))] [gap:8px];
+        @apply [display:grid] [grid-template-columns:repeat(6,_minmax(0,_1fr))] [gap:8px] [margin:0] [padding:0] [list-style:none];
     }
     .prayer-time {
         @apply [display:flex] [flex-direction:column] [align-items:center] [justify-content:center] [min-height:66px] [padding:8px] [border-radius:10px] [background:#ffffff16];
@@ -384,6 +384,13 @@
     }
     .prayer-time strong {
         @apply [color:#fff] [font-size:16px];
+    }
+    .prayer-time.is-next {
+        @apply [background:var(--gold)];
+    }
+    .prayer-time.is-next span,
+    .prayer-time.is-next strong {
+        @apply [color:var(--green)];
     }
     .data-note {
         @apply [margin:14px_0_0] [color:var(--muted)] [font-size:11px];

@@ -4,19 +4,33 @@
 @section('description', 'Jadwal sholat dan kegiatan rutin jamaah Masjid Jami Nurul Haqq.')
 
 @section('content')
-    <x-page-hero eyebrow="Jadwal & kegiatan" title="Ibadah dan kajian setiap pekan" description="Temukan jadwal sholat, kegiatan rutin jamaah, dan informasi agenda Masjid Jami Nurul Haqq." action-url="https://wa.me/6281239567390" action-label="Tanya jadwal ke pengurus" />
+    <x-page-hero eyebrow="Jadwal & kegiatan" :title="$page?->hero_title ?? 'Jadwal & Kegiatan'" :description="$page?->hero_description" action-url="https://wa.me/6281239567390" action-label="Tanya jadwal ke pengurus" />
 
     <section class="section">
         <div class="site-container">
             <div class="prayer-banner">
-                <div><p class="eyebrow eyebrow-light">Jadwal sholat · simulasi</p><h2>Kamis, 15 Oktober 2026</h2><p>Sidoarjo dan sekitarnya · WIB</p></div>
-                <div class="prayer-grid">
-                    @foreach (['Subuh' => '03:56', 'Terbit' => '05:10', 'Dzuhur' => '11:20', 'Ashar' => '14:25', 'Maghrib' => '17:26', 'Isya' => '18:35'] as $name => $time)
-                        <div class="prayer-time"><span>{{ $name }}</span><strong>{{ $time }}</strong></div>
-                    @endforeach
-                </div>
+                @if ($prayerSchedule)
+                    <div>
+                        <p class="eyebrow eyebrow-light">Jadwal sholat hari ini</p>
+                        <h2>{{ $prayerSchedule['date'] }}</h2>
+                        <p>{{ $prayerSchedule['location'] }} dan sekitarnya · WIB</p>
+                    </div>
+                    <ol class="prayer-grid" aria-label="Waktu sholat">
+                        @foreach ($prayers as $prayer)
+                            <li @class(['prayer-time', 'is-next' => $prayer['is_next']]) @if ($prayer['is_next']) aria-current="time" @endif>
+                                <span>{{ $prayer['name'] }}</span><strong>{{ $prayer['time'] }}</strong>
+                            </li>
+                        @endforeach
+                    </ol>
+                @else
+                    <div>
+                        <p class="eyebrow eyebrow-light">Jadwal sholat hari ini</p>
+                        <h2>Jadwal sholat tidak tersedia saat ini</h2>
+                        <p>Silakan muat ulang halaman beberapa saat lagi.</p>
+                    </div>
+                @endif
             </div>
-            <p class="data-note"><strong>Data contoh · jadwal simulasi</strong> Waktu di atas hanya simulasi untuk Kamis, 15 Oktober 2026 — bukan jadwal resmi atau live.</p>
+            <p class="data-note"><strong>Sumber: myQuran</strong> Waktu sholat untuk wilayah Sidoarjo, diperbarui setiap hari.</p>
         </div>
     </section>
 
@@ -26,26 +40,43 @@
             <div class="schedule-columns">
                 <article class="content-panel">
                     <h3>Kegiatan rutin</h3>
-                    @foreach ([['Sholat fardhu berjamaah', '5 waktu sehari', 'Setiap hari'], ['Sholat Jumat', 'Setiap Jumat', 'Jumat'], ['Pengajian rutin', 'Ahad · 19.30 WIB', 'Ahad'], ['Kajian Islam', 'Rabu · 19.30 WIB', 'Rabu']] as [$title, $detail, $tag])
-                        <div class="schedule-row"><span class="card-icon">▤</span><span class="schedule-copy"><strong>{{ $title }}</strong><small>{{ $detail }}</small></span><span class="tag">{{ $tag }}</span></div>
-                    @endforeach
-                    <p class="panel-note">Untuk perubahan kegiatan rutin, silakan hubungi pengurus masjid.</p>
+                    @forelse ($routines as $routine)
+                        <div class="schedule-row"><span class="card-icon" aria-hidden="true">▤</span><span class="schedule-copy"><strong>{{ $routine->title }}</strong>@if ($routine->schedule)<small>{{ $routine->schedule }}</small>@endif</span>@if ($routine->badge)<span class="tag">{{ $routine->badge }}</span>@endif</div>
+                    @empty
+                        <p>Belum ada kegiatan rutin.</p>
+                    @endforelse
+                    @if (filled($page?->routine_note))
+                        <p class="panel-note">{{ $page->routine_note }}</p>
+                    @endif
                 </article>
                 <article class="content-panel content-panel-dark">
-                    <p class="eyebrow eyebrow-light">Agenda yang tercantum</p>
-                    @foreach ([['18', 'Okt', 'Pengajian Akbar', 'Ust. Abdullah', '19.30 WIB – selesai'], ['25', 'Okt', 'Peringatan Maulid Nabi', 'Panitia Maulid 1448 H', '08.00 WIB – selesai']] as [$day, $month, $title, $host, $time])
-                        <div class="event-row"><span class="date-card"><strong>{{ $day }}</strong><small>{{ $month }}</small></span><span><strong>{{ $title }}</strong><small>{{ $host }}</small><small>{{ $time }} · Halaman masjid</small></span></div>
-                    @endforeach
-                    <p class="demo-caption">Data contoh · jadwal simulasi</p>
+                    <p class="eyebrow eyebrow-light">Agenda terdekat</p>
+                    @forelse ($agendas as $agenda)
+                        @php($date = $agenda->date->locale('id'))
+                        <div class="event-row">
+                            <span class="date-card"><strong>{{ $date->day }}</strong><small>{{ $date->translatedFormat('M') }}</small></span>
+                            <span>
+                                <strong>{{ $agenda->title }}</strong>
+                                @if ($agenda->speaker)<small>{{ $agenda->speaker }}</small>@endif
+                                <small>{{ $date->translatedFormat('l, j F Y') }}{{ $agenda->time ? ' · '.$agenda->time : '' }}{{ $agenda->location ? ' · '.$agenda->location : '' }}</small>
+                            </span>
+                        </div>
+                    @empty
+                        <p>Belum ada agenda terjadwal. Agenda berikutnya akan diumumkan oleh takmir.</p>
+                    @endforelse
                     <a class="button button-gold button-full" href="https://wa.me/6281239567390">Konfirmasi kehadiran</a>
                 </article>
             </div>
             <article class="content-panel quran-schedule">
                 <x-section-heading eyebrow="Ngaji kitab" title="Jadwal Ngaji Kitab" />
-                @foreach ([['Safinatun Najah', 'Ust. Ahmad Fauzi', 'Sabtu, 18.00 WIB (ba’da Maghrib)', 'Sabtu'], ['Riyadhus Shalihin', 'Ust. Muhammad Ridwan', 'Selasa, 19.30 WIB', 'Selasa']] as [$title, $teacher, $time, $day])
-                    <div class="schedule-row"><span class="card-icon">▣</span><span class="schedule-copy"><strong>{{ $title }}</strong><small>{{ $teacher }} · {{ $time }}</small><small class="muted-text">Ruang utama masjid</small></span><span class="tag">{{ $day }}</span></div>
-                @endforeach
-                <p class="panel-note">Hubungi pengurus untuk konfirmasi jadwal ngaji kitab terkini.</p>
+                @forelse ($kitabSchedules as $kitab)
+                    <div class="schedule-row"><span class="card-icon" aria-hidden="true">▣</span><span class="schedule-copy"><strong>{{ $kitab->title }}</strong><small>{{ $kitab->speaker }} · {{ $kitab->day->label() }}, {{ $kitab->time }}</small>@if ($kitab->location)<small class="muted-text">{{ $kitab->location }}</small>@endif</span><span class="tag">{{ $kitab->day->label() }}</span></div>
+                @empty
+                    <p>Belum ada jadwal ngaji kitab.</p>
+                @endforelse
+                @if (filled($page?->kitab_note))
+                    <p class="panel-note">{{ $page->kitab_note }}</p>
+                @endif
             </article>
         </div>
     </section>

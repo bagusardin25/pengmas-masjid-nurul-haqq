@@ -8,15 +8,14 @@ use App\Http\Controllers\Dashboard\Profil\AboutStatController;
 use App\Http\Controllers\Dashboard\Profil\FacilityController;
 use App\Http\Controllers\Dashboard\Profil\OrganizationMemberController;
 use App\Http\Controllers\Dashboard\ProfilController as DashboardProfilController;
+use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('home');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
-Route::get('/jadwal-kegiatan', function () {
-    return view('pages.jadwal');
-})->name('jadwal');
+Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/program-tpq', function () {
     return view('pages.tpq');
 })->name('tpq');
