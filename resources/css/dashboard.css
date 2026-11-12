@@ -984,6 +984,133 @@
     color: var(--green);
 }
 
+/* Kelola Beranda: foto hero dan peta sumber konten. */
+.dash-field-arabic textarea {
+    direction: rtl;
+    font-family: Amiri, "Traditional Arabic", serif;
+    font-size: 20px;
+    line-height: 1.8;
+}
+
+.dash-hero-photo {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.dash-hero-current {
+    margin: 0;
+}
+
+.dash-hero-current img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 6 / 5;
+    border-radius: 110px 110px 14px 14px;
+    background: #e4ece6;
+    object-fit: cover;
+}
+
+.dash-hero-current figcaption {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.dash-hero-photo-fields {
+    display: grid;
+    min-width: 0;
+    gap: 14px;
+}
+
+.dash-inline-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--ink);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.dash-inline-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--green);
+}
+
+.dash-source-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-source-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fcfbf7;
+}
+
+.dash-source-card.is-pending {
+    border-style: dashed;
+    background: #f4f3ee;
+}
+
+.dash-source-card h3 {
+    margin: 0;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.dash-source-card p {
+    flex: 1;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.dash-source-card a {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.dash-source-card a:hover {
+    text-decoration: underline;
+}
+
+.dash-source-card a:focus-visible {
+    border-radius: 4px;
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-badge {
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #ece9df;
+    color: #5f564a;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dash-badge-auto {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
 /* Item menyempit (tablet): 2 kolom. */
 @container (max-width: 760px) {
     .dash-grid-stat,
@@ -1045,6 +1172,14 @@
 }
 
 @media (max-width: 760px) {
+    .dash-hero-photo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-hero-current {
+        max-width: 220px;
+    }
+
     .dash-toast {
         right: 16px;
         bottom: 16px;

@@ -43,7 +43,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::name('dashboard.')->group(function () {
-        Route::get('/beranda', [DashboardBerandaController::class, 'index'])->name('beranda');
+        Route::get('/beranda', [DashboardBerandaController::class, 'edit'])->name('beranda');
+        Route::put('/beranda', [DashboardBerandaController::class, 'update'])->name('beranda.update');
 
         Route::get('/profil', [DashboardProfilController::class, 'edit'])->name('profil');
         Route::put('/profil', [DashboardProfilController::class, 'update'])->name('profil.update');
