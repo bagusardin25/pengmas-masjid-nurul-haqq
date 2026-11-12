@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\AboutPage;
 use App\Models\ActivityPage;
 use App\Models\HomePage;
+use App\Models\TpqPage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Http;
@@ -19,6 +20,7 @@ class PublicPagesTest extends TestCase
         HomePage::factory()->create();
         AboutPage::factory()->create();
         ActivityPage::factory()->create();
+        TpqPage::factory()->create();
 
         Http::fake(function (ClientRequest $request) {
             $date = basename((string) parse_url($request->url(), PHP_URL_PATH));

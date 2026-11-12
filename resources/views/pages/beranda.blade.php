@@ -434,70 +434,46 @@
                             <h2
                                 class="[margin:16px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Program TPQ</h2>
-                            <p class="[margin:14px_0_0] max-w-[560px] text-[17px] leading-[1.75] text-[#42524B]">
-                                TPQ Nurul Haqq membentuk generasi berkarakter Qur'ani melalui pembelajaran Al-Qur'an
-                                metode Tartil, dari jenjang Tartil 1–6 hingga Marhalah Ula, Wustha, Akhir, dan Diniyah.
-                            </p>
-                            <ul
-                                class="list-none [margin:24px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] [gap:12px_20px]">
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Membaca Al-Qur'an dengan tartil
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Menulis Al-Qur'an dengan benar
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Munaqosah setiap enam bulan
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Ekstrakurikuler jujitsu, banjari &amp; drum band
-                                </li>
-                            </ul>
-                            <div
-                                class="mt-[28px] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        USIA</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">[rentang
-                                        usia]</p>
+                            @if ($tpq?->summary)
+                                <p class="[margin:14px_0_0] max-w-[560px] text-[17px] leading-[1.75] text-[#42524B]">
+                                    {{ $tpq->summary }}
+                                </p>
+                            @endif
+                            @if ($tpqPillars->isNotEmpty())
+                                <ul
+                                    class="list-none [margin:24px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] [gap:12px_20px]">
+                                    @foreach ($tpqPillars as $pillar)
+                                        <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
+                                            <span
+                                                class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
+                                                    width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+                                                    stroke-linejoin="round" aria-hidden="true">
+                                                    <path d="M20 6 9 17l-5-5"></path>
+                                                </svg></span>{{ $pillar->title }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                            @php
+                                $tpqDetails = array_filter([
+                                    'USIA' => $tpq?->info_age_range,
+                                    'JADWAL' => $tpq?->info_schedule,
+                                    'BIAYA' => $tpq?->info_fee,
+                                ]);
+                            @endphp
+                            @if ($tpqDetails)
+                                <div
+                                    class="mt-[28px] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
+                                    @foreach ($tpqDetails as $term => $value)
+                                        <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
+                                            <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
+                                                {{ $term }}</p>
+                                            <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">{{ $value }}</p>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        JADWAL</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">Senin–Jumat,
-                                        15.30–17.00 WIB</p>
-                                </div>
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        BIAYA</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">[biaya per
-                                        bulan]</p>
-                                </div>
-                            </div>
+                            @endif
                             <div class="mt-[28px] flex flex-wrap [gap:12px]">
                                 <a href="{{ route('tpq') }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] bg-[#0B3B2C] text-[#FFFFFF] text-[16px] font-bold no-underline"><svg
@@ -507,7 +483,7 @@
                                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                                         <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                                     </svg>Daftar TPQ</a>
-                                <a href="https://wa.me/6281239567390"
+                                <a href="{{ $tpq?->whatsappUrl() ?? 'https://wa.me/6281239567390' }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] [border:1.5px_solid_#0B3B2C] text-[#0B3B2C] text-[16px] font-bold no-underline"><svg
                                         width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
