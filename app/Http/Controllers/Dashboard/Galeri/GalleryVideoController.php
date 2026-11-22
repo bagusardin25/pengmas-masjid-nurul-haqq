@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Dashboard\Galeri;
 
 use App\Enums\PublicationStatus;
 use App\Models\GalleryVideo;
+use App\Services\YoutubeMetadata;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class GalleryVideoController extends GaleriListController
 {
     protected string $section = 'video';
 
     protected string $bag = 'video';
+
+    public function __construct(private readonly YoutubeMetadata $youtube) {}
 
     protected function rules(): array
     {
@@ -27,7 +32,8 @@ class GalleryVideoController extends GaleriListController
                     }
                 },
             ],
-            'title' => ['required', 'string', 'max:255'],
+            // Judul dan durasi yang dikosongkan diambil otomatis dari YouTube.
+            'title' => ['nullable', 'string', 'max:255'],
             'category_id' => $this->categoryRule(),
             'speaker' => ['nullable', 'string', 'max:255'],
             'date' => ['nullable', 'date_format:Y-m-d'],
@@ -62,19 +68,46 @@ class GalleryVideoController extends GaleriListController
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    private function withYoutubeId(array $data): array
+    private function withYoutubeData(array $data, ?GalleryVideo $video = null): array
     {
         $data['youtube_url'] = trim($data['youtube_url']);
         $data['youtube_id'] = GalleryVideo::parseYoutubeId($data['youtube_url']);
 
+        if (blank($data['title'] ?? null) || blank($data['duration'] ?? null)) {
+            $metadata = $this->youtube->fetch($data['youtube_id']);
+            $data['title'] = filled($data['title'] ?? null) ? $data['title'] : $metadata['title'];
+            $data['duration'] = filled($data['duration'] ?? null) ? $data['duration'] : $metadata['duration'];
+        }
+
+        if (blank($data['title'])) {
+            throw ValidationException::withMessages([
+                'title' => 'Judul tidak bisa diambil otomatis dari YouTube (video privat, dihapus, atau YouTube tidak bisa dihubungi). Isi judulnya secara manual.',
+            ])->errorBag($this->bag.'-'.($video?->getKey() ?? 'new'))
+                ->redirectTo($this->pageUrl().'#'.$this->section);
+        }
+
         return $data;
+    }
+
+    /**
+     * Judul dan durasi untuk mengisi form otomatis saat tautan YouTube ditempel.
+     */
+    public function lookup(Request $request): JsonResponse
+    {
+        $youtubeId = GalleryVideo::parseYoutubeId((string) $request->query('url'));
+
+        if ($youtubeId === null) {
+            return response()->json(['message' => 'Tautan YouTube tidak dikenali.'], 422);
+        }
+
+        return response()->json($this->youtube->fetch($youtubeId));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validateForm($request);
 
-        GalleryVideo::create($this->withNextSortOrder(GalleryVideo::class, $this->withYoutubeId($data)));
+        GalleryVideo::create($this->withNextSortOrder(GalleryVideo::class, $this->withYoutubeData($data)));
 
         return $this->backToSection('Video ditambahkan.');
     }
@@ -83,7 +116,7 @@ class GalleryVideoController extends GaleriListController
     {
         $data = $this->validateForm($request, $video);
 
-        $video->update($this->withYoutubeId($data));
+        $video->update($this->withYoutubeData($data, $video));
 
         return $this->backToSection('Video diperbarui.');
     }

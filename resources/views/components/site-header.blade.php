@@ -20,8 +20,8 @@
                     {{ $item['label'] }}
                 </a>
             @endforeach
-            <a class="header-login-link-mobile"
-                href="{{ url('/login') }}">{{ Auth::user() == null ? 'Login' : 'Dashboard' }}</a>
+            {{-- <a class="header-login-link-mobile"
+                href="{{ url('/login') }}">{{ Auth::user() == null ? 'Login' : 'Dashboard' }}</a> --}}
         </nav>
 
         {{-- <a class="header-login-link" href="{{ url('/login') }}">{{ Auth::user() == null ? 'Login' : 'Dashboard' }}</a> --}}

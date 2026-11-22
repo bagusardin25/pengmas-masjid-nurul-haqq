@@ -2175,3 +2175,8 @@
 .dash-maintenance-info dd {
     margin: 0;
 }
+
+.dash-autofill-status {
+    margin: 0 auto 0 0;
+    align-self: center;
+}

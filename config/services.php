@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    // Opsional. Tanpa key, durasi video diambil dari halaman video YouTube.
+    'youtube' => [
+        'key' => env('YOUTUBE_API_KEY'),
+    ],
+
 ];
