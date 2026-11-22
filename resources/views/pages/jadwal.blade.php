@@ -4,7 +4,7 @@
 @section('description', 'Jadwal sholat dan kegiatan rutin jamaah Masjid Jami Nurul Haqq.')
 
 @section('content')
-    <x-page-hero eyebrow="Jadwal & kegiatan" :title="$page?->hero_title ?? 'Jadwal & Kegiatan'" :description="$page?->hero_description" action-url="https://wa.me/6281239567390" action-label="Tanya jadwal ke pengurus" />
+    <x-page-hero eyebrow="Jadwal & kegiatan" :title="$page?->hero_title ?? 'Jadwal & Kegiatan'" :description="$page?->hero_description" :action-url="$siteContact->contactUrl()" action-label="Tanya jadwal ke pengurus" />
 
     <section class="section">
         <div class="site-container">
@@ -64,7 +64,7 @@
                     @empty
                         <p>Belum ada agenda terjadwal. Agenda berikutnya akan diumumkan oleh takmir.</p>
                     @endforelse
-                    <a class="button button-gold button-full" href="https://wa.me/6281239567390">Konfirmasi kehadiran</a>
+                    <a class="button button-gold button-full" href="{{ $siteContact->contactUrl() }}">Konfirmasi kehadiran</a>
                 </article>
             </div>
             <article class="content-panel quran-schedule">

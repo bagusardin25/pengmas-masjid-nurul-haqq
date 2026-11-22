@@ -41,4 +41,17 @@ class ContactPhone extends Model
     {
         return WhatsApp::url($this->number);
     }
+
+    public function telUrl(): string
+    {
+        return 'tel:'.preg_replace('/[^0-9+]/', '', $this->number);
+    }
+
+    /**
+     * Tautan utama nomor ini: WhatsApp bila nomornya WhatsApp, selain itu telepon biasa.
+     */
+    public function url(): string
+    {
+        return $this->is_whatsapp ? ($this->whatsappUrl() ?? $this->telUrl()) : $this->telUrl();
+    }
 }

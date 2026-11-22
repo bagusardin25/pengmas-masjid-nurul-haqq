@@ -22,9 +22,12 @@
 
         <div class="dashboard-main">
             <x-dashboard.topbar />
-            <main id="dashboard-main-content" class="dashboard-content">
-                @yield('content')
-            </main>
+            <div class="dashboard-workspace">
+                <main id="dashboard-main-content" class="dashboard-content">
+                    @yield('content')
+                </main>
+                <x-dashboard.live-preview :url="View::yieldContent('preview-url') ?: null" />
+            </div>
         </div>
 
         <button

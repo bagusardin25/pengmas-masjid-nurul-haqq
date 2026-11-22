@@ -78,7 +78,7 @@ abstract class ListItemController extends Controller
         if ($validator->fails()) {
             throw (new ValidationException($validator))
                 ->errorBag($bag)
-                ->redirectTo(route($this->page).'#'.$this->section);
+                ->redirectTo($this->pageUrl().'#'.$this->section);
         }
 
         return $validator->validated();
@@ -115,10 +115,17 @@ abstract class ListItemController extends Controller
         return $data;
     }
 
+    /**
+     * URL halaman kelola. Ditimpa bila halamannya butuh parameter (mis. halaman foto satu album).
+     */
+    protected function pageUrl(): string
+    {
+        return route($this->page);
+    }
+
     protected function backToSection(string $message): RedirectResponse
     {
-        return to_route($this->page)
-            ->withFragment($this->section)
+        return redirect()->to($this->pageUrl().'#'.$this->section)
             ->with('status', $message);
     }
 }

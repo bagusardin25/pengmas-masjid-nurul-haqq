@@ -1319,3 +1319,859 @@
         transition: none;
     }
 }
+
+/* ------------------------------------------------------------------
+   Kelola Kontak, Galeri, dan ringkasan Dashboard
+   ------------------------------------------------------------------ */
+
+.dash-grid-phone {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 96px 150px auto;
+}
+
+.dash-grid-video {
+    grid-template-columns: 160px minmax(0, 1fr);
+}
+
+.dash-video-thumb {
+    width: 160px;
+    height: 90px;
+}
+
+.dash-span-4 {
+    grid-column: span 4;
+}
+
+.dash-back-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dash-back-link:hover {
+    text-decoration: underline;
+}
+
+.dash-text-button {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--green);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dash-text-button:hover {
+    text-decoration: underline;
+}
+
+.dash-text-button:focus-visible {
+    border-radius: 6px;
+    outline: 3px solid rgb(201 151 28 / 55%);
+}
+
+.dash-text-button-danger {
+    color: #a33a2b;
+}
+
+.dash-status {
+    align-self: flex-start;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dash-status-draft {
+    background: #f1ece0;
+    color: #8a6a12;
+}
+
+/* Kartu album di halaman Kelola Galeri. */
+.dash-album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-album-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fcfbf7;
+}
+
+.dash-album-card.is-hidden {
+    border-style: dashed;
+    background: #f4f3ee;
+}
+
+.dash-album-link {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    color: inherit;
+    text-decoration: none;
+}
+
+.dash-album-link:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: -3px;
+}
+
+.dash-album-cover {
+    position: relative;
+    display: grid;
+    aspect-ratio: 4 / 3;
+    place-items: center;
+    background: #e4ece6;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.dash-album-cover img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dash-album-count {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 3px 8px;
+    border-radius: 7px;
+    background: rgb(23 35 30 / 82%);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.dash-album-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px 14px;
+}
+
+.dash-album-copy strong {
+    color: var(--green);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.dash-album-copy small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.dash-album-action {
+    margin-top: auto;
+    padding-top: 6px;
+    color: #8a6a12;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dash-album-link:hover .dash-album-action {
+    text-decoration: underline;
+}
+
+/* Unggah banyak foto dan daftar foto di halaman album. */
+.dash-upload-box {
+    display: grid;
+    gap: 12px;
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.dash-upload-box h3 {
+    margin-bottom: 0;
+}
+
+.dash-upload-box input[type="file"] {
+    padding: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.dash-upload-box input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: var(--green-soft);
+    color: var(--green);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dash-upload-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-upload-previews img {
+    display: block;
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.dash-empty-spaced {
+    margin-top: 4px;
+}
+
+.dash-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-photo-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fcfbf7;
+}
+
+.dash-photo-card.is-cover {
+    border-color: #c9971c;
+    box-shadow: 0 0 0 1px #c9971c;
+}
+
+.dash-photo-card-image {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    background: #e4ece6;
+}
+
+.dash-photo-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dash-photo-card-image:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: -3px;
+}
+
+.dash-cover-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 7px;
+    background: #e2b84b;
+    color: #17231e;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.dash-photo-card-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 76px;
+    align-items: end;
+    gap: 8px;
+    padding: 12px 12px 0;
+}
+
+.dash-photo-card-form .dash-button {
+    grid-column: 1 / -1;
+}
+
+.dash-photo-card-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px 8px;
+}
+
+.dash-photo-card-actions form:last-child {
+    margin-left: auto;
+}
+
+/* Ringkasan Dashboard. */
+.dash-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-stat {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+}
+
+.dash-stat:hover {
+    border-color: #c9d8d1;
+}
+
+.dash-stat:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-stat-label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dash-stat-value {
+    color: var(--green);
+    font-size: 30px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.dash-stat-note {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.dash-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.dash-overview-side {
+    display: grid;
+    gap: 20px;
+}
+
+.dash-panel-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.dash-progress-text {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dash-progress {
+    overflow: hidden;
+    height: 6px;
+    margin-bottom: 12px;
+    border-radius: 999px;
+    background: #ece9df;
+}
+
+.dash-progress span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--green);
+}
+
+.dash-checklist,
+.dash-mini-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+}
+
+.dash-check-icon {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    background: #f6ead0;
+    color: #8a6a12;
+}
+
+.dash-checklist .is-done .dash-check-icon {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.dash-checklist-copy,
+.dash-mini-list li > span:last-child {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+}
+
+.dash-checklist-copy strong,
+.dash-mini-list strong {
+    color: var(--ink);
+    font-size: 13px;
+}
+
+.dash-checklist .is-done strong {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.dash-checklist-copy small,
+.dash-mini-list small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.dash-mini-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+}
+
+.dash-mini-list li:first-child,
+.dash-checklist li:first-child {
+    border-top: 0;
+}
+
+.dash-date-chip,
+.dash-file-chip {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    place-content: center;
+    border-radius: 10px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.dash-date-chip strong {
+    color: var(--green);
+    font-size: 17px;
+}
+
+.dash-file-chip {
+    background: #f6ead0;
+    color: #8a6a12;
+    font-weight: 800;
+}
+
+.dash-page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dash-page-card {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fcfbf7;
+    color: inherit;
+    text-decoration: none;
+}
+
+.dash-page-card:hover {
+    border-color: #c9d8d1;
+    background: #fff;
+}
+
+.dash-page-card:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-page-card strong {
+    color: var(--green);
+    font-size: 14px;
+}
+
+.dash-page-card span {
+    color: var(--ink);
+    font-size: 12px;
+}
+
+.dash-page-card small {
+    margin-top: auto;
+    padding-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+@container (max-width: 760px) {
+    .dash-grid-phone {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-grid-video {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-span-4 {
+        grid-column: 1 / -1;
+    }
+}
+
+@container (max-width: 460px) {
+    .dash-grid-phone {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-video-thumb {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+}
+
+@media (max-width: 900px) {
+    .dash-overview {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Akun & Admin. */
+.dash-grid-admin {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dash-admin-list {
+    margin-bottom: 4px;
+}
+
+.dash-admin-avatar {
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.dash-admin-list strong .dash-status {
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+@container (max-width: 760px) {
+    .dash-grid-admin {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container (max-width: 460px) {
+    .dash-grid-admin {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.dashboard-sidebar-nav + .dashboard-sidebar-label {
+    margin-top: 18px;
+}
+
+/* ------------------------------------------------------------------
+   Pratinjau HP di sisi kanan dashboard (layar lebar saja).
+   ------------------------------------------------------------------ */
+.dashboard-workspace {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+}
+
+.dashboard-workspace > .dashboard-content {
+    min-width: 0;
+}
+
+.dash-preview {
+    display: none;
+}
+
+@media (min-width: 1480px) {
+    .dash-preview {
+        position: sticky;
+        top: 64px;
+        display: flex;
+        width: clamp(340px, 24vw, 440px);
+        height: calc(100vh - 64px);
+        flex: 0 0 auto;
+        flex-direction: column;
+        padding: 20px 24px 16px 4px;
+    }
+
+    .dash-preview.is-collapsed {
+        width: auto;
+        padding: 20px 20px 0 0;
+    }
+}
+
+.dash-preview-inner {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dash-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.dash-preview-header > div:first-child {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.dash-preview-header strong {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.dash-preview-header span {
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dash-preview-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.dash-preview-actions button,
+.dash-preview-actions a,
+.dash-preview-open {
+    display: inline-grid;
+    min-width: 32px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--green);
+    cursor: pointer;
+}
+
+.dash-preview-actions button:hover,
+.dash-preview-actions a:hover,
+.dash-preview-open:hover {
+    background: var(--green-soft);
+}
+
+.dash-preview-actions button:focus-visible,
+.dash-preview-actions a:focus-visible,
+.dash-preview-open:focus-visible {
+    outline: 3px solid rgb(201 151 28 / 55%);
+    outline-offset: 2px;
+}
+
+.dash-preview-open {
+    display: inline-flex;
+    gap: 6px;
+    padding: 0 12px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.dash-preview-stage {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dash-preview-phone {
+    --preview-scale: 1;
+    position: relative;
+    width: calc(390px * var(--preview-scale));
+    height: calc(844px * var(--preview-scale));
+    flex: 0 0 auto;
+    overflow: hidden;
+    border: 6px solid #17231e;
+    border-radius: calc(34px * var(--preview-scale) + 6px);
+    background: #fff;
+    box-shadow: 0 20px 40px rgb(11 59 44 / 18%);
+    box-sizing: content-box;
+}
+
+.dash-preview-phone iframe {
+    display: block;
+    width: 390px;
+    height: 844px;
+    border: 0;
+    transform: scale(var(--preview-scale));
+    transform-origin: 0 0;
+}
+
+.dash-preview-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: #fff;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.dash-preview-note {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+}
+
+/* Tombol "Tampilkan lebih banyak" di daftar panjang. */
+.dash-load-more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 14px;
+    margin-top: 12px;
+}
+
+.dash-load-more .dash-button {
+    gap: 6px;
+}
+
+.dash-load-more .dash-button small {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dash-load-more-count {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Perawatan server. */
+.dash-maintenance-text {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.dash-panel code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #f1eee4;
+    color: var(--ink);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.dash-maintenance-list .dash-check-icon.is-ok {
+    background: var(--green-soft);
+    color: var(--green);
+}
+
+.dash-maintenance-list small + small {
+    margin-top: 4px;
+}
+
+.dash-maintenance-actions {
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.dash-maintenance-warning,
+.dash-maintenance-error {
+    margin: 12px 0 0;
+    padding: 11px 14px;
+    border: 1px solid #f0c9c2;
+    border-radius: 10px;
+    background: #fdf1ef;
+    color: #9a2f20;
+    font-size: 13px;
+}
+
+.dash-maintenance-error {
+    margin: 0;
+}
+
+.dash-maintenance-info {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 8px 18px;
+    margin: 0;
+    font-size: 13px;
+}
+
+.dash-maintenance-info dt {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.dash-maintenance-info dd {
+    margin: 0;
+}

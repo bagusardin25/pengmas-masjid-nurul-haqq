@@ -3,64 +3,158 @@
 @section('title', 'Galeri')
 @section('description', 'Album foto, video kajian, dan artikel kegiatan Masjid Jami Nurul Haqq.')
 
-@section('content')
-    <x-page-hero eyebrow="Galeri" title="Momen kebersamaan jamaah" description="Album foto, video kajian, dan artikel kegiatan Masjid Nurul Haqq. Seluruh konten merupakan ilustrasi demo." />
+@php
+    $setting = $siteContact->setting();
+@endphp
 
-    <section class="section section-muted">
+@section('content')
+    <x-page-hero eyebrow="Galeri" title="Momen kebersamaan jamaah" description="Album foto, video kajian, dan artikel kegiatan Masjid Nurul Haqq." />
+
+    <section id="album" class="section section-muted">
         <div class="site-container">
             <div class="gallery-heading">
                 <x-section-heading eyebrow="Galeri kegiatan" title="Dari ibadah hingga belajar mengaji" />
-                <span class="muted-text">Konten demo · visual ilustrasi</span>
             </div>
-            <div class="filter-list" aria-label="Kategori galeri">
-                <span class="filter-chip filter-chip-active">Semua</span>
-                <span class="filter-chip">Kajian rutin</span>
-                <span class="filter-chip">Sholat berjamaah</span>
-                <span class="filter-chip">Kegiatan TPQ</span>
-                <span class="filter-chip">Pengajian Ahad malam</span>
-            </div>
-            <div class="gallery-grid">
-                @foreach ([['Kajian Rutin', 'Dokumentasi kajian Islam rutin jamaah bersama ustaz di masjid.', 'Rabu · 19.30 WIB', '7 Oktober 2026'], ['Sholat Berjamaah', 'Momen kekhusyukan ibadah berjamaah di Masjid Nurul Haqq.', 'Sholat fardhu · 5 waktu sehari', '9 Oktober 2026'], ['Belajar TPQ', 'Semangat santri TPQ dalam mempelajari Al-Qur’an bersama ustaz.', 'Program pendidikan Al-Qur’an', '8 Oktober 2026'], ['Pengajian Ahad Malam', 'Suasana pengajian rutin yang penuh kekhidmatan bersama jamaah.', 'Ahad · 19.30 WIB', '11 Oktober 2026']] as [$title, $description, $meta, $date])
-                    <article class="gallery-card">
-                        <div class="gallery-placeholder" role="img" aria-label="Placeholder foto {{ $title }}"><span>{{ $date }}</span></div>
-                        <div class="gallery-copy"><p class="eyebrow">Album foto · 20–24 gambar</p><h3>{{ $title }}</h3><p>{{ $description }}</p><small>{{ $meta }}</small></div>
-                    </article>
-                @endforeach
-            </div>
+
+            @if ($categories->isNotEmpty())
+                <nav class="filter-list" aria-label="Kategori galeri">
+                    <a href="{{ route('galeri') }}#album" @class(['filter-chip', 'filter-chip-active' => $activeCategory === null])
+                        @if ($activeCategory === null) aria-current="page" @endif>Semua</a>
+                    @foreach ($categories as $category)
+                        <a href="{{ route('galeri', ['kategori' => $category->slug]) }}#album"
+                            @class(['filter-chip', 'filter-chip-active' => $activeCategory?->is($category)])
+                            @if ($activeCategory?->is($category)) aria-current="page" @endif>{{ $category->name }}</a>
+                    @endforeach
+                </nav>
+            @endif
+
+            @if ($albums->isEmpty())
+                <p class="gallery-empty">
+                    @if ($activeCategory)
+                        Belum ada album di kategori {{ $activeCategory->name }}. <a href="{{ route('galeri') }}#album">Lihat semua album</a>.
+                    @else
+                        Dokumentasi kegiatan sedang disiapkan pengurus. Silakan kembali lagi nanti.
+                    @endif
+                </p>
+            @else
+                <div class="gallery-grid">
+                    @foreach ($albums as $album)
+                        @php $cover = $album->cover(); @endphp
+                        <article class="gallery-card">
+                            <a class="gallery-cover" href="{{ route('galeri.album', $album) }}">
+                                @if ($cover)
+                                    <img src="{{ $cover->url() }}" alt="" loading="lazy" decoding="async"
+                                        @if ($cover->width) width="{{ $cover->width }}" height="{{ $cover->height }}" @endif>
+                                @endif
+                                @if ($album->date)
+                                    <span>{{ $album->date->locale('id')->translatedFormat('j F Y') }}</span>
+                                @endif
+                                <span class="sr-only">Buka album {{ $album->title }}</span>
+                            </a>
+                            <div class="gallery-copy">
+                                <p class="eyebrow">{{ $album->category?->name ?? 'Album foto' }} · {{ $album->photos_count }} foto</p>
+                                <h3><a href="{{ route('galeri.album', $album) }}">{{ $album->title }}</a></h3>
+                                @if ($album->description)
+                                    <p>{{ \Illuminate\Support\Str::limit($album->description, 160) }}</p>
+                                @endif
+                                @if ($album->location)
+                                    <small>{{ $album->location }}</small>
+                                @endif
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+
+                @if ($albums->hasPages())
+                    <div class="report-pagination">{{ $albums->links() }}</div>
+                @endif
+            @endif
         </div>
     </section>
 
-    <section class="section">
-        <div class="site-container">
-            <div class="gallery-heading">
-                <x-section-heading eyebrow="Video kajian" title="Tonton kajian pilihan" />
-                <a class="channel-card" href="https://youtube.com"><span class="channel-avatar">NH</span><span><strong>Nurul Haqq</strong><small>Kanal demo · 12 playlist</small></span><span class="tag">Kunjungi kanal</span></a>
+    @if ($videos->isNotEmpty() || filled($setting?->youtube_url))
+        <section class="section">
+            <div class="site-container">
+                <div class="gallery-heading">
+                    <x-section-heading eyebrow="Video kajian" title="Tonton kajian pilihan" />
+                    @if (filled($setting?->youtube_url))
+                        <a class="channel-card" href="{{ $setting->youtube_url }}" target="_blank" rel="noopener noreferrer">
+                            <span class="channel-avatar">NH</span>
+                            <span><strong>Nurul Haqq</strong><small>Kanal YouTube masjid</small></span>
+                            <span class="tag">Kunjungi kanal</span>
+                        </a>
+                    @endif
+                </div>
+                @if ($videos->isEmpty())
+                    <p class="gallery-empty">Video kajian belum tersedia di sini. Kunjungi kanal YouTube masjid untuk menonton kajian terbaru.</p>
+                @else
+                    <div class="card-grid card-grid-three">
+                        @foreach ($videos as $video)
+                            <article class="video-card">
+                                <a class="video-thumb" href="{{ $video->watchUrl() }}" target="_blank" rel="noopener noreferrer">
+                                    <img src="{{ $video->thumbnailUrl() }}" alt="" loading="lazy" decoding="async" width="480" height="360">
+                                    <span class="video-play" aria-hidden="true">▶</span>
+                                    @if ($video->duration)
+                                        <small>{{ $video->duration }}</small>
+                                    @endif
+                                    <span class="sr-only">Tonton {{ $video->title }} di YouTube</span>
+                                </a>
+                                <div class="video-copy">
+                                    <p class="eyebrow">{{ $video->category?->name ?? 'Video' }}</p>
+                                    <h3>{{ $video->title }}</h3>
+                                    @if ($video->description)
+                                        <p>{{ \Illuminate\Support\Str::limit($video->description, 140) }}</p>
+                                    @endif
+                                    <small>
+                                        {{ $video->speaker ?? 'Masjid Nurul Haqq' }}@if ($video->date) · {{ $video->date->locale('id')->translatedFormat('j F Y') }}@endif
+                                    </small>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
             </div>
-            <div class="card-grid card-grid-three">
-                @foreach ([['Adab Menuntut Ilmu', 'Pentingnya menjaga adab dan akhlak dalam setiap langkah menuntut ilmu.', '24:18', '5 Oktober 2026'], ['Belajar Tajwid Dasar', 'Panduan praktis membaca Al-Qur’an dengan tajwid yang benar untuk pemula.', '16:40', '6 Oktober 2026'], ['Merawat Ukhuwah Jamaah', 'Mempererat persaudaraan dan kebersamaan sebagai pilar kehidupan jamaah.', '32:10', '8 Oktober 2026']] as [$title, $description, $duration, $date])
-                    <article class="video-card">
-                        <a class="video-placeholder" href="https://youtube.com" aria-label="Tonton {{ $title }}"><span>▶</span><small>{{ $duration }}</small></a>
-                        <div class="video-copy"><p class="eyebrow">Kajian · demo video</p><h3>{{ $title }}</h3><p>{{ $description }}</p><small>Nurul Haqq · {{ $date }}</small></div>
-                    </article>
-                @endforeach
-            </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
-    <section class="section section-muted">
-        <div class="site-container">
-            <x-section-heading eyebrow="Artikel kegiatan" title="Tulisan dari jamaah" />
-            <div class="card-grid card-grid-two">
-                <article class="article-card"><div class="article-image" role="img" aria-label="Placeholder artikel Adab Menuntut Ilmu"></div><div class="article-copy"><p class="article-meta">Kajian · 5 Oktober 2026 · 4 menit baca</p><h3>Adab Menuntut Ilmu</h3><p>Rasulullah ﷺ bersabda bahwa menuntut ilmu adalah kewajiban setiap Muslim. Menjaga adab dalam perjalanan mencari ilmu sama pentingnya dengan ilmu itu sendiri.</p><strong>● Ust. Ahmad Fauzi</strong></div></article>
-                <article class="article-card"><div class="article-image" role="img" aria-label="Placeholder artikel Gotong Royong Memakmurkan Masjid"></div><div class="article-copy"><p class="article-meta">Kegiatan · 10 Oktober 2026 · 5 menit baca</p><h3>Gotong Royong Memakmurkan Masjid</h3><p>Masjid bukan sekadar tempat sholat, melainkan pusat peradaban umat. Ketika jamaah bahu-membahu merawat dan memakmurkan masjid, terbentuk ikatan ukhuwah yang kuat.</p><strong>● Panitia Masjid</strong></div></article>
+    @if ($articles->isNotEmpty())
+        <section @class(['section', 'section-muted' => $videos->isNotEmpty() || filled($setting?->youtube_url)])>
+            <div class="site-container">
+                <x-section-heading eyebrow="Artikel kegiatan" title="Tulisan dari jamaah" />
+                <div class="card-grid card-grid-two">
+                    @foreach ($articles as $article)
+                        <article class="article-card">
+                            <a class="article-image" href="{{ route('galeri.artikel', $article) }}" tabindex="-1" aria-hidden="true">
+                                @if ($article->coverImage)
+                                    <img src="{{ $article->coverImage->url() }}" alt="" loading="lazy" decoding="async">
+                                @endif
+                            </a>
+                            <div class="article-copy">
+                                <p class="article-meta">
+                                    {{ collect([$article->category, $article->published_at?->locale('id')->translatedFormat('j F Y'), $article->readingMinutes().' menit baca'])->filter()->join(' · ') }}
+                                </p>
+                                <h3><a href="{{ route('galeri.artikel', $article) }}">{{ $article->title }}</a></h3>
+                                @if ($article->summary())
+                                    <p>{{ $article->summary() }}</p>
+                                @endif
+                                @if ($article->author)
+                                    <strong>● {{ $article->author }}</strong>
+                                @endif
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     <section class="section">
         <div class="site-container gallery-contact">
             <div><h2>Ingin mengetahui kegiatan masjid?</h2><p>Lihat jadwal kegiatan rutin atau hubungi pengurus untuk informasi dokumentasi yang tersedia.</p></div>
-            <div class="button-row"><a class="button button-dark" href="{{ route('jadwal') }}">Lihat jadwal</a><a class="button button-outline" href="https://wa.me/6281239567390">Hubungi pengurus</a></div>
+            <div class="button-row">
+                <a class="button button-dark" href="{{ route('jadwal') }}">Lihat jadwal</a>
+                <a class="button button-outline" href="{{ $siteContact->contactUrl() }}">Hubungi pengurus</a>
+            </div>
         </div>
     </section>
     <x-donation-cta />

@@ -46,7 +46,7 @@
                 </svg>
             </summary>
             <div class="dashboard-user-dropdown">
-                <a href="{{ route('profile.edit') }}">Pengaturan akun</a>
+                <a href="{{ route('profile.edit') }}">Akun &amp; admin</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit">Keluar</button>

@@ -443,7 +443,7 @@
                                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                                         <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                                     </svg>Daftar TPQ</a>
-                                <a href="{{ $tpq?->whatsappUrl() ?? 'https://wa.me/6281239567390' }}"
+                                <a href="{{ $tpq?->whatsappUrl() ?? $siteContact->contactUrl() }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] [border:1.5px_solid_#0B3B2C] text-[#0B3B2C] text-[16px] font-bold no-underline"><svg
                                         width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -640,58 +640,106 @@
                                 <path d="m12 5 7 7-7 7"></path>
                             </svg></a>
                     </div>
+                    @php
+                        // Album terbaru dari dashboard Galeri; foto bawaan dipakai sampai ada minimal 4 album berfoto.
+                        $highlights = $galleryAlbums->count() >= 4
+                            ? $galleryAlbums->map(fn ($album) => [
+                                'src' => $album->cover()->url(),
+                                'srcset' => null,
+                                'width' => $album->cover()->width,
+                                'height' => $album->cover()->height,
+                                'alt' => $album->cover()->alt ?: $album->title,
+                                'caption' => $album->title,
+                                'href' => route('galeri.album', $album),
+                                'position' => null,
+                            ])->all()
+                            : [
+                                [
+                                    'src' => asset('images/beranda/galeri-silaturahmi-pengurus-1600.jpg'),
+                                    'srcset' => asset('images/beranda/galeri-silaturahmi-pengurus-960.jpg').' 960w, '.asset('images/beranda/galeri-silaturahmi-pengurus-1600.jpg').' 1600w',
+                                    'width' => 1600, 'height' => 713,
+                                    'alt' => 'Pengurus Yayasan Nurul Haqq dan Takmir Masjid Nurul Haqq berfoto bersama di dalam masjid',
+                                    'caption' => 'Silaturahmi pengurus Yayasan Nurul Haqq dengan Takmir Masjid Nurul Haqq',
+                                    'href' => null, 'position' => null,
+                                ],
+                                [
+                                    'src' => asset('images/beranda/galeri-safari-dakwah-isra-miraj.jpg'), 'srcset' => null,
+                                    'width' => 720, 'height' => 542,
+                                    'alt' => "Warga berfoto di depan spanduk Safari Dakwah Peringatan Isra Mi'raj 1446 H",
+                                    'caption' => "Safari Dakwah Isra Mi'raj 1446 H",
+                                    'href' => null, 'position' => '50% 100%',
+                                ],
+                                [
+                                    'src' => asset('images/beranda/galeri-prasasti-peresmian.jpg'), 'srcset' => null,
+                                    'width' => 720, 'height' => 538,
+                                    'alt' => 'Prasasti Masjid Nurul Haqq: dibangun 13 Juni 2010 dan diresmikan 15 April 2018',
+                                    'caption' => 'Prasasti peresmian masjid, 2018',
+                                    'href' => null, 'position' => null,
+                                ],
+                                [
+                                    'src' => asset('images/beranda/galeri-spanduk-isra-miraj.jpg'), 'srcset' => null,
+                                    'width' => 720, 'height' => 860,
+                                    'alt' => "Warga di depan spanduk Peringatan Isra Mi'raj dan menyambut Ramadhan 1446 H di Masjid Nurul Haqq",
+                                    'caption' => 'Menyambut Ramadhan 1446 H',
+                                    'href' => null, 'position' => '50% 45%',
+                                ],
+                            ];
+                        $featured = array_shift($highlights);
+                        $morePhotos = max(0, $galleryPhotoTotal - 4);
+                    @endphp
                     <div class="mt-[40px] flex flex-wrap [gap:14px]">
                         <figure
                             class="relative [flex:1_1_520px] min-w-0 h-[400px] [margin:0] overflow-hidden rounded-[24px] bg-[#E4ECE6]">
-                            <img src="{{ asset('images/beranda/galeri-silaturahmi-pengurus-1600.jpg') }}"
-                                srcset="{{ asset('images/beranda/galeri-silaturahmi-pengurus-960.jpg') }} 960w, {{ asset('images/beranda/galeri-silaturahmi-pengurus-1600.jpg') }} 1600w"
-                                sizes="(min-width: 1100px) 640px, calc(100vw - 40px)" width="1600" height="713"
-                                alt="Pengurus Yayasan Nurul Haqq dan Takmir Masjid Nurul Haqq berfoto bersama di dalam masjid"
+                            <img src="{{ $featured['src'] }}"
+                                @if ($featured['srcset']) srcset="{{ $featured['srcset'] }}" sizes="(min-width: 1100px) 640px, calc(100vw - 40px)" @endif
+                                @if ($featured['width']) width="{{ $featured['width'] }}" height="{{ $featured['height'] }}" @endif
+                                alt="{{ $featured['alt'] }}"
                                 loading="lazy" decoding="async" class="block w-full h-[100%] object-cover">
                             <figcaption
                                 class="absolute left-[0] right-[0] bottom-[0] [padding:56px_24px_20px] [background:linear-gradient(to_top,rgba(8,45,34,0.88),rgba(8,45,34,0))] text-[#FFFFFF] text-[15px] font-bold leading-[1.4]">
-                                Silaturahmi pengurus Yayasan Nurul Haqq dengan Takmir Masjid Nurul Haqq</figcaption>
+                                @if ($featured['href'])
+                                    <a href="{{ $featured['href'] }}" class="text-[#FFFFFF] no-underline">{{ $featured['caption'] }}</a>
+                                @else
+                                    {{ $featured['caption'] }}
+                                @endif
+                            </figcaption>
                         </figure>
                         <div
                             class="[flex:1_1_520px] min-w-0 grid [grid-template-columns:repeat(2,minmax(0,1fr))] [grid-template-rows:repeat(2,193px)] [gap:14px]">
-                            <figure class="relative [margin:0] overflow-hidden rounded-[20px] bg-[#E4ECE6]">
-                                <img src="{{ asset('images/beranda/galeri-safari-dakwah-isra-miraj.jpg') }}"
-                                    width="720" height="542"
-                                    alt="Warga berfoto di depan spanduk Safari Dakwah Peringatan Isra Mi'raj 1446 H"
-                                    loading="lazy" decoding="async"
-                                    class="block w-full h-[100%] object-cover [object-position:50%_100%]">
-                                <figcaption
-                                    class="absolute left-[0] right-[0] bottom-[0] [padding:32px_14px_12px] [background:linear-gradient(to_top,rgba(8,45,34,0.88),rgba(8,45,34,0))] text-[#FFFFFF] text-[13px] font-bold leading-[1.35]">
-                                    Safari Dakwah Isra Mi'raj 1446 H</figcaption>
-                            </figure>
-                            <figure class="relative [margin:0] overflow-hidden rounded-[20px] bg-[#E4ECE6]">
-                                <img src="{{ asset('images/beranda/galeri-prasasti-peresmian.jpg') }}" width="720"
-                                    height="538"
-                                    alt="Prasasti Masjid Nurul Haqq: dibangun 13 Juni 2010 dan diresmikan 15 April 2018"
-                                    loading="lazy" decoding="async" class="block w-full h-[100%] object-cover">
-                                <figcaption
-                                    class="absolute left-[0] right-[0] bottom-[0] [padding:32px_14px_12px] [background:linear-gradient(to_top,rgba(8,45,34,0.88),rgba(8,45,34,0))] text-[#FFFFFF] text-[13px] font-bold leading-[1.35]">
-                                    Prasasti peresmian masjid, 2018</figcaption>
-                            </figure>
-                            <figure class="relative [margin:0] overflow-hidden rounded-[20px] bg-[#E4ECE6]">
-                                <img src="{{ asset('images/beranda/galeri-spanduk-isra-miraj.jpg') }}" width="720"
-                                    height="860"
-                                    alt="Warga di depan spanduk Peringatan Isra Mi'raj dan menyambut Ramadhan 1446 H di Masjid Nurul Haqq"
-                                    loading="lazy" decoding="async"
-                                    class="block w-full h-[100%] object-cover [object-position:50%_45%]">
-                                <figcaption
-                                    class="absolute left-[0] right-[0] bottom-[0] [padding:32px_14px_12px] [background:linear-gradient(to_top,rgba(8,45,34,0.88),rgba(8,45,34,0))] text-[#FFFFFF] text-[13px] font-bold leading-[1.35]">
-                                    Menyambut Ramadhan 1446 H</figcaption>
-                            </figure>
-                            <a href="/galeri"
-                                class="rounded-[20px] bg-[#0B3B2C] text-[#FFFFFF] flex flex-col items-center justify-center [gap:2px] no-underline"><span
-                                    class="text-[34px] font-extrabold leading-[1.1]">+4</span><span
-                                    class="text-[14px] font-semibold text-[#C9D8D1]">foto lainnya</span></a>
+                            @foreach ($highlights as $highlight)
+                                <figure class="relative [margin:0] overflow-hidden rounded-[20px] bg-[#E4ECE6]">
+                                    <img src="{{ $highlight['src'] }}"
+                                        @if ($highlight['width']) width="{{ $highlight['width'] }}" height="{{ $highlight['height'] }}" @endif
+                                        alt="{{ $highlight['alt'] }}"
+                                        loading="lazy" decoding="async"
+                                        class="block w-full h-[100%] object-cover"
+                                        @if ($highlight['position']) style="object-position: {{ $highlight['position'] }}" @endif>
+                                    <figcaption
+                                        class="absolute left-[0] right-[0] bottom-[0] [padding:32px_14px_12px] [background:linear-gradient(to_top,rgba(8,45,34,0.88),rgba(8,45,34,0))] text-[#FFFFFF] text-[13px] font-bold leading-[1.35]">
+                                        @if ($highlight['href'])
+                                            <a href="{{ $highlight['href'] }}" class="text-[#FFFFFF] no-underline">{{ $highlight['caption'] }}</a>
+                                        @else
+                                            {{ $highlight['caption'] }}
+                                        @endif
+                                    </figcaption>
+                                </figure>
+                            @endforeach
+                            <a href="{{ route('galeri') }}"
+                                class="rounded-[20px] bg-[#0B3B2C] text-[#FFFFFF] flex flex-col items-center justify-center [gap:2px] no-underline">
+                                @if ($morePhotos > 0)
+                                    <span class="text-[34px] font-extrabold leading-[1.1]">+{{ $morePhotos }}</span><span
+                                        class="text-[14px] font-semibold text-[#C9D8D1]">foto lainnya</span>
+                                @else
+                                    <span class="text-[20px] font-extrabold leading-[1.1]">Lihat galeri</span><span
+                                        class="text-[14px] font-semibold text-[#C9D8D1]">album kegiatan</span>
+                                @endif
+                            </a>
                         </div>
                     </div>
                 </div>
             </section>
 
+            @php $siteSetting = $siteContact->setting(); @endphp
             <section id="kontak" class="[padding:96px_0] bg-[#FFFFFF]">
                 <div class="max-w-[1440px] mx-auto px-[clamp(20px,4.5vw,64px)]">
                     <div class="flex flex-wrap [gap:48px_64px]">
@@ -707,7 +755,7 @@
                                 ZISWAF, pendaftaran TPQ, dan kebutuhan ibadah lainnya.</p>
                             <ul class="list-none [margin:28px_0_0] [padding:0] flex flex-col [gap:10px]">
                                 @foreach ($phones as $phone)
-                                    <li><a href="{{ $phone->is_whatsapp ? $phone->whatsappUrl() : 'tel:'.preg_replace('/[^0-9+]/', '', $phone->number) }}"
+                                    <li><a href="{{ $phone->url() }}"
                                             class="flex items-center [gap:16px] [padding:14px_18px] rounded-[16px] bg-[#F8F6EF] text-[#17231E] no-underline">
                                             @if ($phone->is_whatsapp == true)
                                                 <span
@@ -743,7 +791,8 @@
                                                 </svg></span>
                                         </a></li>
                                 @endforeach
-                                <li><a href="mailto:takmirmnh22@gmail.com"
+                                @if (filled($siteSetting?->email))
+                                <li><a href="mailto:{{ $siteSetting->email }}"
                                         class="flex items-center [gap:16px] [padding:14px_18px] rounded-[16px] bg-[#F8F6EF] text-[#17231E] no-underline"><span
                                             class="w-[44px] h-[44px] rounded-[12px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
                                                 width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -755,7 +804,7 @@
                                             </svg></span><span class="[flex:1] min-w-0"><span
                                                 class="block text-[13px] text-[#4A5A53]">Email
                                                 takmir</span><span
-                                                class="block text-[clamp(14px,3.9vw,17px)] font-bold [overflow-wrap:anywhere]">{{ $contact?->email }}</span></span><span
+                                                class="block text-[clamp(14px,3.9vw,17px)] font-bold [overflow-wrap:anywhere]">{{ $siteSetting?->email }}</span></span><span
                                             class="text-[#6E7F77] flex"><svg width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -763,7 +812,9 @@
                                                 <path d="M5 12h14"></path>
                                                 <path d="m12 5 7 7-7 7"></path>
                                             </svg></span></a></li>
-                                <li><a href="https://instagram.com/masjidnurulhaqq"
+                                @endif
+                                @if ($siteSetting?->instagramUrl())
+                                <li><a href="{{ $siteSetting->instagramUrl() }}" target="_blank" rel="noopener noreferrer"
                                         class="flex items-center [gap:16px] [padding:14px_18px] rounded-[16px] bg-[#F8F6EF] text-[#17231E] no-underline"><span
                                             class="w-[44px] h-[44px] rounded-[12px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
                                                 width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -775,7 +826,7 @@
                                                 <path d="M17.5 6.5h.01"></path>
                                             </svg></span><span class="[flex:1] min-w-0"><span
                                                 class="block text-[13px] text-[#4A5A53]">Instagram</span><span
-                                                class="block text-[17px] font-bold">{{ $contact?->instagram }}</span></span><span
+                                                class="block text-[17px] font-bold">{{ '@'.$siteSetting->instagram }}</span></span><span
                                             class="text-[#6E7F77] flex"><svg width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -783,7 +834,9 @@
                                                 <path d="M5 12h14"></path>
                                                 <path d="m12 5 7 7-7 7"></path>
                                             </svg></span></a></li>
+                                @endif
                             </ul>
+                            @if (filled($siteSetting?->service_hours))
                             <p
                                 class="[margin:18px_0_0] flex flex-wrap items-center [gap:8px] text-[15px] text-[#4A5A53]">
                                 <span class="text-[#8A6A12] flex"><svg width="18" height="18"
@@ -792,17 +845,20 @@
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <path d="M12 6v6l4 2"></path>
                                     </svg></span>Layanan sekretariat: <strong
-                                    class="text-[#17231E]">{{ $contact?->service_hours }}</strong>
+                                    class="text-[#17231E]">{{ $siteSetting->service_hours }}</strong>
                             </p>
+                            @endif
                         </div>
                         <div class="[flex:1_1_460px] min-w-0">
+                            @if (filled($siteSetting?->maps_embed_url))
                             <div
                                 class="h-[340px] overflow-hidden rounded-[24px] bg-[#E9EEE8] [border:1px_solid_#E6E2D6]">
-                                <iframe src="{{ $contact?->maps_embed_url }}"
+                                <iframe src="{{ $siteSetting->maps_embed_url }}"
                                     title="Peta lokasi Masjid Nurul Haqq di Google Maps" width="600"
                                     height="340" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
                                     allowfullscreen class="block w-full h-[100%] [border:0]"></iframe>
                             </div>
+                            @endif
                             <div class="mt-[16px] flex flex-wrap items-center justify-between [gap:12px_20px]">
                                 <p
                                     class="[margin:0] [flex:1_1_260px] flex [gap:10px] items-start text-[15px] leading-[1.6] text-[#42524B]">
@@ -812,9 +868,9 @@
                                             aria-hidden="true">
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                             <circle cx="12" cy="10" r="3"></circle>
-                                        </svg></span>{{ $contact?->address }}
+                                        </svg></span>{{ $siteSetting?->address }}
                                 </p>
-                                <a href="{{ $contact?->maps_url }}" target="_blank" rel="noopener noreferrer"
+                                <a href="{{ $siteSetting?->mapsLink() ?? route('kontak') }}" target="_blank" rel="noopener noreferrer"
                                     class="inline-flex items-center [gap:8px] min-h-[48px] [padding:0_20px] rounded-[14px] [border:1.5px_solid_#0B3B2C] text-[#0B3B2C] text-[15px] font-bold no-underline"><svg
                                         width="16" height="16" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"

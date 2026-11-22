@@ -39,3 +39,26 @@ test('users can logout', function () {
     $this->assertGuest();
     $response->assertRedirect('/');
 });
+
+test('the login page uses the masjid design in indonesian', function () {
+    $this->get('/login')
+        ->assertOk()
+        ->assertSee('Masuk ke dashboard')
+        ->assertSee('Nurul Haqq')
+        ->assertSee('images/beranda/hero-masjid-pintu-1200.jpg', false)
+        ->assertDontSee('Forgot your password?')
+        ->assertDontSee('Remember me');
+});
+
+test('failed logins show an indonesian message', function () {
+    $user = User::factory()->create();
+
+    $this->from('/login')
+        ->post('/login', ['email' => $user->email, 'password' => 'salah'])
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors(['email' => 'Email atau password salah. Periksa kembali lalu coba lagi.']);
+
+    $this->from('/login')
+        ->post('/login', ['email' => '', 'password' => ''])
+        ->assertSessionHasErrors(['email' => 'Email wajib diisi.', 'password' => 'Password wajib diisi.']);
+});
