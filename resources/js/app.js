@@ -407,6 +407,69 @@ Alpine.data('youtubeAutofill', (endpoint) => ({
     },
 }));
 
+/**
+ * Tombol "Muat lebih banyak" di halaman publik (video dan artikel Galeri).
+ * Mengambil kartu berikutnya dari server lalu menambahkannya ke grid tanpa memuat ulang halaman.
+ * Alamat di bilah browser ikut diperbarui, jadi saat halaman dimuat ulang jumlah kartunya tetap.
+ * Bila permintaan gagal, tautan dibuka biasa (halaman dimuat ulang dengan kartu lebih banyak).
+ */
+Alpine.data('publicLoadMore', () => ({
+    url: '',
+    busy: false,
+    status: '',
+
+    init() {
+        this.url = this.$root.dataset.url;
+    },
+
+    grid() {
+        return this.$root.closest('section')?.querySelector('[data-load-more-grid]');
+    },
+
+    async load(event) {
+        const grid = this.grid();
+
+        if (!grid || !this.url) {
+            return; // biarkan tautan terbuka biasa
+        }
+
+        event?.preventDefault();
+
+        if (this.busy) {
+            return;
+        }
+
+        this.busy = true;
+        const before = grid.children.length;
+        const request = new URL(this.url, window.location.href);
+        request.hash = '';
+        request.searchParams.set('partial', this.$root.dataset.param);
+        request.searchParams.set('dari', String(before));
+
+        try {
+            const response = await fetch(request, { headers: { Accept: 'application/json' } });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+            grid.insertAdjacentHTML('beforeend', data.html);
+
+            // Pindahkan fokus ke kartu pertama yang baru, agar pengguna keyboard/pembaca layar tidak tersesat.
+            grid.children[before]?.querySelector('a[href]:not([tabindex="-1"])')?.focus({ preventScroll: true });
+
+            this.status = `${data.count} ${this.$root.dataset.param} ditambahkan.`;
+            this.url = data.next ?? '';
+            history.replaceState(history.state, '', data.url);
+        } catch {
+            window.location.href = this.url;
+        } finally {
+            this.busy = false;
+        }
+    },
+}));
+
 Alpine.start();
 
 const navToggle = document.querySelector('.nav-toggle');

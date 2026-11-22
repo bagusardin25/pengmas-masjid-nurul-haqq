@@ -35,7 +35,7 @@
                 </ul>
 
                 <div class="report-pagination">
-                    {{ $reports->links() }}
+                    {{ $reports->links(null, ['label' => 'laporan']) }}
                 </div>
             @endif
 

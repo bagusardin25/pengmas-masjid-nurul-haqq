@@ -66,14 +66,14 @@
                 </div>
 
                 @if ($albums->hasPages())
-                    <div class="report-pagination">{{ $albums->links() }}</div>
+                    <div class="report-pagination">{{ $albums->links(null, ['label' => 'album']) }}</div>
                 @endif
             @endif
         </div>
     </section>
 
     @if ($videos->isNotEmpty() || filled($setting?->youtube_url))
-        <section class="section">
+        <section id="video" class="section">
             <div class="site-container">
                 <div class="gallery-heading">
                     <x-section-heading eyebrow="Video kajian" title="Tonton kajian pilihan" />
@@ -88,62 +88,31 @@
                 @if ($videos->isEmpty())
                     <p class="gallery-empty">Video kajian belum tersedia di sini. Kunjungi kanal YouTube masjid untuk menonton kajian terbaru.</p>
                 @else
-                    <div class="card-grid card-grid-three">
+                    <div class="card-grid card-grid-three" data-load-more-grid>
                         @foreach ($videos as $video)
-                            <article class="video-card">
-                                <a class="video-thumb" href="{{ $video->watchUrl() }}" target="_blank" rel="noopener noreferrer">
-                                    <img src="{{ $video->thumbnailUrl() }}" alt="" loading="lazy" decoding="async" width="480" height="360">
-                                    <span class="video-play" aria-hidden="true">▶</span>
-                                    @if ($video->duration)
-                                        <small>{{ $video->duration }}</small>
-                                    @endif
-                                    <span class="sr-only">Tonton {{ $video->title }} di YouTube</span>
-                                </a>
-                                <div class="video-copy">
-                                    <p class="eyebrow">{{ $video->category?->name ?? 'Video' }}</p>
-                                    <h3>{{ $video->title }}</h3>
-                                    @if ($video->description)
-                                        <p>{{ \Illuminate\Support\Str::limit($video->description, 140) }}</p>
-                                    @endif
-                                    <small>
-                                        {{ $video->speaker ?? 'Masjid Nurul Haqq' }}@if ($video->date) · {{ $video->date->locale('id')->translatedFormat('j F Y') }}@endif
-                                    </small>
-                                </div>
-                            </article>
+                            @include('pages.partials.video-card')
                         @endforeach
                     </div>
+                    @if ($moreVideosUrl)
+                        <x-load-more :url="$moreVideosUrl" label="video" />
+                    @endif
                 @endif
             </div>
         </section>
     @endif
 
     @if ($articles->isNotEmpty())
-        <section @class(['section', 'section-muted' => $videos->isNotEmpty() || filled($setting?->youtube_url)])>
+        <section id="artikel" @class(['section', 'section-muted' => $videos->isNotEmpty() || filled($setting?->youtube_url)])>
             <div class="site-container">
                 <x-section-heading eyebrow="Artikel kegiatan" title="Tulisan dari jamaah" />
-                <div class="card-grid card-grid-two">
+                <div class="card-grid card-grid-two" data-load-more-grid>
                     @foreach ($articles as $article)
-                        <article class="article-card">
-                            <a class="article-image" href="{{ route('galeri.artikel', $article) }}" tabindex="-1" aria-hidden="true">
-                                @if ($article->coverImage)
-                                    <img src="{{ $article->coverImage->url() }}" alt="" loading="lazy" decoding="async">
-                                @endif
-                            </a>
-                            <div class="article-copy">
-                                <p class="article-meta">
-                                    {{ collect([$article->category, $article->published_at?->locale('id')->translatedFormat('j F Y'), $article->readingMinutes().' menit baca'])->filter()->join(' · ') }}
-                                </p>
-                                <h3><a href="{{ route('galeri.artikel', $article) }}">{{ $article->title }}</a></h3>
-                                @if ($article->summary())
-                                    <p>{{ $article->summary() }}</p>
-                                @endif
-                                @if ($article->author)
-                                    <strong>● {{ $article->author }}</strong>
-                                @endif
-                            </div>
-                        </article>
+                        @include('pages.partials.article-card')
                     @endforeach
                 </div>
+                @if ($moreArticlesUrl)
+                    <x-load-more :url="$moreArticlesUrl" label="artikel" />
+                @endif
             </div>
         </section>
     @endif
