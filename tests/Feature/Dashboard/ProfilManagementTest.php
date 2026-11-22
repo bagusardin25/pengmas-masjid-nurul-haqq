@@ -235,3 +235,19 @@ test('the seeder fills profil content with real facility names', function () {
         ->and(AboutPage::current()->intro_description)->not->toBeNull()
         ->and(AboutStat::query()->whereNull('icon')->count())->toBe(0);
 });
+
+test('the seeder fills the 2025-2030 takmir board without duplicates', function () {
+    $this->seed(AboutPageSeeder::class);
+    $this->seed(AboutPageSeeder::class);
+
+    $members = OrganizationMember::query()->ordered()->get();
+
+    expect($members)->toHaveCount(10)
+        ->and($members->first()->position)->toBe('Ketua')
+        ->and($members->first()->name)->toBe('H. Sholihul Ibadi, S.T')
+        ->and($members->firstWhere('position', 'Sekretaris')->name)->toBe('Gatot Bambang')
+        ->and($members->firstWhere('position', 'Bendahara')->name)->toBe('Budiyono')
+        ->and($members->firstWhere('position', 'Wakil Sekretaris III')->note)->toBe('Bidang Riayah')
+        ->and($members->every(fn (OrganizationMember $member) => $member->is_active))->toBeTrue()
+        ->and($members->pluck('name'))->not->toContain('Ahmad Fauzi');
+});
