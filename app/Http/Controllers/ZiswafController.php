@@ -45,7 +45,8 @@ class ZiswafController extends Controller
 
     public function reports(Request $request): View
     {
-        $category = ReportCategory::tryFrom((string) $request->query('kategori'));
+        $kategori = $request->query('kategori');
+        $category = is_string($kategori) ? ReportCategory::tryFrom($kategori) : null;
 
         $reports = ZiswafReport::query()
             ->published()

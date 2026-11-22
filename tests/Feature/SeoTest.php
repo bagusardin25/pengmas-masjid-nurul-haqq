@@ -78,3 +78,21 @@ test('the sitemap lists public pages and only published content', function () {
         ->assertDontSee(route('galeri.artikel', $draftArticle), false)
         ->assertDontSee('/dashboard', false);
 });
+
+test('titles and descriptions with special characters are escaped only once', function () {
+    $album = GalleryAlbum::factory()->published()->create([
+        'title' => "Isra Mi'raj & Maulid",
+        'description' => 'Kajian "Tafsir" & doa bersama',
+    ]);
+    GalleryPhoto::factory()->for($album, 'album')->create();
+
+    $this->get(route('jadwal'))
+        ->assertSee('<title>Jadwal &amp; Kegiatan — Masjid Jami Nurul Haqq</title>', false)
+        ->assertDontSee('&amp;amp;', false);
+
+    $this->get(route('galeri.album', $album))
+        ->assertSee('<title>Isra Mi&#039;raj &amp; Maulid — Masjid Jami Nurul Haqq</title>', false)
+        ->assertSee('content="Kajian &quot;Tafsir&quot; &amp; doa bersama"', false)
+        ->assertDontSee('&amp;amp;', false)
+        ->assertDontSee('&amp;#039;', false);
+});

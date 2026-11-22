@@ -94,7 +94,8 @@ class GalleryVideoController extends GaleriListController
      */
     public function lookup(Request $request): JsonResponse
     {
-        $youtubeId = GalleryVideo::parseYoutubeId((string) $request->query('url'));
+        $url = $request->query('url');
+        $youtubeId = is_string($url) ? GalleryVideo::parseYoutubeId($url) : null;
 
         if ($youtubeId === null) {
             return response()->json(['message' => 'Tautan YouTube tidak dikenali.'], 422);
