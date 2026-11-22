@@ -155,6 +155,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->only(['store', 'edit', 'update', 'destroy'])
                 ->parameters(['album' => 'album'])
                 ->names('albums');
+            Route::get('video/info-youtube', [GalleryVideoController::class, 'lookup'])->name('videos.lookup');
             Route::resource('video', GalleryVideoController::class)
                 ->only(['store', 'update', 'destroy'])
                 ->parameters(['video' => 'video'])

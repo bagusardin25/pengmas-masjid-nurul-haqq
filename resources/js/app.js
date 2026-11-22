@@ -353,6 +353,60 @@ Alpine.data('loadMore', ({ key, total, step = 5, min = 0 }) => ({
     },
 }));
 
+/**
+ * Form video di dashboard: saat tautan YouTube ditempel, judul dan durasi yang masih kosong
+ * diisi dari YouTube. Isian yang sudah diketik admin tidak ditimpa. Bila gagal, server tetap
+ * mencoba lagi saat disimpan.
+ */
+Alpine.data('youtubeAutofill', (endpoint) => ({
+    status: '',
+    busy: false,
+
+    async lookup(event) {
+        if (event.target.name !== 'youtube_url') {
+            return;
+        }
+
+        const form = this.$root;
+        const url = event.target.value.trim();
+        const title = form.elements.namedItem('title');
+        const duration = form.elements.namedItem('duration');
+
+        if (!url || (title?.value.trim() && duration?.value.trim())) {
+            return;
+        }
+
+        this.busy = true;
+        this.status = 'Mengambil judul dan durasi dari YouTube…';
+
+        try {
+            const response = await fetch(`${endpoint}?url=${encodeURIComponent(url)}`, {
+                headers: { Accept: 'application/json' },
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                this.status = data.message ?? 'Tautan YouTube tidak dikenali.';
+                return;
+            }
+
+            if (title && !title.value.trim() && data.title) {
+                title.value = data.title;
+            }
+
+            if (duration && !duration.value.trim() && data.duration) {
+                duration.value = data.duration;
+            }
+
+            this.status = data.title ? 'Judul dan durasi terisi dari YouTube.' : 'Judul tidak bisa diambil; isi secara manual.';
+        } catch {
+            this.status = 'YouTube tidak bisa dihubungi; judul akan dicoba lagi saat disimpan.';
+        } finally {
+            this.busy = false;
+        }
+    },
+}));
+
 Alpine.start();
 
 const navToggle = document.querySelector('.nav-toggle');

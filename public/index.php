@@ -17,4 +17,8 @@ require __DIR__.'/../vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
+// Folder publik = folder tempat file ini berada. Di shared hosting isi folder public dipindah ke
+// public_html, jadi storage link, build Vite, dan public_path() harus mengikuti folder ini.
+$app->usePublicPath(__DIR__);
+
 $app->handleRequest(Request::capture());

@@ -8,11 +8,17 @@ use App\Models\GalleryPhoto;
 use App\Models\GalleryVideo;
 use App\Models\Media;
 use App\Models\User;
+use App\Services\YoutubeMetadata;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
+
+    // Tes tidak boleh menghubungi YouTube sungguhan. Permintaan yang tidak dipalsukan gagal,
+    // dan YoutubeMetadata menganggapnya sebagai "YouTube tidak bisa dihubungi".
+    Http::preventStrayRequests();
 });
 
 function galleryPhotoUpload(string $name = 'foto.png'): UploadedFile
@@ -250,7 +256,6 @@ test('videos are validated with indonesian messages', function () {
         ->assertRedirect(route('dashboard.galeri').'#video')
         ->assertSessionHasErrors([
             'youtube_url' => 'Tautan YouTube tidak dikenali. Salin tautan dari tombol Bagikan di YouTube, mis. https://youtu.be/abc123XYZ_0.',
-            'title' => 'Judul video wajib diisi.',
             'duration' => 'Durasi ditulis seperti di YouTube, mis. 24:18 atau 1:05:30.',
         ], null, 'video-new');
 });
@@ -352,4 +357,97 @@ test('an item with validation errors stays visible beyond the first five', funct
     $this->actingAs($this->user)
         ->get(route('dashboard.galeri'))
         ->assertSee("loadMore({ key: 'galeri-video', total: 8, step: 5, min: 8 })", false);
+});
+
+function fakeYoutube(string $title = 'Kajian Kitab Riyadhus Shalihin', int $seconds = 1458): void
+{
+    Http::fake([
+        'www.youtube.com/oembed*' => Http::response(['title' => $title, 'author_name' => 'Nurul Haqq']),
+        'www.youtube.com/watch*' => Http::response('<script>var x = {"videoDetails":{"lengthSeconds":"'.$seconds.'"}};</script>'),
+    ]);
+}
+
+test('a video only needs its youtube link; title and duration come from youtube', function () {
+    fakeYoutube();
+
+    $this->actingAs($this->user)
+        ->post(route('dashboard.galeri.videos.store'), [
+            'youtube_url' => 'https://youtu.be/abcdefghijk',
+            'title' => '',
+            'duration' => '',
+            'status' => 'published',
+        ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('dashboard.galeri').'#video');
+
+    expect(GalleryVideo::query()->sole())
+        ->title->toBe('Kajian Kitab Riyadhus Shalihin')
+        ->duration->toBe('24:18');
+});
+
+test('typed titles and durations are kept instead of youtube data', function () {
+    fakeYoutube();
+
+    $this->actingAs($this->user)->post(route('dashboard.galeri.videos.store'), [
+        'youtube_url' => 'https://youtu.be/abcdefghijk',
+        'title' => 'Judul dari admin',
+        'duration' => '',
+        'status' => 'published',
+    ]);
+
+    expect(GalleryVideo::query()->sole())
+        ->title->toBe('Judul dari admin')
+        ->duration->toBe('24:18');
+});
+
+test('a missing title is asked for when youtube cannot be reached', function () {
+    Http::fake(['*youtube.com/*' => Http::response('', 404)]);
+
+    $this->actingAs($this->user)
+        ->post(route('dashboard.galeri.videos.store'), [
+            'youtube_url' => 'https://youtu.be/abcdefghijk',
+            'title' => '',
+            'status' => 'published',
+        ])
+        ->assertRedirect(route('dashboard.galeri').'#video')
+        ->assertSessionHasErrors(['title'], null, 'video-new');
+
+    expect(GalleryVideo::query()->count())->toBe(0);
+});
+
+test('the form can look up a youtube link before saving', function () {
+    fakeYoutube('Belajar Tajwid Dasar', 3930);
+
+    $this->actingAs($this->user)
+        ->getJson(route('dashboard.galeri.videos.lookup', ['url' => 'https://www.youtube.com/watch?v=abcdefghijk']))
+        ->assertOk()
+        ->assertExactJson(['title' => 'Belajar Tajwid Dasar', 'duration' => '1:05:30']);
+
+    $this->actingAs($this->user)
+        ->getJson(route('dashboard.galeri.videos.lookup', ['url' => 'https://vimeo.com/1']))
+        ->assertStatus(422);
+
+    auth()->logout();
+    $this->getJson(route('dashboard.galeri.videos.lookup', ['url' => 'https://youtu.be/abcdefghijk']))->assertUnauthorized();
+});
+
+test('youtube durations are read and formatted like on youtube', function () {
+    expect(YoutubeMetadata::parseIsoDuration('PT1H5M30S'))->toBe(3930)
+        ->and(YoutubeMetadata::parseIsoDuration('PT3M4S'))->toBe(184)
+        ->and(YoutubeMetadata::parseIsoDuration('salah'))->toBeNull()
+        ->and(YoutubeMetadata::formatDuration(184))->toBe('3:04')
+        ->and(YoutubeMetadata::formatDuration(3930))->toBe('1:05:30');
+});
+
+test('the youtube api key is used for durations when configured', function () {
+    config(['services.youtube.key' => 'kunci-uji']);
+    Http::fake([
+        'www.youtube.com/oembed*' => Http::response(['title' => 'Kajian Ahad']),
+        'www.googleapis.com/youtube/v3/videos*' => Http::response(['items' => [['contentDetails' => ['duration' => 'PT45M']]]]),
+    ]);
+
+    expect(app(YoutubeMetadata::class)->fetch('abcdefghijk'))
+        ->toBe(['title' => 'Kajian Ahad', 'duration' => '45:00']);
+
+    Http::assertSent(fn ($request) => str_contains($request->url(), 'key=kunci-uji'));
 });

@@ -117,14 +117,16 @@
                     @endphp
                     <div @class(['dash-item', 'is-hidden' => $video->status === PublicationStatus::Draft])
                         x-show="isShown({{ $loop->index }})" @if ($loop->index >= $perPage) x-cloak @endif>
-                        <form method="POST" action="{{ route('dashboard.galeri.videos.update', $video) }}" class="dash-item-form dash-grid-video">
+                        <form method="POST" action="{{ route('dashboard.galeri.videos.update', $video) }}" class="dash-item-form dash-grid-video"
+                            x-data="youtubeAutofill(@js(route('dashboard.galeri.videos.lookup')))" @change="lookup($event)">
                             @csrf
                             @method('PUT')
                             <a class="dash-photo-thumb dash-video-thumb" href="{{ $video->watchUrl() }}" target="_blank" rel="noopener" aria-label="Tonton {{ $video->title }} di YouTube">
                                 <img src="{{ $video->thumbnailUrl() }}" alt="" loading="lazy">
                             </a>
                             <div class="dash-item-form dash-grid-six">
-                                <x-dashboard.field :bag="$bag" name="title" label="Judul video" :value="$video->title" required class="dash-span-3" />
+                                <x-dashboard.field :bag="$bag" name="title" label="Judul video" :value="$video->title" class="dash-span-3"
+                                    hint="Kosongkan untuk memakai judul dari YouTube." />
                                 <x-dashboard.field :bag="$bag" name="youtube_url" label="Tautan YouTube" type="url" :value="$video->youtube_url" required class="dash-span-3" />
                                 <x-dashboard.field :bag="$bag" name="category_id" label="Kategori" type="select" :options="$categoryOptions" :value="$video->category_id" />
                                 <x-dashboard.field :bag="$bag" name="speaker" label="Pemateri" :value="$video->speaker" class="dash-span-2" />
@@ -143,20 +145,24 @@
                 <x-dashboard.load-more-button label="video" />
             </div>
 
-            <form method="POST" action="{{ route('dashboard.galeri.videos.store') }}" class="dash-add">
+            <form method="POST" action="{{ route('dashboard.galeri.videos.store') }}" class="dash-add"
+                x-data="youtubeAutofill(@js(route('dashboard.galeri.videos.lookup')))" @change="lookup($event)">
                 @csrf
                 <h3>Tambah video</h3>
                 <div class="dash-item-form dash-grid-six">
                     <x-dashboard.field bag="video-new" name="youtube_url" label="Tautan YouTube" type="url" placeholder="https://youtu.be/..." required class="dash-span-3"
-                        hint="Di YouTube pilih Bagikan → Salin." />
-                    <x-dashboard.field bag="video-new" name="title" label="Judul video" placeholder="Kajian Kitab Riyadhus Shalihin" required class="dash-span-3" />
+                        hint="Di YouTube pilih Bagikan → Salin. Judul dan durasi terisi otomatis." />
+                    <x-dashboard.field bag="video-new" name="title" label="Judul video" placeholder="Otomatis dari YouTube" class="dash-span-3" />
                     <x-dashboard.field bag="video-new" name="category_id" label="Kategori" type="select" :options="$categoryOptions" />
                     <x-dashboard.field bag="video-new" name="speaker" label="Pemateri" class="dash-span-2" />
                     <x-dashboard.field bag="video-new" name="date" label="Tanggal" type="date" />
-                    <x-dashboard.field bag="video-new" name="duration" label="Durasi" placeholder="24:18" />
+                    <x-dashboard.field bag="video-new" name="duration" label="Durasi" placeholder="Otomatis" />
                     <x-dashboard.field bag="video-new" name="status" label="Status" type="select" :options="$statusOptions" value="published" required />
                     <x-dashboard.field bag="video-new" name="description" label="Keterangan" type="textarea" rows="1" class="dash-span-full" />
-                    <x-dashboard.item-actions submit-label="Tambah video" class="dash-actions-row" />
+                    <div class="dash-item-actions dash-actions-row">
+                        <span class="dash-hint dash-autofill-status" x-show="status" x-text="status" role="status"></span>
+                        <button type="submit" class="dash-button dash-button-secondary" :disabled="busy">Tambah video</button>
+                    </div>
                 </div>
             </form>
         </section>
