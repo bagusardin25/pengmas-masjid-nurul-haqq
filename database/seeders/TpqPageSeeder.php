@@ -2,44 +2,59 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProfileIcon;
+use App\Models\TpqDocumentation;
 use App\Models\TpqFaq;
 use App\Models\TpqPage;
 use App\Models\TpqPillar;
+use App\Services\MediaUploader;
 use Illuminate\Database\Seeder;
 
+/**
+ * Data asli TPQ Nurul Haqq.
+ *
+ * Sumber: "Notulensi Zoom 18 Oktober 2026.pdf" (keterangan Bu Ani, Ketua TPQ) dan papan
+ * visi-misi TPQ (public/images/beranda/tpq-papan-visi-misi-1200.jpg). Rentang usia dan
+ * nominal SPP belum ada di dokumen, jadi dibiarkan kosong dan tidak ditampilkan.
+ */
 class TpqPageSeeder extends Seeder
 {
     public function run(): void
     {
         (TpqPage::current() ?? new TpqPage)->fill([
             'hero_title' => "Tumbuh bersama Al-Qur'an sejak dini",
-            'hero_description' => "Program TPQ Masjid Jami Nurul Haqq membantu anak-anak usia 6–15 tahun belajar membaca Al-Qur'an, membangun hafalan, dan mengamalkan akhlak mulia sejak dini.",
-            'summary' => "Pendidikan Al-Qur'an yang terstruktur dan intensif untuk tumbuh kembang spiritual anak-anak dan remaja di lingkungan Tawangsari.",
-            'info_description' => 'Program TPQ Masjid Jami Nurul Haqq khusus anak usia 6–15 tahun. Kelas berlangsung Senin–Kamis pukul 15.30–17.00 WIB dengan biaya Rp50.000 per bulan.',
-            'info_age_range' => '6–15 tahun',
-            'info_schedule' => 'Senin–Kamis · 15.30–17.00 WIB',
-            'info_fee' => 'Rp50.000 / bulan',
+            'hero_description' => "TPQ Nurul Haqq hadir untuk membentuk generasi berkarakter Qur'ani: santri belajar membaca Al-Qur'an dengan tartil, menulis Al-Qur'an dengan benar, serta menanamkan dasar keimanan dan ketakwaan kepada Allah dan Rasul-Nya.",
+            'summary' => "TPQ Nurul Haqq membentuk generasi berkarakter Qur'ani melalui pembelajaran Al-Qur'an metode Tartil, dari jenjang Tartil 1–6 hingga Marhalah Ula, Wustha, Akhir, dan Diniyah.",
+            'info_description' => 'Mengaji rutin berlangsung setiap Senin–Jumat sesuai kelas dan jenjang masing-masing santri. Saat ini 115 santri aktif belajar bersama 11 ustadz dan ustadzah, dengan satu pengajar mendampingi sekitar 10–15 santri.',
+            'info_age_range' => null,
+            'info_schedule' => 'Senin–Jumat · 15.30–17.00 WIB',
+            'info_fee' => null,
             'registration_title' => 'Mari mulai perjalanan belajar anak',
-            'registration_description' => 'Pendaftaran dibuka dengan syarat identitas wali dan formulir pendaftaran. Biaya pendaftaran kelas dapat dikonfirmasi kepada pengurus.',
+            'registration_description' => 'Pendaftaran santri baru dilakukan dengan mengisi formulir dari TPQ dan melampirkan fotokopi Kartu Keluarga serta akta kelahiran, masing-masing 2 lembar. Hubungi pengurus untuk mendapatkan formulir.',
             'registration_phone' => '0812-3956-7390',
+            'registration_form_url' => null,
         ])->save();
 
         $pillars = [
             [
-                'title' => "Belajar Iqro' & Al-Qur'an",
-                'description' => "Pembelajaran membaca Al-Qur'an dimulai dari Iqro' dasar hingga Al-Qur'an dengan metode yang interaktif dan terstruktur.",
+                'title' => "Membaca Al-Qur'an dengan tartil",
+                'description' => 'Metode Tartil berjenjang dari Tartil 1 hingga Tartil 6, dilanjutkan tingkatan Marhalah Ula, Wustha, Akhir, dan Diniyah.',
+                'icon' => ProfileIcon::Quran,
             ],
             [
-                'title' => "Tahfidzul Qur'an sejak dini",
-                'description' => "Santri diajarkan hafalan Al-Qur'an secara bertahap agar menjadi kebiasaan harian dan penguatan spiritual.",
+                'title' => "Menulis Al-Qur'an dengan benar",
+                'description' => "Santri dibimbing menulis Al-Qur'an dengan baik dan benar sebagai bagian dari misi TPQ.",
+                'icon' => ProfileIcon::Book,
             ],
             [
-                'title' => 'Akhlak & doa harian',
-                'description' => 'Pembelajaran akhlak dan doa harian membantu anak memahami nilai-nilai baik dalam keseharian.',
+                'title' => 'Munaqosah setiap enam bulan',
+                'description' => 'Kenaikan jenjang dan kelulusan ditentukan melalui ujian munaqosah internal TPQ dan munaqosah tingkat kecamatan.',
+                'icon' => ProfileIcon::Check,
             ],
             [
-                'title' => 'Kelas reguler & intensif',
-                'description' => 'Kelas reguler dan intensif disiapkan agar orang tua dapat memilih jadwal belajar yang sesuai dengan kebutuhan anak.',
+                'title' => 'Ekstrakurikuler & tadarus',
+                'description' => 'Jujitsu, banjari, dan drum band setiap Sabtu, tadarus bersama setiap pekan, serta tadarling (tadarus keliling) setiap bulan.',
+                'icon' => ProfileIcon::People,
             ],
         ];
 
@@ -48,22 +63,26 @@ class TpqPageSeeder extends Seeder
         foreach ($pillars as $pillar) {
             TpqPillar::query()->updateOrCreate(
                 ['title' => $pillar['title']],
-                ['description' => $pillar['description'], 'sort_order' => $sortOrder++],
+                ['description' => $pillar['description'], 'icon' => $pillar['icon'], 'sort_order' => $sortOrder++],
             );
         }
 
         $faqs = [
             [
-                'question' => 'Usia & pilihan kelas',
-                'answer' => 'Tanyakan rentang usia serta informasi kelas reguler dan intensif yang sesuai untuk anak.',
+                'question' => 'Kapan jadwal mengaji?',
+                'answer' => 'Setiap Senin–Jumat pukul 15.30–17.00 WIB, sesuai kelas dan jenjang santri. Ekstrakurikuler diadakan setiap hari Sabtu.',
             ],
             [
-                'question' => 'Hari & jam belajar',
-                'answer' => 'Konfirmasikan hari dan jam pembelajaran kepada sekretariat sebelum memilih kelas.',
+                'question' => 'Apa syarat pendaftaran?',
+                'answer' => 'Mengisi formulir pendaftaran dari TPQ dan melampirkan fotokopi Kartu Keluarga serta akta kelahiran, masing-masing 2 lembar.',
             ],
             [
-                'question' => 'Biaya & pendaftaran',
-                'answer' => 'Tanyakan biaya per bulan dan informasi pendaftaran yang sudah terkonfirmasi.',
+                'question' => 'Bagaimana pembayaran SPP?',
+                'answer' => 'SPP dibayarkan setiap bulan menggunakan kartu SPP, dan bisa ditransfer kepada bendahara TPQ.',
+            ],
+            [
+                'question' => 'Bagaimana memantau perkembangan anak?',
+                'answer' => 'Nilai harian dicatat pengajar di buku prestasi yang bisa diperiksa orang tua. Kenaikan jenjang ditentukan lewat munaqosah setiap enam bulan.',
             ],
         ];
 
@@ -73,6 +92,19 @@ class TpqPageSeeder extends Seeder
             TpqFaq::query()->updateOrCreate(
                 ['question' => $faq['question']],
                 ['answer' => $faq['answer'], 'sort_order' => $sortOrder++],
+            );
+        }
+
+        // Foto asli papan TPQ (sudah dipakai di Beranda) sebagai dokumentasi pertama.
+        $boardPhoto = public_path('images/beranda/tpq-papan-visi-misi-1200.jpg');
+
+        if (is_file($boardPhoto)) {
+            $caption = 'Papan nama serta visi dan misi TPQ Nurul Haqq';
+            $media = app(MediaUploader::class)->importFile($boardPhoto, 'tpq/papan-visi-misi-tpq.jpg', $caption);
+
+            TpqDocumentation::query()->firstOrCreate(
+                ['image_id' => $media->id],
+                ['caption' => $caption, 'sort_order' => 1],
             );
         }
     }

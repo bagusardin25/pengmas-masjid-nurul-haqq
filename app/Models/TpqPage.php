@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSingleRow;
+use App\Support\WhatsApp;
 use Database\Factories\TpqPageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,4 +29,20 @@ class TpqPage extends Model
         'registration_phone',
         'registration_form_url',
     ];
+
+    /**
+     * Tautan WhatsApp dari nomor pendaftaran, mis. "0812-3956-7390" → https://wa.me/6281239567390.
+     */
+    public function whatsappUrl(): ?string
+    {
+        return WhatsApp::url($this->registration_phone);
+    }
+
+    /**
+     * Tujuan tombol "Daftar TPQ": formulir online bila ada, selain itu WhatsApp pengurus.
+     */
+    public function registrationUrl(): ?string
+    {
+        return $this->registration_form_url ?: $this->whatsappUrl();
+    }
 }

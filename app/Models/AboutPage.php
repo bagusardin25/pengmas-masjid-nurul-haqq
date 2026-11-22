@@ -22,7 +22,7 @@ class AboutPage extends Model
         'hero_image_id',
         'hero_badge',
         'intro_title',
-        'intro_summary',
+        'intro_description',
         'history_title',
         'history_content',
     ];

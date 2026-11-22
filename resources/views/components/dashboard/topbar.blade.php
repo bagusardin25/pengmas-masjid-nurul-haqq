@@ -8,7 +8,7 @@
     </button>
 
     <nav class="dashboard-breadcrumbs" aria-label="Breadcrumb">
-        <a href="{{ route('dashboard.index') }}" aria-label="Dashboard">
+        <a href="{{ route('dashboard') }}" aria-label="Dashboard">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="m3 10 9-7 9 7"></path>

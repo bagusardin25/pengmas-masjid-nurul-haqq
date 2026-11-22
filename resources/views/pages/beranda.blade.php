@@ -30,14 +30,14 @@
                     <div>
                         <p
                             class="[margin:0] inline-flex items-center [gap:8px] [padding:7px_14px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] text-[12px] font-bold tracking-[0.1em]">
-                            {{ $hero->hero_eyebrow }}
+                            {{ $hero?->hero_eyebrow }}
                         </p>
                         <h1
                             class="[margin:22px_0_0] text-[clamp(48px,6vw,84px)] leading-[1.02] font-extrabold tracking-[-0.025em] text-[#0B3B2C]">
-                            {{ $hero->hero_title }}
+                            {!! nl2br(e($hero?->hero_title)) !!}
                         </h1>
                         <p class="[margin:22px_0_0] max-w-[540px] text-[18px] leading-[1.7] text-[#42524B]">
-                            {{ $hero->hero_description }}
+                            {{ $hero?->hero_description }}
                         </p>
                         <p
                             class="[margin:24px_0_0] max-w-[520px] flex [gap:10px] items-start text-[15px] leading-[1.6] text-[#42524B]">
@@ -46,7 +46,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
-                                </svg></span><span>{{ $contact->address }}</span>
+                                </svg></span><span>{{ $contact?->address }}</span>
                         </p>
                         <div class="mt-[32px] flex flex-wrap [gap:12px]">
                             <a href="{{ route('jadwal') }}"
@@ -71,24 +71,31 @@
                     <div class="hero-media max-[640px]:pb-0 relative pb-[40px]">
                         <figure
                             class="[margin:0] aspect-[6/5] rounded-[320px_320px_28px_28px] overflow-hidden bg-[#E4ECE6]">
-                            <img src="{{ asset('images/beranda/hero-masjid-pintu-1200.jpg') }}"
-                                srcset="{{ asset('images/beranda/hero-masjid-pintu-720.jpg') }} 720w, {{ asset('images/beranda/hero-masjid-pintu-1200.jpg') }} 1200w"
-                                sizes="(min-width: 1100px) 640px, calc(100vw - 40px)" width="1200" height="1000"
-                                alt="Pintu masuk Masjid Nurul Haqq dengan papan nama dan fasad yang diterangi lampu pada malam hari"
-                                fetchpriority="high" decoding="async" class="block w-full h-[100%] object-cover">
+                            @if ($hero?->heroImage)
+                                <img src="{{ $hero->heroImage->url() }}"
+                                    @if ($hero->heroImage->width) width="{{ $hero->heroImage->width }}" height="{{ $hero->heroImage->height }}" @endif
+                                    alt="{{ $hero->heroImage->alt ?: 'Foto Masjid Nurul Haqq' }}"
+                                    fetchpriority="high" decoding="async" class="block w-full h-[100%] object-cover">
+                            @else
+                                <img src="{{ asset(\App\Models\HomePage::DEFAULT_HERO_IMAGE) }}"
+                                    srcset="{{ asset('images/beranda/hero-masjid-pintu-720.jpg') }} 720w, {{ asset(\App\Models\HomePage::DEFAULT_HERO_IMAGE) }} 1200w"
+                                    sizes="(min-width: 1100px) 640px, calc(100vw - 40px)" width="1200" height="1000"
+                                    alt="{{ \App\Models\HomePage::DEFAULT_HERO_ALT }}"
+                                    fetchpriority="high" decoding="async" class="block w-full h-[100%] object-cover">
+                            @endif
                         </figure>
                         <blockquote
                             class="hero-quote max-[640px]:[position:relative] max-[640px]:left-auto max-[640px]:bottom-auto max-[640px]:w-auto max-[640px]:[margin:-64px_16px_0] absolute left-[24px] bottom-[0] [margin:0] w-[min(400px,calc(100% - 48px))] [padding:22px_24px] rounded-[20px] bg-[#0B3B2C] text-[#FFFFFF] shadow-[0_20px_44px_rgba(11,59,44,0.28)]">
                             <p lang="ar" dir="rtl"
                                 class="[margin:0] font-[Amiri,serif] text-[22px] leading-[1.8] text-[#E2B84B]">
-                                {{ $hero->hero_arabic_text }}
+                                {{ $hero?->hero_arabic_text }}
                             </p>
                             <p class="[margin:8px_0_0] text-[14px] leading-[1.6] text-[#E3ECE7]">
-                                {{ $hero->hero_translation }}
+                                {{ $hero?->hero_translation }}
                             </p>
                             <cite
                                 class="block mt-[10px] not-italic text-[12px] font-bold tracking-[0.12em] text-[#E2B84B]">
-                                {{ $hero->hero_citation }}
+                                {{ $hero?->hero_citation }}
                             </cite>
                         </blockquote>
                     </div>
@@ -159,9 +166,9 @@
                             </p>
                             <h2
                                 class="[margin:14px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
-                                {{ $about->hero_title }}</h2>
+                                {{ $about?->hero_title }}</h2>
                             <p class="[margin:20px_0_0] text-[17px] leading-[1.75] text-[#42524B]">
-                                {{ $about->history_content }}</p>
+                                {{ $about?->history_content }}</p>
                             <a href="/profil"
                                 class="mt-[20px] inline-flex items-center [gap:8px] min-h-[44px] text-[15px] font-bold text-[#0B3B2C] no-underline">Baca
                                 profil lengkap<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -171,69 +178,20 @@
                                     <path d="m12 5 7 7-7 7"></path>
                                 </svg></a>
                         </div>
-                        <div class="grid [grid-template-columns:repeat(2,minmax(0,1fr))] [gap:16px]">
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path
-                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                                        </path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    270 m²</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Luas tanah</p>
+                        @if ($aboutStats->isNotEmpty())
+                            <div class="grid [grid-template-columns:repeat(2,minmax(0,1fr))] [gap:16px]">
+                                @foreach ($aboutStats as $stat)
+                                    <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
+                                        <span
+                                            class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><x-stat-icon :icon="$stat->icon" /></span>
+                                        <p
+                                            class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
+                                            {{ $stat->value }}</p>
+                                        <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">{{ $stat->label }}</p>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                        <path d="M9 22V12h6v10"></path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    150 m²</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Luas bangunan</p>
-                            </div>
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    600</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Daya tampung jamaah</p>
-                            </div>
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z">
-                                        </path>
-                                        <path d="M14 2v6h6"></path>
-                                        <path d="m9 15 2 2 4-4"></path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    Wakaf</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Status tanah</p>
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
                     <div class="mt-[64px]">
@@ -268,7 +226,7 @@
                                 class="[margin:14px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Ibadah dan kajian setiap pekan</h2>
                         </div>
-                        <a href="#jadwal"
+                        <a href="{{ route('jadwal') }}"
                             class="inline-flex items-center [gap:8px] min-h-[44px] text-[15px] font-bold text-[#0B3B2C] no-underline">Lihat
                             semua kegiatan<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -282,213 +240,92 @@
                             <h3 class="[margin:18px_0_4px] text-[13px] font-bold tracking-[0.12em] text-[#8A6A12]">
                                 KEGIATAN RUTIN</h3>
                             <ul class="list-none [margin:0] [padding:0]">
-                                <li
-                                    class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 20.5h18"></path>
-                                            <path d="M5.5 20.5v-6.2a6.5 6.5 0 0 1 13 0v6.2"></path>
-                                            <path d="M12 7.8V4.6"></path>
-                                            <circle cx="12" cy="3.4" r="1"></circle>
-                                            <path d="M10 20.5v-3a2 2 0 0 1 4 0v3"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Sholat
-                                            fardhu berjamaah</span><span
-                                            class="block mt-[2px] text-[14px] text-[#4A5A53]">Imam
-                                            rawatib bergiliran</span></span>
-                                    <span
-                                        class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">5
-                                        waktu sehari</span>
-                                </li>
-                                <li
-                                    class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path
-                                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
-                                            </path>
-                                            <path d="m3.3 7 8.7 5 8.7-5"></path>
-                                            <path d="M12 22V12"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Sholat
-                                            Jumat</span><span class="block mt-[2px] text-[14px] text-[#4A5A53]">Khotib
-                                            &amp; imam terjadwal oleh takmir</span></span>
-                                    <span
-                                        class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Setiap
-                                        Jumat</span>
-                                </li>
-                                <li
-                                    class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Ngaji
-                                            Kitab Nashoihud Diniyyah</span><span
-                                            class="block mt-[2px] text-[14px] text-[#4A5A53]">KH. Ahmad
-                                            Jazuli Sholeh, S.Ag</span></span>
-                                    <span class="flex flex-wrap [gap:8px]"><span
-                                            class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Sabtu
-                                            pekan ke-1 &amp; 3 · Ba'da Subuh</span><span
-                                            class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Rabu
-                                            pekan ke-2 &amp; 4 · Ba'da Isya'</span></span>
-                                </li>
-                                <li
-                                    class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Ngaji
-                                            Kitab Irsyadul Ibad</span><span
-                                            class="block mt-[2px] text-[14px] text-[#4A5A53]">Ust.
-                                            Ainur Rofiq Muslimin</span></span>
-                                    <span
-                                        class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Ahad
-                                        · Ba'da Maghrib</span>
-                                </li>
-                                <li
-                                    class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Ngaji
-                                            Kitab Riyadush Shalihin</span><span
-                                            class="block mt-[2px] text-[14px] text-[#4A5A53]">Ust. H.
-                                            M. Ghofirin, S.Pd, M.Pd</span></span>
-                                    <span
-                                        class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Sabtu
-                                        pekan ke-2 &amp; 4 · Ba'da Subuh</span>
-                                </li>
-                                <li
-                                    class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="m16 6 4 14"></path>
-                                            <path d="M12 6v14"></path>
-                                            <path d="M8 8v12"></path>
-                                            <path d="M4 4v16"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Ngaji
-                                            Al-Qur'an Sak Maknane</span><span
-                                            class="block mt-[2px] text-[14px] text-[#4A5A53]">Ust.
-                                            Rachmad</span></span>
-                                    <span
-                                        class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Selasa
-                                        · Ba'da Isya'</span>
-                                </li>
-                                <li class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0]">
-                                    <span
-                                        class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="m16 6 4 14"></path>
-                                            <path d="M12 6v14"></path>
-                                            <path d="M8 8v12"></path>
-                                            <path d="M4 4v16"></path>
-                                        </svg></span>
-                                    <span class="[flex:1_1_180px] min-w-0"><span
-                                            class="block text-[17px] font-bold text-[#17231E]">Ngaji
-                                            Kitab Tajwid Hidayatush Shibyan</span><span
-                                            class="block mt-[2px] text-[14px] text-[#4A5A53]">Ust. M.
-                                            Faishal Riza, S.HI</span></span>
-                                    <span
-                                        class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">Kamis
-                                        · Ba'da Isya'</span>
-                                </li>
+                                @foreach ($routines as $routine)
+                                    <li
+                                        class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6] last:border-b-0">
+                                        <span
+                                            class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
+                                                width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M3 20.5h18"></path>
+                                                <path d="M5.5 20.5v-6.2a6.5 6.5 0 0 1 13 0v6.2"></path>
+                                                <path d="M12 7.8V4.6"></path>
+                                                <circle cx="12" cy="3.4" r="1"></circle>
+                                                <path d="M10 20.5v-3a2 2 0 0 1 4 0v3"></path>
+                                            </svg></span>
+                                        <span class="[flex:1_1_180px] min-w-0"><span
+                                                class="block text-[17px] font-bold text-[#17231E]">{{ $routine->title }}</span>
+                                            @if ($routine->schedule)
+                                                <span class="block mt-[2px] text-[14px] text-[#4A5A53]">{{ $routine->schedule }}</span>
+                                            @endif
+                                        </span>
+                                        @if ($routine->badge)
+                                            <span
+                                                class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">{{ $routine->badge }}</span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                                @foreach ($kitabGroups as $sessions)
+                                    @php $kitab = $sessions->first(); @endphp
+                                    <li
+                                        class="flex flex-wrap items-center [gap:12px_16px] [padding:18px_0] [border-bottom:1px_solid_#E6E2D6] last:border-b-0">
+                                        <span
+                                            class="w-[48px] h-[48px] rounded-[14px] bg-[#FFFFFF] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
+                                                width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                            </svg></span>
+                                        <span class="[flex:1_1_180px] min-w-0"><span
+                                                class="block text-[17px] font-bold text-[#17231E]">{{ $kitab->title }}</span><span
+                                                class="block mt-[2px] text-[14px] text-[#4A5A53]">{{ $kitab->speaker }}</span></span>
+                                        <span class="flex flex-wrap [gap:8px]">
+                                            @foreach ($sessions as $session)
+                                                <span
+                                                    class="[padding:6px_14px] rounded-[999px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6] text-[14px] font-semibold text-[#2F4038]">{{ $session->day->label() }}
+                                                    · {{ $session->time }}</span>
+                                            @endforeach
+                                        </span>
+                                    </li>
+                                @endforeach
+                                @if ($routines->isEmpty() && $kitabGroups->isEmpty())
+                                    <li class="[padding:18px_0] text-[15px] text-[#4A5A53]">Belum ada kegiatan rutin.</li>
+                                @endif
                             </ul>
                         </div>
                         @php
-                            // Jadwal khotib/imam sholat Jumat 2026 dari Takmir Masjid Nurul Haqq (periode Agustus–Desember).
-                            $jadwalKhotibJumat = [
-                                '2026-08-07' => 'Ust. Fuad Mustofa, S.Pd',
-                                '2026-08-14' => 'Ust. Khusnul Yaqin Noor',
-                                '2026-08-21' => 'Ust. Abdul Rosid Achmad, S.Pd',
-                                '2026-08-28' => 'Ust. Achmad Muaidi Jakfar',
-                                '2026-09-04' => 'Ust. M. Syarif, M.Pd',
-                                '2026-09-11' => 'Ust. H. M. Ghofirin, S.Pd, M.Pd',
-                                '2026-09-18' => 'Ust. Abdul Rosid Achmad, S.Pd',
-                                '2026-09-25' => 'Ust. Dr. Achmad Yasin Muchtar, M.Ag',
-                                '2026-10-02' => 'Ust. Fuad Mustofa, S.Pd',
-                                '2026-10-09' => 'Ust. Adib Amrulloh Al Chafidz',
-                                '2026-10-16' => 'Ust. Abdul Rosid Achmad, S.Pd',
-                                '2026-10-23' => 'Ust. Drs. H. Ainur Rofiq',
-                                '2026-10-30' => 'Ust. Ibnu Abdillah, S.Ag',
-                                '2026-11-06' => 'Ust. Kholil Anwar, SH',
-                                '2026-11-13' => 'Ust. Muzamil, M.Pd',
-                                '2026-11-20' => 'Ust. Achmad Muaidi Jakfar',
-                                '2026-11-27' => 'Ust. Abdul Fattah',
-                                '2026-12-04' => 'Ust. H. M. Ghofirin, S.Pd, M.Pd',
-                                '2026-12-11' => 'Ust. Adib Amrulloh Al Chafidz',
-                                '2026-12-18' => 'Ust. Abdul Rosid Achmad, S.Pd',
-                                '2026-12-25' => 'Ust. Ibnu Abdillah, S.Ag',
-                            ];
-                            $hariIni = now('Asia/Jakarta')->toDateString();
-                            $jumatMendatang = array_values(
-                                array_filter(array_keys($jadwalKhotibJumat), fn($tanggal) => $tanggal >= $hariIni),
-                            );
-                            $jumatTerdekat = isset($jumatMendatang[0])
-                                ? \Illuminate\Support\Carbon::parse($jumatMendatang[0])->locale('id')
-                                : null;
-                            $jumatBerikutnya = isset($jumatMendatang[1])
-                                ? \Illuminate\Support\Carbon::parse($jumatMendatang[1])->locale('id')
-                                : null;
+                            $nextAgenda = $upcomingAgendas->first();
+                            $laterAgenda = $upcomingAgendas->get(1);
+                            $nextAgendaDate = $nextAgenda?->date->locale('id');
                         @endphp
                         <article
                             class="[flex:1_1_360px] min-w-0 flex flex-col [padding:28px] rounded-[24px] bg-[#0B3B2C] text-[#FFFFFF]">
                             <h3 class="[margin:0] text-[13px] font-bold tracking-[0.12em] text-[#E2B84B]">
                                 AGENDA TERDEKAT</h3>
-                            @if ($jumatTerdekat)
+                            @if ($nextAgenda)
                                 <div class="mt-[20px] flex [gap:18px] items-start">
                                     <p
                                         class="[margin:0] shrink-0 w-[84px] [padding:12px_0] rounded-[16px] bg-[#E2B84B] text-[#0B3B2C] text-center leading-[1.1]">
                                         <span
-                                            class="block text-[36px] font-extrabold">{{ $jumatTerdekat->day }}</span><span
-                                            class="block mt-[4px] text-[13px] font-extrabold tracking-[0.12em]">{{ strtoupper($jumatTerdekat->translatedFormat('M')) }}</span>
+                                            class="block text-[36px] font-extrabold">{{ $nextAgendaDate->day }}</span><span
+                                            class="block mt-[4px] text-[13px] font-extrabold tracking-[0.12em]">{{ strtoupper($nextAgendaDate->translatedFormat('M')) }}</span>
                                     </p>
                                     <div class="min-w-0">
-                                        <p class="[margin:0] text-[24px] font-extrabold leading-[1.25]">Sholat
-                                            Jumat</p>
+                                        <p class="[margin:0] text-[24px] font-extrabold leading-[1.25]">{{ $nextAgenda->title }}</p>
                                         <ul
                                             class="list-none [margin:12px_0_0] [padding:0] flex flex-col [gap:8px] text-[15px] text-[#D5E2DC]">
-                                            <li class="flex items-center [gap:10px]"><span
-                                                    class="text-[#E2B84B] flex"><svg width="18" height="18"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="1.8" stroke-linecap="round"
-                                                        stroke-linejoin="round" aria-hidden="true">
-                                                        <circle cx="12" cy="8" r="4"></circle>
-                                                        <path d="M20 21a8 8 0 0 0-16 0"></path>
-                                                    </svg></span>Khotib &amp; imam:
-                                                {{ $jadwalKhotibJumat[$jumatTerdekat->toDateString()] }}</li>
+                                            @if ($nextAgenda->speaker)
+                                                <li class="flex items-center [gap:10px]"><span
+                                                        class="text-[#E2B84B] flex"><svg width="18" height="18"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="1.8" stroke-linecap="round"
+                                                            stroke-linejoin="round" aria-hidden="true">
+                                                            <circle cx="12" cy="8" r="4"></circle>
+                                                            <path d="M20 21a8 8 0 0 0-16 0"></path>
+                                                        </svg></span>{{ $nextAgenda->speaker }}</li>
+                                            @endif
                                             <li class="flex items-center [gap:10px]"><span
                                                     class="text-[#E2B84B] flex"><svg width="18" height="18"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -496,16 +333,17 @@
                                                         stroke-linejoin="round" aria-hidden="true">
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <path d="M12 6v6l4 2"></path>
-                                                    </svg></span>{{ $jumatTerdekat->translatedFormat('l, j F Y') }} ·
-                                                waktu Dzuhur</li>
-                                            <li class="flex items-center [gap:10px]"><span
-                                                    class="text-[#E2B84B] flex"><svg width="18" height="18"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="1.8" stroke-linecap="round"
-                                                        stroke-linejoin="round" aria-hidden="true">
-                                                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                                        <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg></span>Masjid Nurul Haqq</li>
+                                                    </svg></span>{{ $nextAgendaDate->translatedFormat('l, j F Y') }}{{ $nextAgenda->time ? ' · '.$nextAgenda->time : '' }}</li>
+                                            @if ($nextAgenda->location)
+                                                <li class="flex items-center [gap:10px]"><span
+                                                        class="text-[#E2B84B] flex"><svg width="18" height="18"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="1.8" stroke-linecap="round"
+                                                            stroke-linejoin="round" aria-hidden="true">
+                                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                                            <circle cx="12" cy="10" r="3"></circle>
+                                                        </svg></span>{{ $nextAgenda->location }}</li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </div>
@@ -516,10 +354,11 @@
                                     oleh takmir.</p>
                             @endif
                             <div class="mt-[24px] mb-[24px] flex flex-wrap [gap:10px]">
-                                <a href="#jadwal"
+                                <a href="{{ route('jadwal') }}"
                                     class="[flex:1_1_140px] inline-flex items-center justify-center [gap:8px] min-h-[48px] [padding:0_18px] rounded-[12px] bg-[#E2B84B] text-[#0B3B2C] text-[15px] font-bold no-underline">Detail
                                     agenda</a>
-                                <a href="#jadwal"
+                                @if ($nextAgenda)
+                                <a href="{{ route('agenda.calendar', $nextAgenda) }}" download
                                     class="[flex:1_1_160px] inline-flex items-center justify-center [gap:8px] min-h-[48px] [padding:0_18px] rounded-[12px] [border:1.5px_solid_rgba(255,255,255,0.45)] text-[#FFFFFF] text-[15px] font-bold no-underline"><svg
                                         width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -527,13 +366,14 @@
                                         <rect x="3" y="4" width="18" height="18" rx="2"></rect>
                                         <path d="M16 2v4M8 2v4M3 10h18"></path>
                                     </svg>Simpan ke kalender</a>
+                                @endif
                             </div>
-                            @if ($jumatTerdekat)
+                            @if ($nextAgenda)
                                 <p
                                     class="[margin:auto_0_0] pt-[20px] [border-top:1px_solid_rgba(255,255,255,0.14)] text-[14px] text-[#B9CCC3]">
-                                    @if ($jumatBerikutnya)
-                                        Jumat berikutnya: {{ $jumatBerikutnya->translatedFormat('j F Y') }} ·
-                                        {{ $jadwalKhotibJumat[$jumatBerikutnya->toDateString()] }}
+                                    @if ($laterAgenda)
+                                        Berikutnya: {{ $laterAgenda->date->locale('id')->translatedFormat('j F Y') }} ·
+                                        {{ $laterAgenda->title }}{{ $laterAgenda->speaker ? ' — '.$laterAgenda->speaker : '' }}
                                     @else
                                         Belum ada agenda lain yang terjadwal.
                                     @endif
@@ -554,70 +394,46 @@
                             <h2
                                 class="[margin:16px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Program TPQ</h2>
-                            <p class="[margin:14px_0_0] max-w-[560px] text-[17px] leading-[1.75] text-[#42524B]">
-                                TPQ Nurul Haqq membentuk generasi berkarakter Qur'ani melalui pembelajaran Al-Qur'an
-                                metode Tartil, dari jenjang Tartil 1–6 hingga Marhalah Ula, Wustha, Akhir, dan Diniyah.
-                            </p>
-                            <ul
-                                class="list-none [margin:24px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] [gap:12px_20px]">
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Membaca Al-Qur'an dengan tartil
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Menulis Al-Qur'an dengan benar
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Munaqosah setiap enam bulan
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Ekstrakurikuler jujitsu, banjari &amp; drum band
-                                </li>
-                            </ul>
-                            <div
-                                class="mt-[28px] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        USIA</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">[rentang
-                                        usia]</p>
+                            @if ($tpq?->summary)
+                                <p class="[margin:14px_0_0] max-w-[560px] text-[17px] leading-[1.75] text-[#42524B]">
+                                    {{ $tpq->summary }}
+                                </p>
+                            @endif
+                            @if ($tpqPillars->isNotEmpty())
+                                <ul
+                                    class="list-none [margin:24px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] [gap:12px_20px]">
+                                    @foreach ($tpqPillars as $pillar)
+                                        <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
+                                            <span
+                                                class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
+                                                    width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+                                                    stroke-linejoin="round" aria-hidden="true">
+                                                    <path d="M20 6 9 17l-5-5"></path>
+                                                </svg></span>{{ $pillar->title }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                            @php
+                                $tpqDetails = array_filter([
+                                    'USIA' => $tpq?->info_age_range,
+                                    'JADWAL' => $tpq?->info_schedule,
+                                    'BIAYA' => $tpq?->info_fee,
+                                ]);
+                            @endphp
+                            @if ($tpqDetails)
+                                <div
+                                    class="mt-[28px] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
+                                    @foreach ($tpqDetails as $term => $value)
+                                        <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
+                                            <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
+                                                {{ $term }}</p>
+                                            <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">{{ $value }}</p>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        JADWAL</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">Senin–Jumat,
-                                        15.30–17.00 WIB</p>
-                                </div>
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        BIAYA</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">[biaya per
-                                        bulan]</p>
-                                </div>
-                            </div>
+                            @endif
                             <div class="mt-[28px] flex flex-wrap [gap:12px]">
                                 <a href="{{ route('tpq') }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] bg-[#0B3B2C] text-[#FFFFFF] text-[16px] font-bold no-underline"><svg
@@ -627,7 +443,7 @@
                                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                                         <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                                     </svg>Daftar TPQ</a>
-                                <a href="https://wa.me/6281239567390"
+                                <a href="{{ $tpq?->whatsappUrl() ?? 'https://wa.me/6281239567390' }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] [border:1.5px_solid_#0B3B2C] text-[#0B3B2C] text-[16px] font-bold no-underline"><svg
                                         width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -809,7 +625,7 @@
                                         LAPORAN DANA</h3>
                                     <p class="[margin:4px_0_0] text-[16px] font-bold">Periode Mei 2026</p>
                                 </div>
-                                <a href="#ziswaf"
+                                <a href="{{ route('ziswaf') }}"
                                     class="inline-flex items-center [gap:6px] min-h-[44px] [padding:0_14px] rounded-[12px] bg-[#EEF5F1] text-[#0B3B2C] text-[14px] font-bold no-underline"><svg
                                         width="16" height="16" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -895,7 +711,7 @@
                                 class="[margin:14px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Momen kegiatan jamaah</h2>
                         </div>
-                        <a href="#galeri"
+                        <a href="{{ route('galeri') }}"
                             class="inline-flex items-center [gap:8px] min-h-[44px] text-[15px] font-bold text-[#0B3B2C] no-underline">Lihat
                             semua galeri<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -971,7 +787,7 @@
                                 ZISWAF, pendaftaran TPQ, dan kebutuhan ibadah lainnya.</p>
                             <ul class="list-none [margin:28px_0_0] [padding:0] flex flex-col [gap:10px]">
                                 @foreach ($phones as $phone)
-                                    <li><a href="{{ $phone->is_whatsapp == true ? 'https://wa.me/' . $phone->number : 'tel:' . $phone->number }}"
+                                    <li><a href="{{ $phone->is_whatsapp ? $phone->whatsappUrl() : 'tel:'.preg_replace('/[^0-9+]/', '', $phone->number) }}"
                                             class="flex items-center [gap:16px] [padding:14px_18px] rounded-[16px] bg-[#F8F6EF] text-[#17231E] no-underline">
                                             @if ($phone->is_whatsapp == true)
                                                 <span
@@ -1019,7 +835,7 @@
                                             </svg></span><span class="[flex:1] min-w-0"><span
                                                 class="block text-[13px] text-[#4A5A53]">Email
                                                 takmir</span><span
-                                                class="block text-[clamp(14px,3.9vw,17px)] font-bold [overflow-wrap:anywhere]">{{ $contact->email }}</span></span><span
+                                                class="block text-[clamp(14px,3.9vw,17px)] font-bold [overflow-wrap:anywhere]">{{ $contact?->email }}</span></span><span
                                             class="text-[#6E7F77] flex"><svg width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -1039,7 +855,7 @@
                                                 <path d="M17.5 6.5h.01"></path>
                                             </svg></span><span class="[flex:1] min-w-0"><span
                                                 class="block text-[13px] text-[#4A5A53]">Instagram</span><span
-                                                class="block text-[17px] font-bold">{{ $contact->instagram }}</span></span><span
+                                                class="block text-[17px] font-bold">{{ $contact?->instagram }}</span></span><span
                                             class="text-[#6E7F77] flex"><svg width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -1056,13 +872,13 @@
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <path d="M12 6v6l4 2"></path>
                                     </svg></span>Layanan sekretariat: <strong
-                                    class="text-[#17231E]">{{ $contact->service_hours }}</strong>
+                                    class="text-[#17231E]">{{ $contact?->service_hours }}</strong>
                             </p>
                         </div>
                         <div class="[flex:1_1_460px] min-w-0">
                             <div
                                 class="h-[340px] overflow-hidden rounded-[24px] bg-[#E9EEE8] [border:1px_solid_#E6E2D6]">
-                                <iframe src="{{ $contact->maps_embed_url }}"
+                                <iframe src="{{ $contact?->maps_embed_url }}"
                                     title="Peta lokasi Masjid Nurul Haqq di Google Maps" width="600"
                                     height="340" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
                                     allowfullscreen class="block w-full h-[100%] [border:0]"></iframe>
@@ -1076,9 +892,9 @@
                                             aria-hidden="true">
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                             <circle cx="12" cy="10" r="3"></circle>
-                                        </svg></span>{{ $contact->address }}
+                                        </svg></span>{{ $contact?->address }}
                                 </p>
-                                <a href="{{ $contact->maps_url }}" target="_blank" rel="noopener noreferrer"
+                                <a href="{{ $contact?->maps_url }}" target="_blank" rel="noopener noreferrer"
                                     class="inline-flex items-center [gap:8px] min-h-[48px] [padding:0_20px] rounded-[14px] [border:1.5px_solid_#0B3B2C] text-[#0B3B2C] text-[15px] font-bold no-underline"><svg
                                         width="16" height="16" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"

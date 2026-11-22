@@ -17,7 +17,6 @@ class Facility extends Model
      */
     protected $fillable = [
         'name',
-        'icon',
         'sort_order',
         'is_active',
     ];
