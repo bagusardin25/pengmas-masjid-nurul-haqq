@@ -37,11 +37,14 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\TpqController;
 use App\Http\Controllers\ZiswafController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('home');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');

@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Kontak masjid (footer, tombol WhatsApp) tersedia di semua halaman publik sebagai $siteContact.
-        View::composer(['pages.*', 'components.site-footer'], function ($view): void {
+        View::composer(['pages.*', 'layouts.app', 'components.site-footer'], function ($view): void {
             $view->with('siteContact', $this->app->make(SiteContact::class));
         });
     }

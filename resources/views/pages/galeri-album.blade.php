@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $album->title)
+@section('og_image', $album->cover()?->url() ?? '')
 @section('description', $album->description ?: 'Album foto '.$album->title.' di Masjid Jami Nurul Haqq.')
 
 @php

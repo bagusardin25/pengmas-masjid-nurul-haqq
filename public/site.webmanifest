@@ -1,0 +1,13 @@
+{
+    "name": "Masjid Jami Nurul Haqq",
+    "short_name": "Nurul Haqq",
+    "lang": "id",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f8f6ef",
+    "theme_color": "#0b3b2c",
+    "icons": [
+        { "src": "/images/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+        { "src": "/images/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    ]
+}
