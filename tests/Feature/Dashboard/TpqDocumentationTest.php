@@ -9,25 +9,6 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * PNG asli berukuran $width × $height, dibuat tanpa ekstensi GD.
- */
-function tpqTestPng(int $width, int $height): string
-{
-    $rows = '';
-
-    for ($y = 0; $y < $height; $y++) {
-        $rows .= "\0".str_repeat("\x0b\x3b\x2c", $width);
-    }
-
-    $chunk = fn (string $type, string $data): string => pack('N', strlen($data)).$type.$data.pack('N', crc32($type.$data));
-
-    return "\x89PNG\r\n\x1a\n"
-        .$chunk('IHDR', pack('NNCCCCC', $width, $height, 8, 2, 0, 0, 0))
-        .$chunk('IDAT', gzcompress($rows))
-        .$chunk('IEND', '');
-}
-
 beforeEach(function () {
     Storage::fake('public');
     $this->user = User::factory()->create();
@@ -36,7 +17,7 @@ beforeEach(function () {
 test('a documentation photo can be uploaded', function () {
     $this->actingAs($this->user)
         ->post(route('dashboard.tpq.documentations.store'), [
-            'image' => UploadedFile::fake()->createWithContent('santri-mengaji.png', tpqTestPng(40, 30)),
+            'image' => UploadedFile::fake()->createWithContent('santri-mengaji.png', testPng(40, 30)),
             'caption' => 'Santri belajar membaca Al-Qur\'an',
         ])
         ->assertRedirect(route('dashboard.tpq').'#dokumentasi')
@@ -82,7 +63,7 @@ test('uploading requires a photo in a supported format and size', function () {
 
 test('a documentation caption and order can be updated without uploading again', function () {
     $this->actingAs($this->user)->post(route('dashboard.tpq.documentations.store'), [
-        'image' => UploadedFile::fake()->createWithContent('foto.png', tpqTestPng(4, 3)),
+        'image' => UploadedFile::fake()->createWithContent('foto.png', testPng(4, 3)),
     ]);
 
     $documentation = TpqDocumentation::query()->firstOrFail();
@@ -103,7 +84,7 @@ test('a documentation caption and order can be updated without uploading again',
 
 test('deleting a documentation photo removes the file and its media row', function () {
     $this->actingAs($this->user)->post(route('dashboard.tpq.documentations.store'), [
-        'image' => UploadedFile::fake()->createWithContent('foto.png', tpqTestPng(4, 3)),
+        'image' => UploadedFile::fake()->createWithContent('foto.png', testPng(4, 3)),
     ]);
 
     $documentation = TpqDocumentation::query()->with('image')->firstOrFail();
@@ -121,7 +102,7 @@ test('deleting a documentation photo removes the file and its media row', functi
 
 test('the tpq management page lists documentation photos and an upload form', function () {
     $this->actingAs($this->user)->post(route('dashboard.tpq.documentations.store'), [
-        'image' => UploadedFile::fake()->createWithContent('foto.png', tpqTestPng(4, 3)),
+        'image' => UploadedFile::fake()->createWithContent('foto.png', testPng(4, 3)),
         'caption' => 'Foto tersimpan',
     ]);
 
@@ -142,7 +123,7 @@ test('the public tpq page shows documentation photos only when there are any', f
     $this->get(route('tpq'))->assertOk()->assertDontSee('Kegiatan belajar santri');
 
     $this->actingAs($this->user)->post(route('dashboard.tpq.documentations.store'), [
-        'image' => UploadedFile::fake()->createWithContent('foto.png', tpqTestPng(40, 30)),
+        'image' => UploadedFile::fake()->createWithContent('foto.png', testPng(40, 30)),
         'caption' => 'Santri menulis Al-Qur\'an',
     ]);
 

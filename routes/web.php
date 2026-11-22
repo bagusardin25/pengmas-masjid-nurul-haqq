@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgendaCalendarController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Dashboard\BerandaController as DashboardBerandaController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -26,6 +27,7 @@ Route::get('/', [BerandaController::class, 'index'])->name('home');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');
+Route::get('/agenda/{agenda:slug}/kalender.ics', AgendaCalendarController::class)->name('agenda.calendar');
 Route::get('/ziswaf', function () {
     return view('pages.ziswaf');
 })->name('ziswaf');
@@ -41,7 +43,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::name('dashboard.')->group(function () {
-        Route::get('/beranda', [DashboardBerandaController::class, 'index'])->name('beranda');
+        Route::get('/beranda', [DashboardBerandaController::class, 'edit'])->name('beranda');
+        Route::put('/beranda', [DashboardBerandaController::class, 'update'])->name('beranda.update');
 
         Route::get('/profil', [DashboardProfilController::class, 'edit'])->name('profil');
         Route::put('/profil', [DashboardProfilController::class, 'update'])->name('profil.update');

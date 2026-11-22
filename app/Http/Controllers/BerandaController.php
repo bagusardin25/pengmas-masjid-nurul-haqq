@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AboutPage;
+use App\Models\AboutStat;
 use App\Models\Agenda;
 use App\Models\ContactPhone;
 use App\Models\ContactSetting;
@@ -19,10 +20,11 @@ class BerandaController extends Controller
 {
     public function index(PrayerSchedule $prayerSchedule)
     {
-        $hero = HomePage::first();
+        $hero = HomePage::query()->with('heroImage')->first();
         $contact = ContactSetting::first();
         $phones = ContactPhone::all();
         $about = AboutPage::first();
+        $aboutStats = AboutStat::query()->ordered()->get();
         $facilities = Facility::query()->where('is_active', true)->ordered()->get();
         $today = CarbonImmutable::now('Asia/Jakarta');
 
@@ -59,6 +61,7 @@ class BerandaController extends Controller
             'contact',
             'phones',
             'about',
+            'aboutStats',
             'facilities',
             'routines',
             'kitabGroups',

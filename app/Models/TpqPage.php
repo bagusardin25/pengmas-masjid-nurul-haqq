@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSingleRow;
+use App\Support\WhatsApp;
 use Database\Factories\TpqPageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,17 +35,7 @@ class TpqPage extends Model
      */
     public function whatsappUrl(): ?string
     {
-        $digits = preg_replace('/\D+/', '', (string) $this->registration_phone);
-
-        if ($digits === '') {
-            return null;
-        }
-
-        if (str_starts_with($digits, '0')) {
-            $digits = '62'.substr($digits, 1);
-        }
-
-        return 'https://wa.me/'.$digits;
+        return WhatsApp::url($this->registration_phone);
     }
 
     /**
