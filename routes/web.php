@@ -21,6 +21,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TpqController;
+use App\Http\Controllers\ZiswafController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('home');
@@ -28,9 +29,8 @@ Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');
 Route::get('/agenda/{agenda:slug}/kalender.ics', AgendaCalendarController::class)->name('agenda.calendar');
-Route::get('/ziswaf', function () {
-    return view('pages.ziswaf');
-})->name('ziswaf');
+Route::get('/ziswaf', [ZiswafController::class, 'index'])->name('ziswaf');
+Route::get('/ziswaf/laporan', [ZiswafController::class, 'reports'])->name('ziswaf.laporan');
 Route::get('/galeri', function () {
     return view('pages.galeri');
 })->name('galeri');
@@ -112,4 +112,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

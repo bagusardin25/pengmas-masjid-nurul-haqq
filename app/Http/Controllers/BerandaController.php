@@ -13,6 +13,10 @@ use App\Models\KitabSchedule;
 use App\Models\RoutineActivity;
 use App\Models\TpqPage;
 use App\Models\TpqPillar;
+use App\Models\ZiswafContact;
+use App\Models\ZiswafFund;
+use App\Models\ZiswafPage;
+use App\Models\ZiswafReport;
 use App\Services\PrayerSchedule;
 use Carbon\CarbonImmutable;
 
@@ -52,6 +56,11 @@ class BerandaController extends Controller
         $tpq = TpqPage::current();
         $tpqPillars = TpqPillar::query()->ordered()->get();
 
+        $ziswaf = ZiswafPage::query()->with('qrisImage')->first();
+        $ziswafFunds = ZiswafFund::query()->where('is_active', true)->ordered()->get();
+        $ziswafContacts = ZiswafContact::query()->ordered()->get();
+        $latestReports = ZiswafReport::query()->published()->with('reportFile')->latestFirst()->limit(3)->get();
+
         return view('pages.beranda', compact(
             'hero',
             'today',
@@ -68,6 +77,10 @@ class BerandaController extends Controller
             'upcomingAgendas',
             'tpq',
             'tpqPillars',
+            'ziswaf',
+            'ziswafFunds',
+            'ziswafContacts',
+            'latestReports',
         ));
     }
 }

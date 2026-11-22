@@ -1,72 +1,167 @@
 @extends('layouts.app')
 
 @section('title', 'ZISWAF')
-@section('description', 'Informasi penyaluran zakat, infak, sedekah, dan wakaf melalui Yayasan Nurul Haqq.')
+@section('description', 'Penyaluran sedekah, infak, zakat, dan wakaf serta laporan keuangan Masjid Jami Nurul Haqq.')
+
+@php
+    $step = 0;
+    $hasBankAccount = (bool) $ziswaf?->hasBankAccount();
+    $hasAnyReport = $latestReports->contains(fn ($reports) => $reports->isNotEmpty());
+@endphp
 
 @section('content')
-    <x-page-hero eyebrow="ZISWAF" title="Salurkan kebaikan, kuatkan kebersamaan" description="Salurkan zakat, infak, sedekah, dan wakaf melalui Yayasan Nurul Haqq. Dana dikelola amanah dan dilaporkan setiap bulan kepada jamaah." action-url="https://wa.me/6281239567390" action-label="Tanya layanan ZISWAF" />
+    <x-page-hero eyebrow="ZISWAF" :title="$ziswaf?->hero_title ?? 'ZISWAF'" :description="$ziswaf?->hero_description"
+        :action-url="$hasBankAccount ? '#cara-menyalurkan' : null" action-label="Cara menyalurkan" />
 
-    <section class="section">
-        <div class="site-container">
-            <p class="step-title"><span>1</span>Pilih jenis dana</p>
-            <x-section-heading title="Setiap kebaikan punya peran" />
-            <div class="fund-grid">
-                <article class="fund-card fund-card-active"><span>♧</span><h3>Zakat</h3><p>Mal &amp; fitrah</p></article>
-                <article class="fund-card"><span>▱</span><h3>Infaq</h3><p>Kas &amp; operasional</p></article>
-                <article class="fund-card"><span>♡</span><h3>Sedekah</h3><p>Kepedulian sosial</p></article>
-                <article class="fund-card"><span>▤</span><h3>Wakaf</h3><p>Aset produktif umat</p></article>
-            </div>
-        </div>
-    </section>
+    @if ($funds->isNotEmpty() || $programs->isNotEmpty())
+        <section class="section">
+            <div class="site-container">
+                @if ($funds->isNotEmpty())
+                    <p class="step-title"><span>{{ ++$step }}</span>Pilih jenis dana</p>
+                    <x-section-heading title="Setiap kebaikan punya peran" />
+                    <div class="fund-grid">
+                        @foreach ($funds as $fund)
+                            <article class="fund-card">
+                                <span aria-hidden="true">{{ $fund->icon?->glyph() ?? '♡' }}</span>
+                                <h3>{{ $fund->name }}</h3>
+                                @if ($fund->description)
+                                    <p>{{ $fund->description }}</p>
+                                @endif
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
 
-    <section class="section section-muted">
-        <div class="site-container">
-            <x-section-heading eyebrow="Cara menyalurkan dana" title="Mudah disalurkan, jelas dikonfirmasi" />
-            <div class="transfer-grid">
-                <div>
-                    <p class="step-title"><span>2</span>Transfer atau scan QRIS</p>
-                    <article class="content-panel transfer-card">
-                        <div class="qris-placeholder"><span>▧</span><strong>Area QRIS</strong><small>QRIS demo · tidak untuk pembayaran</small></div>
-                        <div>
-                            <p class="eyebrow">Transfer bank</p>
-                            <h3>Bank Demo Syariah</h3>
-                            <strong class="account-number">DEMO-0000-0000</strong>
-                            <p>a.n. Yayasan Nurul Haqq</p>
-                            <small>Rekening dan QRIS merupakan contoh desain, bukan tujuan pembayaran.</small>
+                @if ($programs->isNotEmpty())
+                    <div class="program-block">
+                        <x-section-heading eyebrow="Program sedekah" title="Pilih program penyaluran"
+                            description="Sebutkan program yang dipilih saat konfirmasi agar sedekah disalurkan sesuai niat Anda." />
+                        <div class="card-grid card-grid-three">
+                            @foreach ($programs as $program)
+                                <article class="info-card">
+                                    <span class="card-icon" aria-hidden="true">♡</span>
+                                    <h3>{{ $program->title }}</h3>
+                                    @if ($program->description)
+                                        <p>{{ $program->description }}</p>
+                                    @endif
+                                </article>
+                            @endforeach
                         </div>
-                    </article>
-                </div>
-                <div>
-                    <p class="step-title"><span>3</span>Konfirmasi via WhatsApp</p>
-                    <article class="content-panel content-panel-dark confirmation-card">
-                        <h3>Sampaikan konfirmasi donasi Anda</h3>
-                        <p>Kirimkan konfirmasi kepada sekretariat agar donasi dapat dicatat sesuai jenis dana yang dipilih.</p>
-                        <strong>0812-3956-7390</strong>
-                        <a class="button button-gold button-full" href="https://wa.me/6281239567390">Konfirmasi via WhatsApp</a>
-                    </article>
-                </div>
+                    </div>
+                @endif
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
-    <section class="section">
-        <div class="site-container report-grid">
-            <div>
-                <x-section-heading eyebrow="Amanah & transparan" title="Laporan dana untuk jamaah" description="Dana dikelola Yayasan Nurul Haqq secara amanah dan dilaporkan setiap bulan kepada jamaah, lengkap dengan rincian penyalurannya." />
-                <div class="report-note"><strong>Periode Mei 2026</strong><p>Simulasi laporan Mei 2026. Terkumpul Rp23.122.000, tersalurkan Rp18.000.000, saldo Rp5.122.000.</p></div>
-                <a class="button button-outline" href="https://wa.me/6281239567390">▤ Tanya laporan dana</a>
+    @if ($hasBankAccount || $contacts->isNotEmpty() || $ziswaf?->infaq_box_description)
+        <section id="cara-menyalurkan" class="section section-muted">
+            <div class="site-container">
+                <x-section-heading eyebrow="Cara menyalurkan dana" title="Mudah disalurkan, jelas dikonfirmasi" />
+                <div @class(['transfer-grid', 'transfer-grid-single' => ! ($hasBankAccount && $contacts->isNotEmpty())])>
+                    @if ($hasBankAccount)
+                        <div>
+                            <p class="step-title"><span>{{ ++$step }}</span>{{ $ziswaf->qrisImage ? 'Transfer atau scan QRIS' : 'Transfer ke rekening masjid' }}</p>
+                            <article class="content-panel transfer-card">
+                                @if ($ziswaf->qrisImage)
+                                    <figure class="qris-image">
+                                        <a href="{{ $ziswaf->qrisImage->url() }}" target="_blank" rel="noopener">
+                                            <img src="{{ $ziswaf->qrisImage->url() }}" alt="Kode QRIS {{ $ziswaf->account_holder ? 'a.n. '.$ziswaf->account_holder : 'Masjid Nurul Haqq' }}" loading="lazy">
+                                        </a>
+                                        @if ($ziswaf->qris_note)
+                                            <figcaption>{{ $ziswaf->qris_note }}</figcaption>
+                                        @endif
+                                    </figure>
+                                @endif
+                                <div x-data="{ copied: false }">
+                                    <p class="eyebrow">Transfer bank</p>
+                                    @if ($ziswaf->bank_name)
+                                        <h3>{{ $ziswaf->bank_name }}</h3>
+                                    @endif
+                                    <strong class="account-number">{{ $ziswaf->account_number }}</strong>
+                                    @if ($ziswaf->account_holder)
+                                        <p>a.n. {{ $ziswaf->account_holder }}</p>
+                                    @endif
+                                    @if ($ziswaf->account_note)
+                                        <small>{{ $ziswaf->account_note }}</small>
+                                    @endif
+                                    <button type="button" class="copy-button" x-cloak
+                                        @click="navigator.clipboard.writeText(@js($ziswaf->account_number)).then(() => { copied = true; setTimeout(() => copied = false, 2000) })">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <rect x="8" y="8" width="14" height="14" rx="2"></rect>
+                                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                        </svg>
+                                        <span x-text="copied ? 'Nomor disalin' : 'Salin nomor rekening'">Salin nomor rekening</span>
+                                    </button>
+                                </div>
+                            </article>
+                        </div>
+                    @endif
+
+                    @if ($contacts->isNotEmpty())
+                        <div>
+                            <p class="step-title"><span>{{ ++$step }}</span>Konfirmasi via WhatsApp</p>
+                            <article class="content-panel content-panel-dark confirmation-card">
+                                <h3>Sampaikan konfirmasi donasi Anda</h3>
+                                <p>Kirim bukti transfer beserta jenis dana atau program yang dipilih agar donasi dicatat sesuai niat Anda.</p>
+                                <ul class="confirmation-contacts">
+                                    @foreach ($contacts as $contact)
+                                        <li>
+                                            <span>
+                                                <strong>{{ $contact->name }}</strong>
+                                                @if ($contact->role)
+                                                    <small>{{ $contact->role }}</small>
+                                                @endif
+                                            </span>
+                                            <a class="button button-gold" href="{{ $contact->whatsappUrl() }}" target="_blank" rel="noopener"
+                                                aria-label="Konfirmasi lewat WhatsApp ke {{ $contact->name }}, {{ $contact->phone }}">{{ $contact->phone }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </article>
+                        </div>
+                    @endif
+                </div>
+
+                @if ($ziswaf?->infaq_box_description)
+                    <div class="report-note">
+                        <strong>Kotak infak</strong>
+                        <p>{{ $ziswaf->infaq_box_description }}</p>
+                    </div>
+                @endif
             </div>
-            <article class="report-card">
-                <p class="eyebrow">Laporan dana</p>
-                <h3>Periode Mei 2026</h3>
-                <p>Total terkumpul</p>
-                <strong class="report-total">Rp 23.122.000</strong>
-                <div class="report-summary"><div><span>Tersalurkan</span><strong>Rp 18.000.000</strong></div><div><span>Saldo</span><strong>Rp 5.122.000</strong></div></div>
-                <p class="eyebrow report-breakdown-title">Rincian per jenis</p>
-                @foreach ([['Zakat', '4.875.000', '20%'], ['Infaq', '6.342.000', '28%'], ['Sedekah', '3.215.000', '14%'], ['Wakaf', '8.690.000', '38%']] as [$name, $amount, $percent])
-                    <div class="report-line"><div><strong>{{ $name }}</strong><span>Rp {{ $amount }}</span></div><span class="progress-track"><span @class(['w-[20%]' => $percent === '20%', 'w-[28%]' => $percent === '28%', 'w-[14%]' => $percent === '14%', 'w-[38%]' => $percent === '38%'])></span></span></div>
+        </section>
+    @endif
+
+    <section id="laporan" class="section">
+        <div class="site-container">
+            <div class="report-heading">
+                <x-section-heading eyebrow="Amanah & transparan" title="Laporan keuangan masjid" :description="$ziswaf?->report_description" />
+                @if ($hasAnyReport)
+                    <a class="button button-outline" href="{{ route('ziswaf.laporan') }}">Semua laporan</a>
+                @endif
+            </div>
+            <div class="report-columns">
+                @foreach ($categories as $category)
+                    @php $reports = $latestReports[$category->value]; @endphp
+                    <article class="report-group">
+                        <h3>{{ $category->label() }}</h3>
+                        <p>{{ $category->description() }}</p>
+                        @if ($reports->isEmpty())
+                            <p class="report-empty">Belum ada laporan yang diterbitkan.</p>
+                        @else
+                            <ul class="report-list">
+                                @foreach ($reports as $report)
+                                    <x-report-item :report="$report" />
+                                @endforeach
+                            </ul>
+                            <a class="report-more" href="{{ route('ziswaf.laporan', ['kategori' => $category->value]) }}">
+                                Lihat semua {{ Str::lower($category->shortLabel()) }} <span aria-hidden="true">→</span>
+                            </a>
+                        @endif
+                    </article>
                 @endforeach
-            </article>
+            </div>
         </div>
     </section>
 

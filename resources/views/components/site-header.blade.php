@@ -16,7 +16,7 @@
 
         <nav id="primary-navigation" class="primary-nav" aria-label="Navigasi utama">
             @foreach ([['label' => 'Beranda', 'route' => 'home'], ['label' => 'Profil', 'route' => 'profil'], ['label' => 'Jadwal & Kegiatan', 'route' => 'jadwal'], ['label' => 'Program TPQ', 'route' => 'tpq'], ['label' => 'ZISWAF', 'route' => 'ziswaf'], ['label' => 'Galeri', 'route' => 'galeri'], ['label' => 'Kontak', 'route' => 'kontak']] as $item)
-                <a href="{{ route($item['route']) }}" @if (request()->routeIs($item['route'])) aria-current="page" @endif>
+                <a href="{{ route($item['route']) }}" @if (request()->routeIs($item['route'], $item['route'].'.*')) aria-current="page" @endif>
                     {{ $item['label'] }}
                 </a>
             @endforeach

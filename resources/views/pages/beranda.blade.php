@@ -475,6 +475,10 @@
                     <circle cx="100" cy="100" r="16"></circle>
                     <circle cx="100" cy="100" r="92"></circle>
                 </svg>
+                @php
+                    $ziswafStep = 0;
+                    $hasBankAccount = (bool) $ziswaf?->hasBankAccount();
+                @endphp
                 <div class="relative max-w-[1440px] mx-auto px-[clamp(20px,4.5vw,64px)]">
                     <p
                         class="[margin:0] flex items-center [gap:10px] text-[12px] font-bold tracking-[0.14em] text-[#E2B84B]">
@@ -482,139 +486,103 @@
                     </p>
                     <h2
                         class="[margin:14px_0_0] max-w-[760px] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#FFFFFF]">
-                        Salurkan zakat, infaq, sedekah, dan wakaf</h2>
-                    <p class="[margin:16px_0_0] max-w-[640px] text-[17px] leading-[1.7] text-[#C9D8D1]">Zakat,
-                        infaq, dan shodaqoh dihimpun dan disalurkan oleh Lembaga Amil Zakat, Infaq, dan Shadaqoh NU
-                        (LAZISNU) Masjid Nurul Haqq Tawangsari melalui seksi pengumpulan, pengemasan, dan pembagian.</p>
+                        {{ $ziswaf?->hero_title ?: 'Salurkan kebaikan untuk masjid' }}</h2>
+                    @if ($ziswaf?->summary)
+                        <p class="[margin:16px_0_0] max-w-[640px] text-[17px] leading-[1.7] text-[#C9D8D1]">
+                            {{ $ziswaf->summary }}</p>
+                    @endif
+                    <a href="{{ route('ziswaf') }}"
+                        class="mt-[16px] inline-flex items-center [gap:8px] min-h-[44px] text-[15px] font-bold text-[#E2B84B] no-underline">Lihat
+                        program sedekah &amp; cara menyalurkan<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg></a>
                     <div class="mt-[44px] flex flex-wrap [gap:32px] items-start">
                         <div class="[flex:1.15_1_520px] min-w-0">
-                            <h3 class="[margin:0] flex items-center [gap:12px] text-[17px] font-bold">
-                                <span
-                                    class="w-[28px] h-[28px] rounded-[999px] bg-[#E2B84B] text-[#0B3B2C] flex items-center justify-center text-[14px] font-extrabold">1</span>Pilih
-                                jenis dana
-                            </h3>
-                            <div
-                                class="mt-[16px] grid [grid-template-columns:repeat(auto-fit,minmax(118px,1fr))] [gap:12px]">
-                                <button type="button" aria-pressed="true"
-                                    class="flex flex-col items-start [gap:10px] [padding:18px] rounded-[16px] [border:1.5px_solid_#E2B84B] bg-[#E2B84B] text-[#0B3B2C] [font-family:inherit] text-left cursor-pointer"><svg
-                                        width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <circle cx="8" cy="8" r="6"></circle>
-                                        <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
-                                        <path d="M7 6h1v4"></path>
-                                        <path d="m16.71 13.88.7.71-2.82 2.82"></path>
-                                    </svg><span class="text-[17px] font-extrabold">Zakat</span><span
-                                        class="text-[13px] leading-[1.4] font-semibold">Mal &amp;
-                                        fitrah</span></button>
-                                <button type="button" aria-pressed="false"
-                                    class="flex flex-col items-start [gap:10px] [padding:18px] rounded-[16px] [border:1.5px_solid_rgba(255,255,255,0.18)] bg-[rgba(255,255,255,0.06)] text-[#FFFFFF] [font-family:inherit] text-left cursor-pointer"><span
-                                        class="text-[#E2B84B] flex"><svg width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-                                            aria-hidden="true">
-                                            <path d="M11 14h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"></path>
-                                            <path
-                                                d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9">
-                                            </path>
-                                            <path d="m2 15 6 6"></path>
-                                            <path
-                                                d="M19.5 8.5c.7-.7 1.5-1.6 1.5-2.7A2.73 2.73 0 0 0 16 4a2.78 2.78 0 0 0-5 1.8c0 1.2.8 2 1.5 2.8L16 12Z">
-                                            </path>
-                                        </svg></span><span class="text-[17px] font-extrabold">Infaq</span><span
-                                        class="text-[13px] leading-[1.4] font-semibold text-[#B9CCC3]">Kas &amp;
-                                        operasional</span></button>
-                                <button type="button" aria-pressed="false"
-                                    class="flex flex-col items-start [gap:10px] [padding:18px] rounded-[16px] [border:1.5px_solid_rgba(255,255,255,0.18)] bg-[rgba(255,255,255,0.06)] text-[#FFFFFF] [font-family:inherit] text-left cursor-pointer"><span
-                                        class="text-[#E2B84B] flex"><svg width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-                                            aria-hidden="true">
-                                            <path
-                                                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
-                                            </path>
-                                        </svg></span><span class="text-[17px] font-extrabold">Sedekah</span><span
-                                        class="text-[13px] leading-[1.4] font-semibold text-[#B9CCC3]">Kepedulian
-                                        sosial</span></button>
-                                <button type="button" aria-pressed="false"
-                                    class="flex flex-col items-start [gap:10px] [padding:18px] rounded-[16px] [border:1.5px_solid_rgba(255,255,255,0.18)] bg-[rgba(255,255,255,0.06)] text-[#FFFFFF] [font-family:inherit] text-left cursor-pointer"><span
-                                        class="text-[#E2B84B] flex"><svg width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-                                            aria-hidden="true">
-                                            <path d="M3 22h18"></path>
-                                            <path d="M6 18v-7"></path>
-                                            <path d="M10 18v-7"></path>
-                                            <path d="M14 18v-7"></path>
-                                            <path d="M18 18v-7"></path>
-                                            <path d="M12 2l8 5H4z"></path>
-                                        </svg></span><span class="text-[17px] font-extrabold">Wakaf</span><span
-                                        class="text-[13px] leading-[1.4] font-semibold text-[#B9CCC3]">Aset
-                                        produktif umat</span></button>
-                            </div>
+                            @if ($ziswafFunds->isNotEmpty())
+                                <h3 class="[margin:0] flex items-center [gap:12px] text-[17px] font-bold">
+                                    <span
+                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#E2B84B] text-[#0B3B2C] flex items-center justify-center text-[14px] font-extrabold">{{ ++$ziswafStep }}</span>Pilih
+                                    jenis dana
+                                </h3>
+                                <ul
+                                    class="list-none [margin:16px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
+                                    @foreach ($ziswafFunds as $fund)
+                                        <li
+                                            class="flex flex-col items-start [gap:10px] [padding:18px] rounded-[16px] [border:1.5px_solid_rgba(255,255,255,0.18)] bg-[rgba(255,255,255,0.06)]">
+                                            <span class="text-[#E2B84B] flex"><x-stat-icon :icon="$fund->icon ?? 'heart'" :size="24" /></span>
+                                            <span class="text-[17px] font-extrabold">{{ $fund->name }}</span>
+                                            @if ($fund->description)
+                                                <span class="text-[13px] leading-[1.4] font-semibold text-[#B9CCC3]">{{ $fund->description }}</span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
 
-                            <h3 class="[margin:32px_0_0] flex items-center [gap:12px] text-[17px] font-bold">
-                                <span
-                                    class="w-[28px] h-[28px] rounded-[999px] bg-[#E2B84B] text-[#0B3B2C] flex items-center justify-center text-[14px] font-extrabold">2</span>Transfer
-                                atau scan QRIS
-                            </h3>
-                            <div
-                                class="mt-[16px] flex flex-wrap items-center [gap:20px] [padding:20px] rounded-[20px] bg-[#FFFFFF] text-[#17231E]">
-                                <figure
-                                    class="[margin:0] w-[132px] h-[132px] shrink-0 flex flex-col items-center justify-center [gap:6px] [border:1.5px_dashed_#9FB3AA] rounded-[14px] bg-[#F4F7F5] text-[#2F5C4A]">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <rect x="3" y="3" width="5" height="5" rx="1"></rect>
-                                        <rect x="16" y="3" width="5" height="5" rx="1"></rect>
-                                        <rect x="3" y="16" width="5" height="5" rx="1"></rect>
-                                        <path d="M21 16h-3a2 2 0 0 0-2 2v3"></path>
-                                        <path d="M21 21v.01"></path>
-                                        <path d="M12 7v3a2 2 0 0 1-2 2H7"></path>
-                                        <path d="M3 12h.01"></path>
-                                        <path d="M12 3h.01"></path>
-                                        <path d="M12 16v.01"></path>
-                                        <path d="M16 12h1"></path>
-                                        <path d="M21 12v.01"></path>
-                                        <path d="M12 21v-1"></path>
-                                    </svg>
-                                    <figcaption class="text-[12px] font-bold">Kode QRIS</figcaption>
-                                </figure>
-                                <div class="[flex:1_1_220px] min-w-0">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.12em] text-[#4A5A53]">
-                                        TRANSFER BANK</p>
-                                    <p class="[margin:6px_0_0] text-[16px] font-bold">Bank Syariah Mandiri</p>
-                                    <p
-                                        class="[margin:2px_0_0] text-[24px] font-extrabold tracking-[0.02em] text-[#0B3B2C]">
-                                        7005342184</p>
-                                    <p class="[margin:2px_0_0] text-[14px] text-[#4A5A53]">a.n. Yayasan Nurul Haqq</p>
-                                    <button type="button"
-                                        class="mt-[12px] inline-flex items-center [gap:8px] min-h-[44px] [padding:0_16px] rounded-[12px] [border:1.5px_solid_#0B3B2C] bg-[#FFFFFF] text-[#0B3B2C] [font-family:inherit] text-[14px] font-bold cursor-pointer"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <rect x="8" y="8" width="14" height="14" rx="2"></rect>
-                                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                                        </svg>Salin nomor</button>
+                            @if ($hasBankAccount)
+                                <h3 @class(['[margin:32px_0_0]' => $ziswafStep > 0, '[margin:0]' => $ziswafStep === 0, 'flex items-center [gap:12px] text-[17px] font-bold'])>
+                                    <span
+                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#E2B84B] text-[#0B3B2C] flex items-center justify-center text-[14px] font-extrabold">{{ ++$ziswafStep }}</span>{{ $ziswaf->qrisImage ? 'Transfer atau scan QRIS' : 'Transfer ke rekening masjid' }}
+                                </h3>
+                                <div
+                                    class="mt-[16px] flex flex-wrap items-center [gap:20px] [padding:20px] rounded-[20px] bg-[#FFFFFF] text-[#17231E]">
+                                    @if ($ziswaf->qrisImage)
+                                        <figure class="[margin:0] w-[132px] shrink-0">
+                                            <img src="{{ $ziswaf->qrisImage->url() }}" alt="Kode QRIS {{ $ziswaf->account_holder ? 'a.n. '.$ziswaf->account_holder : 'Masjid Nurul Haqq' }}"
+                                                class="block w-full aspect-square object-contain rounded-[14px] [border:1px_solid_#E6E2D6] bg-[#FFFFFF]" loading="lazy">
+                                        </figure>
+                                    @endif
+                                    <div class="[flex:1_1_220px] min-w-0" x-data="{ copied: false }">
+                                        <p class="[margin:0] text-[12px] font-bold tracking-[0.12em] text-[#4A5A53]">
+                                            TRANSFER BANK</p>
+                                        @if ($ziswaf->bank_name)
+                                            <p class="[margin:6px_0_0] text-[16px] font-bold">{{ $ziswaf->bank_name }}</p>
+                                        @endif
+                                        <p
+                                            class="[margin:2px_0_0] text-[24px] font-extrabold tracking-[0.02em] text-[#0B3B2C]">
+                                            {{ $ziswaf->account_number }}</p>
+                                        @if ($ziswaf->account_holder)
+                                            <p class="[margin:2px_0_0] text-[14px] text-[#4A5A53]">a.n. {{ $ziswaf->account_holder }}</p>
+                                        @endif
+                                        <button type="button" x-cloak
+                                            @click="navigator.clipboard.writeText(@js($ziswaf->account_number)).then(() => { copied = true; setTimeout(() => copied = false, 2000) })"
+                                            class="mt-[12px] inline-flex items-center [gap:8px] min-h-[44px] [padding:0_16px] rounded-[12px] [border:1.5px_solid_#0B3B2C] bg-[#FFFFFF] text-[#0B3B2C] [font-family:inherit] text-[14px] font-bold cursor-pointer"><svg
+                                                width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <rect x="8" y="8" width="14" height="14" rx="2"></rect>
+                                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                            </svg><span x-text="copied ? 'Nomor disalin' : 'Salin nomor'">Salin nomor</span></button>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
-                            <h3 class="[margin:32px_0_0] flex items-center [gap:12px] text-[17px] font-bold">
-                                <span
-                                    class="w-[28px] h-[28px] rounded-[999px] bg-[#E2B84B] text-[#0B3B2C] flex items-center justify-center text-[14px] font-extrabold">3</span>Konfirmasi
-                                donasi
-                            </h3>
-                            <div class="mt-[16px] flex flex-wrap items-center [gap:12px_20px]">
-                                <a href="https://wa.me/6281239567390"
-                                    class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] bg-[#E2B84B] text-[#0B3B2C] text-[16px] font-extrabold no-underline"><svg
-                                        width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
-                                    </svg>Konfirmasi via WhatsApp</a>
-                                <p class="[margin:0] [flex:1_1_220px] text-[14px] leading-[1.6] text-[#B9CCC3]">
+                            @if ($ziswafContacts->isNotEmpty())
+                                <h3 @class(['[margin:32px_0_0]' => $ziswafStep > 0, '[margin:0]' => $ziswafStep === 0, 'flex items-center [gap:12px] text-[17px] font-bold'])>
+                                    <span
+                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#E2B84B] text-[#0B3B2C] flex items-center justify-center text-[14px] font-extrabold">{{ ++$ziswafStep }}</span>Konfirmasi
+                                    donasi
+                                </h3>
+                                <ul class="list-none [margin:16px_0_0] [padding:0] flex flex-wrap [gap:12px]">
+                                    @foreach ($ziswafContacts as $contact)
+                                        <li>
+                                            <a href="{{ $contact->whatsappUrl() }}" target="_blank" rel="noopener"
+                                                aria-label="Konfirmasi lewat WhatsApp ke {{ $contact->name }}, {{ $contact->phone }}"
+                                                class="inline-flex items-center [gap:10px] min-h-[52px] [padding:8px_20px] rounded-[14px] bg-[#E2B84B] text-[#0B3B2C] no-underline"><svg
+                                                    width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                                    stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+                                                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+                                                </svg><span class="flex flex-col leading-[1.25]"><span class="text-[15px] font-extrabold">{{ $contact->name }}</span><span class="text-[13px] font-semibold">{{ $contact->phone }}</span></span></a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <p class="[margin:12px_0_0] text-[14px] leading-[1.6] text-[#B9CCC3]">
                                     Konfirmasi membantu pengurus mencatat dana sesuai niat Anda.</p>
-                            </div>
+                            @endif
                         </div>
 
                         <article
@@ -622,78 +590,30 @@
                             <div class="flex flex-wrap justify-between items-start [gap:12px]">
                                 <div>
                                     <h3 class="[margin:0] text-[12px] font-bold tracking-[0.12em] text-[#4A5A53]">
-                                        LAPORAN DANA</h3>
-                                    <p class="[margin:4px_0_0] text-[16px] font-bold">Periode Mei 2026</p>
+                                        LAPORAN KEUANGAN</h3>
+                                    <p class="[margin:4px_0_0] text-[16px] font-bold">Laporan terbaru</p>
                                 </div>
-                                <a href="{{ route('ziswaf') }}"
-                                    class="inline-flex items-center [gap:6px] min-h-[44px] [padding:0_14px] rounded-[12px] bg-[#EEF5F1] text-[#0B3B2C] text-[14px] font-bold no-underline"><svg
-                                        width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                <a href="{{ route('ziswaf.laporan') }}"
+                                    class="inline-flex items-center [gap:6px] min-h-[44px] [padding:0_14px] rounded-[12px] bg-[#EEF5F1] text-[#0B3B2C] text-[14px] font-bold no-underline">Laporan
+                                    lengkap<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <path d="M7 10l5 5 5-5"></path>
-                                        <path d="M12 15V3"></path>
-                                    </svg>Laporan lengkap</a>
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg></a>
                             </div>
-                            <p class="[margin:24px_0_0] text-[14px] text-[#4A5A53]">Total terkumpul</p>
-                            <p
-                                class="[margin:2px_0_0] text-[clamp(32px,3vw,40px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
-                                Rp 23.122.000</p>
-                            <div class="mt-[16px] grid [grid-template-columns:repeat(2,minmax(0,1fr))] [gap:12px]">
-                                <div class="[padding:12px_14px] rounded-[14px] [border:1.5px_dashed_#CFC8B4]">
-                                    <p class="[margin:0] text-[13px] text-[#4A5A53]">Tersalurkan</p>
-                                    <p class="[margin:2px_0_0] text-[17px] font-extrabold text-[#17231E]">[Rp —]</p>
-                                </div>
-                                <div class="[padding:12px_14px] rounded-[14px] [border:1.5px_dashed_#CFC8B4]">
-                                    <p class="[margin:0] text-[13px] text-[#4A5A53]">Saldo</p>
-                                    <p class="[margin:2px_0_0] text-[17px] font-extrabold text-[#17231E]">[Rp —]</p>
-                                </div>
-                            </div>
-                            <h4 class="[margin:24px_0_0] text-[12px] font-bold tracking-[0.12em] text-[#4A5A53]">
-                                RINCIAN PER JENIS</h4>
-                            <ul class="list-none [margin:12px_0_0] [padding:0] flex flex-col [gap:14px]">
-                                <li>
-                                    <div class="flex justify-between [gap:12px] text-[15px]">
-                                        <span class="font-bold">Zakat</span><span class="text-[#4A5A53]"><strong
-                                                class="text-[#17231E]">Rp 4.875.000</strong> · 21%</span>
-                                    </div>
-                                    <div class="mt-[6px] h-[10px] rounded-[999px] bg-[#EDEBE3]">
-                                        <div class="w-[56.1%] h-[100%] rounded-[999px] bg-[#135C43]">
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="flex justify-between [gap:12px] text-[15px]">
-                                        <span class="font-bold">Infaq</span><span class="text-[#4A5A53]"><strong
-                                                class="text-[#17231E]">Rp 6.342.000</strong> · 27%</span>
-                                    </div>
-                                    <div class="mt-[6px] h-[10px] rounded-[999px] bg-[#EDEBE3]">
-                                        <div class="w-[73%] h-[100%] rounded-[999px] bg-[#135C43]">
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="flex justify-between [gap:12px] text-[15px]">
-                                        <span class="font-bold">Sedekah</span><span class="text-[#4A5A53]"><strong
-                                                class="text-[#17231E]">Rp 3.215.000</strong>
-                                            · 14%</span>
-                                    </div>
-                                    <div class="mt-[6px] h-[10px] rounded-[999px] bg-[#EDEBE3]">
-                                        <div class="w-[37%] h-[100%] rounded-[999px] bg-[#135C43]">
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="flex justify-between [gap:12px] text-[15px]">
-                                        <span class="font-bold">Wakaf</span><span class="text-[#4A5A53]"><strong
-                                                class="text-[#17231E]">Rp 8.690.000</strong> · 38%</span>
-                                    </div>
-                                    <div class="mt-[6px] h-[10px] rounded-[999px] bg-[#EDEBE3]">
-                                        <div class="w-full h-[100%] rounded-[999px] bg-[#135C43]">
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                            @if ($latestReports->isEmpty())
+                                <p
+                                    class="[margin:24px_0_0] [padding:16px] rounded-[14px] [border:1.5px_dashed_#CFC8B4] text-[14px] leading-[1.6] text-[#4A5A53]">
+                                    Belum ada laporan yang diterbitkan. Laporan rutin mingguan, laporan kegiatan, dan
+                                    laporan pembangunan masjid akan tampil di sini setelah diunggah pengurus.</p>
+                            @else
+                                <ul class="report-list mt-[20px]">
+                                    @foreach ($latestReports as $report)
+                                        <x-report-item :report="$report" :show-category="true" />
+                                    @endforeach
+                                </ul>
+                            @endif
                         </article>
                     </div>
                 </div>
