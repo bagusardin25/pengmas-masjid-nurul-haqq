@@ -4,10 +4,12 @@
 --}}
 @php
     $siteName = 'Masjid Jami Nurul Haqq';
-    $pageTitle = trim($__env->yieldContent('title', $siteName));
+    // Isi @section('judul', 'teks') sudah di-escape Blade; dikembalikan dulu agar tidak ter-escape dua kali (&amp;amp;).
+    $plain = fn (string $section, string $default = '') => html_entity_decode(trim($__env->yieldContent($section, $default)), ENT_QUOTES | ENT_HTML5);
+    $pageTitle = $plain('title', $siteName);
     $fullTitle = $pageTitle === $siteName ? $siteName.' — Griya Taman Asri, Sidoarjo' : $pageTitle.' — '.$siteName;
-    $description = trim($__env->yieldContent('description', 'Masjid Jami Nurul Haqq di Griya Taman Asri, Tawangsari, Taman, Sidoarjo: jadwal sholat dan kajian, program TPQ, ZISWAF, dan laporan keuangan.'));
-    $ogImage = trim($__env->yieldContent('og_image')) ?: asset('images/og-default.jpg');
+    $description = $plain('description', 'Masjid Jami Nurul Haqq di Griya Taman Asri, Tawangsari, Taman, Sidoarjo: jadwal sholat dan kajian, program TPQ, ZISWAF, dan laporan keuangan.');
+    $ogImage = $plain('og_image') ?: asset('images/og-default.jpg');
     $canonical = url()->current();
 @endphp
 

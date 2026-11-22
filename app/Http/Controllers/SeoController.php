@@ -18,8 +18,6 @@ class SeoController extends Controller
             'Disallow: /dashboard',
             'Disallow: /login',
             'Disallow: /profile',
-            'Disallow: /forgot-password',
-            'Disallow: /reset-password',
             '',
             'Sitemap: '.route('sitemap'),
         ];

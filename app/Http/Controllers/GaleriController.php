@@ -29,7 +29,7 @@ class GaleriController extends Controller
             ->ordered()
             ->get();
 
-        $activeCategory = $categories->firstWhere('slug', (string) $request->query('kategori'));
+        $activeCategory = $categories->firstWhere('slug', self::stringQuery($request, 'kategori'));
         $inCategory = fn (Builder $query) => $query->when(
             $activeCategory,
             fn (Builder $query) => $query->where('category_id', $activeCategory->id),
@@ -62,6 +62,17 @@ class GaleriController extends Controller
             ->get();
 
         return view('pages.galeri', compact('categories', 'activeCategory', 'albums', 'videos', 'articles'));
+    }
+
+    /**
+     * Nilai parameter URL sebagai teks. Parameter yang dikirim sebagai array (?kategori[]=x) diabaikan,
+     * agar tidak memicu error "Array to string conversion".
+     */
+    private static function stringQuery(Request $request, string $key): string
+    {
+        $value = $request->query($key);
+
+        return is_string($value) ? $value : '';
     }
 
     public function album(GalleryAlbum $album): View

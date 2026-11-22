@@ -1,60 +1,23 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Support\Facades\Notification;
 
-test('reset password link screen can be rendered', function () {
-    $response = $this->get('/forgot-password');
+// Lupa password ditutup: email belum disetel, jadi tautan reset tidak akan pernah sampai.
+// Password diganti admin lain lewat halaman Akun & Admin.
 
-    $response->assertStatus(200);
+test('the forgot password pages are closed', function () {
+    $this->get('/forgot-password')->assertNotFound();
+    $this->get('/reset-password/token-apa-saja')->assertNotFound();
 });
 
-test('reset password link can be requested', function () {
-    Notification::fake();
-
+test('password reset requests are not accepted', function () {
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
-
-    Notification::assertSentTo($user, ResetPassword::class);
-});
-
-test('reset password screen can be rendered', function () {
-    Notification::fake();
-
-    $user = User::factory()->create();
-
-    $this->post('/forgot-password', ['email' => $user->email]);
-
-    Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-        $response = $this->get('/reset-password/'.$notification->token);
-
-        $response->assertStatus(200);
-
-        return true;
-    });
-});
-
-test('password can be reset with valid token', function () {
-    Notification::fake();
-
-    $user = User::factory()->create();
-
-    $this->post('/forgot-password', ['email' => $user->email]);
-
-    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
-        $response = $this->post('/reset-password', [
-            'token' => $notification->token,
-            'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect(route('login'));
-
-        return true;
-    });
+    $this->post('/forgot-password', ['email' => $user->email])->assertNotFound();
+    $this->post('/reset-password', [
+        'token' => 'token',
+        'email' => $user->email,
+        'password' => 'password-baru',
+        'password_confirmation' => 'password-baru',
+    ])->assertNotFound();
 });

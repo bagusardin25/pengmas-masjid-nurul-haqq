@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Alihkan www.domain ke domain utama (satu alamat untuk mesin pencari)
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -22,4 +26,10 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Jangan perlihatkan versi PHP (cadangan; Laravel juga menghapusnya)
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
 </IfModule>
