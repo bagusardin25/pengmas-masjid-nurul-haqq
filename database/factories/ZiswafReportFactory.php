@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\PublicationStatus;
+use App\Enums\ReportCategory;
+use App\Models\Media;
 use App\Models\ZiswafReport;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,20 +13,21 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ZiswafReportFactory extends Factory
 {
-    protected static int $monthOffset = 0;
-
     public function definition(): array
     {
-        $period = now()->startOfMonth()->addMonths(self::$monthOffset);
-        self::$monthOffset++;
-
         return [
-            'period' => $period->toDateString(),
-            'zakat' => 0,
-            'infaq' => 0,
-            'sedekah' => 0,
-            'wakaf' => 0,
-            'disbursed' => 0,
+            'title' => 'Laporan kas pekan ke-1',
+            'category' => ReportCategory::Weekly,
+            'report_date' => now()->toDateString(),
+            'description' => null,
+            'report_file_id' => Media::factory()->state(fn () => [
+                'path' => 'laporan/'.fake()->unique()->uuid().'.pdf',
+                'original_name' => 'laporan.pdf',
+                'alt' => null,
+                'mime_type' => 'application/pdf',
+                'width' => null,
+                'height' => null,
+            ]),
             'status' => PublicationStatus::Draft,
         ];
     }

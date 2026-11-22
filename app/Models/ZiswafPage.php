@@ -19,20 +19,27 @@ class ZiswafPage extends Model
     protected $fillable = [
         'hero_title',
         'hero_description',
-        'zakat_note',
-        'infaq_note',
-        'sedekah_note',
-        'wakaf_note',
+        'summary',
         'bank_name',
         'account_number',
         'account_holder',
+        'account_note',
         'qris_image_id',
         'qris_note',
-        'confirmation_phone',
+        'infaq_box_description',
+        'report_description',
     ];
 
     public function qrisImage(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'qris_image_id');
+    }
+
+    /**
+     * Rekening baru ditampilkan bila nomor rekeningnya sudah diisi.
+     */
+    public function hasBankAccount(): bool
+    {
+        return filled($this->account_number);
     }
 }

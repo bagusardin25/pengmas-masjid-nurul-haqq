@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Enums\ReportCategory;
 use App\Models\Concerns\HasPublicationStatus;
 use Database\Factories\ZiswafReportFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Laporan keuangan masjid berupa dokumen PDF: rutin mingguan, per kegiatan, atau pembangunan.
+ */
 class ZiswafReport extends Model
 {
     /** @use HasFactory<ZiswafReportFactory> */
@@ -18,12 +23,10 @@ class ZiswafReport extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'period',
-        'zakat',
-        'infaq',
-        'sedekah',
-        'wakaf',
-        'disbursed',
+        'title',
+        'category',
+        'report_date',
+        'description',
         'report_file_id',
         'status',
         'published_at',
@@ -35,26 +38,9 @@ class ZiswafReport extends Model
     protected function casts(): array
     {
         return [
-            'period' => 'date',
-            'zakat' => 'integer',
-            'infaq' => 'integer',
-            'sedekah' => 'integer',
-            'wakaf' => 'integer',
-            'disbursed' => 'integer',
+            'category' => ReportCategory::class,
+            'report_date' => 'date',
         ];
-    }
-
-    protected static function booted(): void
-    {
-        static::saving(function (ZiswafReport $report): void {
-            $period = $report->period;
-
-            if ($period === null) {
-                return;
-            }
-
-            $report->period = $period->copy()->startOfMonth()->toDateString();
-        });
     }
 
     public function reportFile(): BelongsTo
@@ -62,18 +48,16 @@ class ZiswafReport extends Model
         return $this->belongsTo(Media::class, 'report_file_id');
     }
 
-    protected function collected(): Attribute
+    /**
+     * Laporan terbaru di atas.
+     */
+    public function scopeLatestFirst(Builder $query): Builder
     {
-        return Attribute::get(fn (): int => $this->zakat + $this->infaq + $this->sedekah + $this->wakaf);
+        return $query->orderByDesc('report_date')->orderByDesc('id');
     }
 
-    protected function balance(): Attribute
+    protected function dateLabel(): Attribute
     {
-        return Attribute::get(fn (): int => $this->collected - $this->disbursed);
-    }
-
-    protected function periodLabel(): Attribute
-    {
-        return Attribute::get(fn (): string => $this->period->copy()->locale('id')->translatedFormat('F Y'));
+        return Attribute::get(fn (): string => $this->report_date->copy()->locale('id')->translatedFormat('j F Y'));
     }
 }
