@@ -849,6 +849,91 @@
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(0, 1fr) 96px 150px auto;
 }
 
+/* Kelola ZISWAF: jenis dana, program sedekah, kontak konfirmasi. */
+.dash-grid-fund {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr) 96px 150px auto;
+}
+
+.dash-grid-program {
+    grid-template-columns: minmax(0, 1fr) 96px 150px auto;
+}
+
+.dash-grid-contact {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 1fr) 96px auto;
+}
+
+.dash-grid-fund .dash-item-actions,
+.dash-grid-program .dash-item-actions {
+    grid-row: 1;
+    grid-column: -2;
+}
+
+/* Isian PDF dan berkas yang sedang dipakai. */
+.dash-field.dash-file-field input[type="file"] {
+    padding: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.dash-file-field input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: var(--green-soft);
+    color: var(--green);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dash-file-current a {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* QRIS: gambar saat ini + isian ganti. */
+.dash-qris {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.dash-qris-current {
+    margin: 0;
+}
+
+.dash-qris-current img,
+.dash-qris-empty {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px dashed #d6d2c4;
+    border-radius: 12px;
+    background: #fff;
+    object-fit: contain;
+}
+
+.dash-qris-empty {
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.dash-qris-current figcaption {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
 /* Grid 6 kolom untuk form dengan banyak isian (ngaji kitab, agenda). */
 .dash-grid-six {
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -1115,6 +1200,9 @@
 @container (max-width: 760px) {
     .dash-grid-stat,
     .dash-grid-role,
+    .dash-grid-fund,
+    .dash-grid-program,
+    .dash-grid-contact,
     .dash-grid-facility,
     .dash-grid-member,
     .dash-grid-routine,
@@ -1135,7 +1223,9 @@
     }
 
     .dash-grid-role .dash-item-actions,
-    .dash-grid-faq .dash-item-actions {
+    .dash-grid-faq .dash-item-actions,
+    .dash-grid-fund .dash-item-actions,
+    .dash-grid-program .dash-item-actions {
         grid-row: auto;
     }
 
@@ -1150,6 +1240,9 @@
 @container (max-width: 460px) {
     .dash-grid-stat,
     .dash-grid-role,
+    .dash-grid-fund,
+    .dash-grid-program,
+    .dash-grid-contact,
     .dash-grid-facility,
     .dash-grid-member,
     .dash-grid-routine,
@@ -1172,8 +1265,13 @@
 }
 
 @media (max-width: 760px) {
-    .dash-hero-photo {
+    .dash-hero-photo,
+    .dash-qris {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-qris-current {
+        max-width: 160px;
     }
 
     .dash-hero-current {

@@ -24,7 +24,7 @@
         <x-dashboard.nav-item label="Profil Masjid" icon="mosque" :href="route('dashboard.profil')" :active="request()->routeIs('dashboard.profil*')" />
         <x-dashboard.nav-item label="Jadwal & Kegiatan" icon="calendar" :href="route('dashboard.jadwal')" :active="request()->routeIs('dashboard.jadwal*')" />
         <x-dashboard.nav-item label="Program TPQ" icon="book" :href="route('dashboard.tpq')" :active="request()->routeIs('dashboard.tpq*')" />
-        <x-dashboard.nav-item label="ZISWAF" icon="heart" />
+        <x-dashboard.nav-item label="ZISWAF" icon="heart" :href="route('dashboard.ziswaf')" :active="request()->routeIs('dashboard.ziswaf*')" />
         <x-dashboard.nav-item label="Galeri & Media" icon="image" />
         <x-dashboard.nav-item label="Kontak" icon="phone" />
     </nav>

@@ -17,6 +17,11 @@ use App\Http\Controllers\Dashboard\Tpq\TpqDocumentationController;
 use App\Http\Controllers\Dashboard\Tpq\TpqFaqController;
 use App\Http\Controllers\Dashboard\Tpq\TpqPillarController;
 use App\Http\Controllers\Dashboard\TpqController as DashboardTpqController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafContactController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafFundController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafProgramController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafReportController;
+use App\Http\Controllers\Dashboard\ZiswafController as DashboardZiswafController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
@@ -102,6 +107,28 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->only(['store', 'update', 'destroy'])
                 ->parameters(['dokumentasi' => 'documentation'])
                 ->names('documentations');
+        });
+
+        Route::get('/ziswaf', [DashboardZiswafController::class, 'edit'])->name('ziswaf');
+        Route::put('/ziswaf', [DashboardZiswafController::class, 'update'])->name('ziswaf.update');
+
+        Route::prefix('ziswaf')->name('ziswaf.')->group(function () {
+            Route::resource('jenis-dana', ZiswafFundController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['jenis-dana' => 'fund'])
+                ->names('funds');
+            Route::resource('program', ZiswafProgramController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['program' => 'program'])
+                ->names('programs');
+            Route::resource('kontak', ZiswafContactController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['kontak' => 'contact'])
+                ->names('contacts');
+            Route::resource('laporan', ZiswafReportController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['laporan' => 'report'])
+                ->names('reports');
         });
     });
 });

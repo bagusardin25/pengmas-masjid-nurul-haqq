@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Dashboard\Concerns;
 
+use Illuminate\Validation\Rules\Enum;
+
 /**
  * Pesan validasi berbahasa Indonesia untuk form dashboard.
  *
@@ -23,6 +25,8 @@ trait IndonesianValidationMessages
             'integer' => ':Attribute harus berupa angka bulat.',
             'boolean' => ':Attribute tidak valid.',
             'enum' => 'Pilihan :attribute tidak valid.',
+            // Rule::enum() memakai pesan miliknya sendiri kecuali diberi pesan berkunci nama kelasnya.
+            Enum::class => 'Pilihan :attribute tidak valid.',
             'url' => ':Attribute harus berupa tautan lengkap, diawali http:// atau https://.',
             'date_format' => ':Attribute tidak sesuai format tanggal.',
             'max' => [
