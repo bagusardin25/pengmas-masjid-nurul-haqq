@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasPublicationStatus;
 use App\Models\Concerns\HasSortOrder;
 use Database\Factories\GalleryVideoFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,6 +68,27 @@ class GalleryVideo extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(GalleryCategory::class, 'category_id');
+    }
+
+    public function thumbnailUrl(): string
+    {
+        return 'https://i.ytimg.com/vi/'.$this->youtube_id.'/hqdefault.jpg';
+    }
+
+    public function watchUrl(): string
+    {
+        return 'https://www.youtube.com/watch?v='.$this->youtube_id;
+    }
+
+    /**
+     * Video terbaru lebih dulu; video tanpa tanggal di akhir.
+     */
+    public function scopeLatestFirst(Builder $query): Builder
+    {
+        return $query->orderByRaw('date is null')
+            ->orderByDesc('date')
+            ->orderBy('sort_order')
+            ->orderByDesc('id');
     }
 
     public static function parseYoutubeId(string $url): ?string

@@ -3,6 +3,13 @@
 @section('title', 'Kontak')
 @section('description', 'Hubungi pengurus masjid, layanan sekretariat, dan informasi pendaftaran TPQ serta ZISWAF.')
 
+@php
+    $contact = $siteContact->setting();
+    $phones = $siteContact->phones();
+    $whatsappUrl = $siteContact->whatsappUrl();
+    $mapsLink = $contact?->mapsLink();
+@endphp
+
 @section('content')
     <section class="contact-page-hero">
         <div class="site-container contact-hero-inner">
@@ -10,7 +17,9 @@
             <p class="eyebrow eyebrow-light">Kontak</p>
             <h1>Hubungi pengurus masjid</h1>
             <p>Untuk layanan ZISWAF, pendaftaran TPQ, dan kebutuhan ibadah lainnya. Mari terhubung dengan Masjid Jami Nurul Haqq.</p>
-            <a class="button button-gold" href="https://wa.me/6281239567390">♡ Tanya via WhatsApp</a>
+            @if ($whatsappUrl)
+                <a class="button button-gold" href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer">♡ Tanya via WhatsApp</a>
+            @endif
         </div>
     </section>
 
@@ -22,66 +31,94 @@
                 <p class="contact-intro">Pilih saluran yang sesuai dengan kebutuhan Anda.</p>
 
                 <div class="contact-list">
-                    <a class="contact-item" href="tel:081234567890">
-                        <span class="contact-icon">☎</span>
-                        <span class="contact-meta">
-                            <small>Kontak takmir</small>
-                            <strong>0812-3456-7890</strong>
-                        </span>
-                        <span class="contact-arrow">→</span>
-                    </a>
-                    <a class="contact-item" href="https://wa.me/6281239567390">
-                        <span class="contact-icon">✆</span>
-                        <span class="contact-meta">
-                            <small>Sekretariat / WhatsApp</small>
-                            <strong>0812-3956-7390</strong>
-                        </span>
-                        <span class="contact-arrow">→</span>
-                    </a>
-                    <a class="contact-item" href="mailto:masjidnurulhaqq@gmail.com">
-                        <span class="contact-icon">✉</span>
-                        <span class="contact-meta">
-                            <small>Email</small>
-                            <strong>masjidnurulhaqq@gmail.com</strong>
-                        </span>
-                        <span class="contact-arrow">→</span>
-                    </a>
-                    <a class="contact-item" href="https://instagram.com/masjidnurulhaqq" target="_blank" rel="noopener noreferrer">
-                        <span class="contact-icon">◎</span>
-                        <span class="contact-meta">
-                            <small>Instagram</small>
-                            <strong>@masjidnurulhaqq</strong>
-                        </span>
-                        <span class="contact-arrow">→</span>
-                    </a>
-                    <div class="contact-item static-item">
-                        <span class="contact-meta">
-                            <small>Layanan sekretariat</small>
-                            <strong>Senin - Jumat, 09.00 - 15.00 WIB</strong>
-                            <small>Jam layanan contoh</small>
-                        </span>
-                    </div>
+                    @foreach ($phones as $phone)
+                        <a class="contact-item" href="{{ $phone->url() }}" @if ($phone->is_whatsapp) target="_blank" rel="noopener noreferrer" @endif>
+                            <span class="contact-icon" aria-hidden="true">{{ $phone->is_whatsapp ? '✆' : '☎' }}</span>
+                            <span class="contact-meta">
+                                <small>{{ $phone->label }}{{ $phone->is_whatsapp ? ' · WhatsApp' : '' }}</small>
+                                <strong>{{ $phone->number }}</strong>
+                            </span>
+                            <span class="contact-arrow" aria-hidden="true">→</span>
+                        </a>
+                    @endforeach
+
+                    @if (filled($contact?->email))
+                        <a class="contact-item" href="mailto:{{ $contact->email }}">
+                            <span class="contact-icon" aria-hidden="true">✉</span>
+                            <span class="contact-meta">
+                                <small>Email</small>
+                                <strong>{{ $contact->email }}</strong>
+                            </span>
+                            <span class="contact-arrow" aria-hidden="true">→</span>
+                        </a>
+                    @endif
+
+                    @if ($contact?->instagramUrl())
+                        <a class="contact-item" href="{{ $contact->instagramUrl() }}" target="_blank" rel="noopener noreferrer">
+                            <span class="contact-icon" aria-hidden="true">◎</span>
+                            <span class="contact-meta">
+                                <small>Instagram</small>
+                                <strong>{{ '@'.$contact->instagram }}</strong>
+                            </span>
+                            <span class="contact-arrow" aria-hidden="true">→</span>
+                        </a>
+                    @endif
+
+                    @if (filled($contact?->youtube_url))
+                        <a class="contact-item" href="{{ $contact->youtube_url }}" target="_blank" rel="noopener noreferrer">
+                            <span class="contact-icon" aria-hidden="true">▶</span>
+                            <span class="contact-meta">
+                                <small>YouTube</small>
+                                <strong>Kanal Masjid Nurul Haqq</strong>
+                            </span>
+                            <span class="contact-arrow" aria-hidden="true">→</span>
+                        </a>
+                    @endif
+
+                    @if (filled($contact?->service_hours))
+                        <div class="contact-item static-item">
+                            <span class="contact-meta">
+                                <small>Layanan sekretariat</small>
+                                <strong>{{ $contact->service_hours }}</strong>
+                            </span>
+                        </div>
+                    @endif
+
+                    @if ($phones->isEmpty() && blank($contact?->email))
+                        <p class="gallery-empty">Kontak pengurus sedang diperbarui. Silakan datang langsung ke sekretariat masjid.</p>
+                    @endif
                 </div>
             </div>
 
             <div class="contact-right">
                 <p class="eyebrow contact-location-label">Lokasi masjid</p>
-                <div class="map-panel">
-                    <div class="map-icon" aria-hidden="true">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+                @if (filled($contact?->maps_embed_url))
+                    <div class="map-embed">
+                        <iframe src="{{ $contact->maps_embed_url }}" title="Peta lokasi Masjid Nurul Haqq di Google Maps"
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
                     </div>
-                    <div class="map-content">
-                        <h3>Area peta Masjid Nurul Haqq</h3>
-                        <p>Perlu bantuan? Silakan kunjungi kami di lokasi atau hubungi pengurus untuk informasi lebih detail.</p>
+                @else
+                    <div class="map-panel">
+                        <div class="map-icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+                        </div>
+                        <div class="map-content">
+                            <h3>Masjid Nurul Haqq</h3>
+                            <p>Perlu bantuan? Silakan kunjungi kami di lokasi atau hubungi pengurus untuk informasi lebih detail.</p>
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 <div class="location-card">
                     <h3>Masjid Jami Nurul Haqq</h3>
-                    <p>Griya Taman Asri Blok FF 08-09, Tawangsari, Kec. Taman, Kabupaten Sidoarjo, Jawa Timur.</p>
-                    <a class="button button-outline" href="https://maps.google.com/?q=Masjid+Jami+Nurul+Haqq+Sidoarjo" target="_blank" rel="noopener noreferrer">
-                        <span aria-hidden="true">↗</span> Buka di Google Maps
-                    </a>
+                    @if (filled($contact?->address))
+                        <p>{{ $contact->address }}</p>
+                    @endif
+                    @if ($mapsLink)
+                        <a class="button button-outline" href="{{ $mapsLink }}" target="_blank" rel="noopener noreferrer">
+                            <span aria-hidden="true">↗</span> Buka di Google Maps
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -96,21 +133,23 @@
                 <a class="help-card" href="{{ route('ziswaf') }}">
                     <span class="card-icon">♡</span>
                     <h3>Layanan ZISWAF</h3>
-                    <p>Jangan khawatir jika ingin menyalurkan zakat, infak, sedekah, wakaf, atau kebutuhan donasi lainnya.</p>
+                    <p>Informasi rekening, QRIS, dan konfirmasi penyaluran zakat, infak, sedekah, dan wakaf.</p>
                 </a>
                 <a class="help-card" href="{{ route('tpq') }}">
                     <span class="card-icon">▤</span>
                     <h3>Pendaftaran TPQ</h3>
-                    <p>Hubungi sekretariat untuk informasi pendaftaran, jadwal kelas, dan program yang tersedia.</p>
+                    <p>Informasi pendaftaran santri baru, jadwal mengaji, dan program TPQ Nurul Haqq.</p>
                 </a>
                 <a class="help-card" href="{{ route('jadwal') }}">
                     <span class="card-icon">⌂</span>
                     <h3>Kebutuhan ibadah</h3>
-                    <p>Hubungi takmir untuk pertanyaan terkait sholat berjamaah, pengajian, dan kebutuhan ibadah lainnya.</p>
+                    <p>Jadwal sholat berjamaah, kajian rutin, ngaji kitab, dan agenda masjid.</p>
                 </a>
             </div>
 
-            <a class="button button-dark contact-direct" href="https://wa.me/6281239567390">Hubungi sekretariat</a>
+            @if ($whatsappUrl)
+                <a class="button button-dark contact-direct" href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer">Hubungi sekretariat</a>
+            @endif
         </div>
     </section>
 

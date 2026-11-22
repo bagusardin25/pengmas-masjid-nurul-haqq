@@ -1,19 +1,23 @@
 <?php
 
-test('registration screen can be rendered', function () {
-    $response = $this->get('/register');
+use App\Models\User;
 
-    $response->assertStatus(200);
+test('the public registration page is closed', function () {
+    $this->get('/register')->assertNotFound();
 });
 
-test('new users can register', function () {
-    $response = $this->post('/register', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
+test('nobody can register an account without logging in', function () {
+    $this->post('/register', [
+        'name' => 'Penyusup',
+        'email' => 'penyusup@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
-    ]);
+    ])->assertNotFound();
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $this->assertGuest();
+    expect(User::query()->where('email', 'penyusup@example.com')->exists())->toBeFalse();
+});
+
+test('the login page does not link to registration', function () {
+    $this->get('/login')->assertOk()->assertDontSee('/register', false);
 });

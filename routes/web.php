@@ -2,12 +2,22 @@
 
 use App\Http\Controllers\AgendaCalendarController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\BerandaController as DashboardBerandaController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\Galeri\ArticleController;
+use App\Http\Controllers\Dashboard\Galeri\GalleryAlbumController;
+use App\Http\Controllers\Dashboard\Galeri\GalleryCategoryController;
+use App\Http\Controllers\Dashboard\Galeri\GalleryPhotoController;
+use App\Http\Controllers\Dashboard\Galeri\GalleryVideoController;
+use App\Http\Controllers\Dashboard\GaleriController as DashboardGaleriController;
 use App\Http\Controllers\Dashboard\Jadwal\AgendaController;
 use App\Http\Controllers\Dashboard\Jadwal\KitabScheduleController;
 use App\Http\Controllers\Dashboard\Jadwal\RoutineActivityController;
 use App\Http\Controllers\Dashboard\JadwalController as DashboardJadwalController;
+use App\Http\Controllers\Dashboard\Kontak\ContactPhoneController;
+use App\Http\Controllers\Dashboard\KontakController as DashboardKontakController;
+use App\Http\Controllers\Dashboard\MaintenanceController;
 use App\Http\Controllers\Dashboard\Profil\AboutRoleController;
 use App\Http\Controllers\Dashboard\Profil\AboutStatController;
 use App\Http\Controllers\Dashboard\Profil\FacilityController;
@@ -22,7 +32,9 @@ use App\Http\Controllers\Dashboard\Ziswaf\ZiswafFundController;
 use App\Http\Controllers\Dashboard\Ziswaf\ZiswafProgramController;
 use App\Http\Controllers\Dashboard\Ziswaf\ZiswafReportController;
 use App\Http\Controllers\Dashboard\ZiswafController as DashboardZiswafController;
+use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\KontakController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TpqController;
@@ -36,12 +48,10 @@ Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');
 Route::get('/agenda/{agenda:slug}/kalender.ics', AgendaCalendarController::class)->name('agenda.calendar');
 Route::get('/ziswaf', [ZiswafController::class, 'index'])->name('ziswaf');
 Route::get('/ziswaf/laporan', [ZiswafController::class, 'reports'])->name('ziswaf.laporan');
-Route::get('/galeri', function () {
-    return view('pages.galeri');
-})->name('galeri');
-Route::get('/kontak', function () {
-    return view('pages.kontak');
-})->name('kontak');
+Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
+Route::get('/galeri/album/{album:slug}', [GaleriController::class, 'album'])->name('galeri.album');
+Route::get('/galeri/artikel/{article:slug}', [GaleriController::class, 'article'])->name('galeri.artikel');
+Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     // Nama "dashboard" dipakai controller auth bawaan Breeze untuk redirect.
@@ -130,13 +140,63 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->parameters(['laporan' => 'report'])
                 ->names('reports');
         });
+
+        Route::get('/galeri', [DashboardGaleriController::class, 'edit'])->name('galeri');
+
+        Route::prefix('galeri')->name('galeri.')->group(function () {
+            Route::resource('kategori', GalleryCategoryController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['kategori' => 'category'])
+                ->names('categories');
+            Route::resource('album', GalleryAlbumController::class)
+                ->only(['store', 'edit', 'update', 'destroy'])
+                ->parameters(['album' => 'album'])
+                ->names('albums');
+            Route::resource('video', GalleryVideoController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['video' => 'video'])
+                ->names('videos');
+            Route::resource('artikel', ArticleController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['artikel' => 'article'])
+                ->names('articles');
+
+            // Foto selalu diakses lewat albumnya, jadi foto album lain tidak bisa diubah dari sini.
+            Route::scopeBindings()->prefix('album/{album}/foto')->name('albums.photos.')->group(function () {
+                Route::post('/', [GalleryPhotoController::class, 'store'])->name('store');
+                Route::put('/{photo}', [GalleryPhotoController::class, 'update'])->name('update');
+                Route::put('/{photo}/sampul', [GalleryPhotoController::class, 'cover'])->name('cover');
+                Route::delete('/{photo}', [GalleryPhotoController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+        // Perawatan server (shared hosting). Tidak ada di menu; alamatnya memuat MAINTENANCE_TOKEN.
+        Route::prefix('perawatan/{token}')->name('maintenance')->group(function () {
+            Route::get('/', [MaintenanceController::class, 'show'])->name('');
+            Route::post('/storage-link', [MaintenanceController::class, 'link'])->name('.link');
+            Route::delete('/storage-link', [MaintenanceController::class, 'unlink'])->name('.unlink');
+            Route::post('/bersihkan-cache', [MaintenanceController::class, 'clearCache'])->name('.cache');
+        });
+
+        Route::get('/kontak', [DashboardKontakController::class, 'edit'])->name('kontak');
+        Route::put('/kontak', [DashboardKontakController::class, 'update'])->name('kontak.update');
+
+        Route::prefix('kontak')->name('kontak.')->group(function () {
+            Route::resource('telepon', ContactPhoneController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['telepon' => 'phone'])
+                ->names('phones');
+        });
     });
 });
 
 Route::middleware('auth')->group(function () {
+    // Halaman "Akun & Admin" di dashboard.
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/dashboard/admin', [AdminController::class, 'store'])->name('dashboard.admins.store');
+    Route::delete('/dashboard/admin/{admin}', [AdminController::class, 'destroy'])->name('dashboard.admins.destroy');
 });
 
 require __DIR__.'/auth.php';

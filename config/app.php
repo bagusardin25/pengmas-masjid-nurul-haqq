@@ -97,6 +97,20 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Token Halaman Perawatan Server
+    |--------------------------------------------------------------------------
+    |
+    | Halaman perawatan (membuat storage link, membersihkan cache) untuk shared
+    | hosting tanpa akses terminal. Hanya bisa dibuka admin yang sudah masuk lewat
+    | /dashboard/perawatan/{token}. Bila kosong, halaman ini dimatikan (404).
+    | Isi dengan teks acak yang panjang, mis. hasil `php -r "echo bin2hex(random_bytes(24));"`.
+    |
+    */
+
+    'maintenance_token' => env('MAINTENANCE_TOKEN'),
+
     'key' => env('APP_KEY'),
 
     'previous_keys' => [

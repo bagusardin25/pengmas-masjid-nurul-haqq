@@ -5,11 +5,13 @@ namespace App\View\Components;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
+/**
+ * Tata letak halaman masuk dan halaman akun tamu lainnya (lupa password, verifikasi).
+ */
 class GuestLayout extends Component
 {
-    /**
-     * Get the view / contents that represents the component.
-     */
+    public function __construct(public string $title = 'Masuk') {}
+
     public function render(): View
     {
         return view('layouts.guest');

@@ -29,9 +29,14 @@ trait IndonesianValidationMessages
             Enum::class => 'Pilihan :attribute tidak valid.',
             'url' => ':Attribute harus berupa tautan lengkap, diawali http:// atau https://.',
             'date_format' => ':Attribute tidak sesuai format tanggal.',
+            'email' => ':Attribute harus berupa alamat email yang valid, mis. nama@gmail.com.',
+            'exists' => 'Pilihan :attribute tidak valid.',
+            'array' => ':Attribute tidak valid.',
             'max' => [
                 'string' => ':Attribute maksimal :max karakter.',
                 'numeric' => ':Attribute maksimal :max.',
+                'array' => ':Attribute maksimal :max berkas sekali unggah.',
+                'file' => ':Attribute maksimal :max KB.',
             ],
             'min' => [
                 'string' => ':Attribute minimal :min karakter.',

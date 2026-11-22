@@ -74,7 +74,7 @@
                     @endforelse
                 </article>
             </div>
-            <a class="button button-dark section-action" href="https://wa.me/6281239567390">☎ Hubungi takmir</a>
+            <a class="button button-dark section-action" href="{{ $siteContact->contactUrl() }}">☎ Hubungi takmir</a>
         </div>
     </section>
 

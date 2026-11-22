@@ -1,3 +1,8 @@
+@php
+    $footerContact = $siteContact->setting();
+    $footerWhatsapp = $siteContact->whatsappUrl();
+@endphp
+
 <footer class="site-footer">
     <div class="site-container footer-inner">
         <div class="footer-about">
@@ -7,7 +12,7 @@
                 </span>
                 <span class="brand-copy"><span>MASJID JAMI</span><strong>Nurul Haqq</strong></span>
             </a>
-            <p>Griya Taman Asri Blok FF 08-09, Tawangsari, Kec. Taman, Kabupaten Sidoarjo, Jawa Timur.</p>
+            <p>{{ $footerContact?->address ?? 'Griya Taman Asri Blok FF 08-09, Tawangsari, Kec. Taman, Kabupaten Sidoarjo, Jawa Timur.' }}</p>
         </div>
         <div class="footer-links">
             <div>
@@ -26,9 +31,18 @@
             </div>
             <div>
                 <h2>Ikuti kami</h2>
-                <a href="https://instagram.com/masjidnurulhaqq" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a>
-                <a href="https://wa.me/6281239567390" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                @if ($footerContact?->instagramUrl())
+                    <a href="{{ $footerContact->instagramUrl() }}" target="_blank" rel="noopener noreferrer">Instagram</a>
+                @endif
+                @if (filled($footerContact?->youtube_url))
+                    <a href="{{ $footerContact->youtube_url }}" target="_blank" rel="noopener noreferrer">YouTube</a>
+                @endif
+                @if ($footerWhatsapp)
+                    <a href="{{ $footerWhatsapp }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                @endif
+                @if (filled($footerContact?->email))
+                    <a href="mailto:{{ $footerContact->email }}">Email</a>
+                @endif
             </div>
         </div>
         <div class="footer-bottom">

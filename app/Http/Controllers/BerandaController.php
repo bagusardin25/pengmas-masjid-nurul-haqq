@@ -8,6 +8,8 @@ use App\Models\Agenda;
 use App\Models\ContactPhone;
 use App\Models\ContactSetting;
 use App\Models\Facility;
+use App\Models\GalleryAlbum;
+use App\Models\GalleryPhoto;
 use App\Models\HomePage;
 use App\Models\KitabSchedule;
 use App\Models\RoutineActivity;
@@ -26,7 +28,7 @@ class BerandaController extends Controller
     {
         $hero = HomePage::query()->with('heroImage')->first();
         $contact = ContactSetting::first();
-        $phones = ContactPhone::all();
+        $phones = ContactPhone::query()->ordered()->get();
         $about = AboutPage::first();
         $aboutStats = AboutStat::query()->ordered()->get();
         $facilities = Facility::query()->where('is_active', true)->ordered()->get();
@@ -61,6 +63,9 @@ class BerandaController extends Controller
         $ziswafContacts = ZiswafContact::query()->ordered()->get();
         $latestReports = ZiswafReport::query()->published()->with('reportFile')->latestFirst()->limit(3)->get();
 
+        $galleryAlbums = GalleryAlbum::query()->published()->has('photos')->withCardData()->latestFirst()->limit(4)->get();
+        $galleryPhotoTotal = GalleryPhoto::query()->whereHas('album', fn ($album) => $album->published())->count();
+
         return view('pages.beranda', compact(
             'hero',
             'today',
@@ -81,6 +86,8 @@ class BerandaController extends Controller
             'ziswafFunds',
             'ziswafContacts',
             'latestReports',
+            'galleryAlbums',
+            'galleryPhotoTotal',
         ));
     }
 }

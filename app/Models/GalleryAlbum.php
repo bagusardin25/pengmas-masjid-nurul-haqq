@@ -6,10 +6,12 @@ use App\Models\Concerns\HasPublicationStatus;
 use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\HasSortOrder;
 use Database\Factories\GalleryAlbumFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class GalleryAlbum extends Model
 {
@@ -56,5 +58,44 @@ class GalleryAlbum extends Model
     public function photos(): HasMany
     {
         return $this->hasMany(GalleryPhoto::class, 'album_id')->ordered();
+    }
+
+    /**
+     * Foto pertama album (urutan paling atas), dipakai sebagai sampul bila sampul belum dipilih.
+     */
+    public function firstPhoto(): HasOne
+    {
+        return $this->hasOne(GalleryPhoto::class, 'album_id')->ofMany([
+            'sort_order' => 'min',
+            'id' => 'min',
+        ]);
+    }
+
+    /**
+     * Gambar sampul album: sampul yang dipilih, atau foto pertama album.
+     * Muat relasi coverImage dan firstPhoto.image agar tidak ada query tambahan.
+     */
+    public function cover(): ?Media
+    {
+        return $this->coverImage ?? $this->firstPhoto?->image;
+    }
+
+    /**
+     * Album terbaru lebih dulu; album tanpa tanggal di akhir, diurutkan menurut urutan.
+     */
+    public function scopeLatestFirst(Builder $query): Builder
+    {
+        return $query->orderByRaw('date is null')
+            ->orderByDesc('date')
+            ->orderBy('sort_order')
+            ->orderByDesc('id');
+    }
+
+    /**
+     * Relasi yang dibutuhkan untuk menampilkan kartu album (sampul dan jumlah foto).
+     */
+    public function scopeWithCardData(Builder $query): Builder
+    {
+        return $query->with(['category', 'coverImage', 'firstPhoto.image'])->withCount('photos');
     }
 }

@@ -50,36 +50,26 @@ test('email verification status is unchanged when the email address is unchanged
     $this->assertNotNull($user->refresh()->email_verified_at);
 });
 
-test('user can delete their account', function () {
+test('users can no longer delete their own account from the profile page', function () {
     $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->delete('/profile', [
-            'password' => 'password',
-        ]);
-
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect('/');
-
-    $this->assertGuest();
-    $this->assertNull($user->fresh());
-});
-
-test('correct password must be provided to delete account', function () {
-    $user = User::factory()->create();
-
-    $response = $this
-        ->actingAs($user)
-        ->from('/profile')
-        ->delete('/profile', [
-            'password' => 'wrong-password',
-        ]);
-
-    $response
-        ->assertSessionHasErrorsIn('userDeletion', 'password')
-        ->assertRedirect('/profile');
+    $this->actingAs($user)
+        ->delete('/profile', ['password' => 'password'])
+        ->assertStatus(405);
 
     $this->assertNotNull($user->fresh());
+});
+
+test('profile errors are shown in indonesian', function () {
+    $other = User::factory()->create(['email' => 'lain@example.com']);
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->from('/profile')
+        ->patch('/profile', ['name' => '', 'email' => 'lain@example.com'])
+        ->assertRedirect('/profile')
+        ->assertSessionHasErrors([
+            'name' => 'Nama wajib diisi.',
+            'email' => 'Email ini sudah dipakai admin lain.',
+        ], null, 'profile');
 });

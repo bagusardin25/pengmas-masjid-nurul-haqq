@@ -7,13 +7,19 @@ use Illuminate\Database\Seeder;
 
 class GalleryCategorySeeder extends Seeder
 {
+    /**
+     * Kategori demo lama. Dihapus bila tidak lagi dipakai album atau video mana pun.
+     */
+    private const DEMO_SLUGS = ['kajian-rutin', 'sholat-berjamaah', 'kegiatan-tpq', 'pengajian-ahad-malam'];
+
     public function run(): void
     {
         $categories = [
-            'kajian-rutin' => 'Kajian rutin',
-            'sholat-berjamaah' => 'Sholat berjamaah',
-            'kegiatan-tpq' => 'Kegiatan TPQ',
-            'pengajian-ahad-malam' => 'Pengajian Ahad malam',
+            'kegiatan-masjid' => 'Kegiatan masjid',
+            'kajian-pengajian' => 'Kajian & pengajian',
+            'hari-besar-islam' => 'Hari besar Islam',
+            'tpq-madrasah' => 'TPQ & Madrasah Diniyah',
+            'masjid-fasilitas' => 'Masjid & fasilitas',
         ];
 
         $sortOrder = 1;
@@ -24,5 +30,20 @@ class GalleryCategorySeeder extends Seeder
                 ['name' => $name, 'sort_order' => $sortOrder++],
             );
         }
+
+        self::removeUnusedDemoCategories();
+    }
+
+    /**
+     * Hapus kategori demo yang sudah tidak dipakai. Dipanggil lagi oleh GalleryPageSeeder setelah
+     * album demo dihapus, karena saat seeder ini jalan album demo lama masih memakai kategorinya.
+     */
+    public static function removeUnusedDemoCategories(): void
+    {
+        GalleryCategory::query()
+            ->whereIn('slug', self::DEMO_SLUGS)
+            ->whereDoesntHave('albums')
+            ->whereDoesntHave('videos')
+            ->delete();
     }
 }
