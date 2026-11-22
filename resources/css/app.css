@@ -1872,4 +1872,133 @@
             padding-top: 24px;
         }
     }
+
+    /* Pagination situs (album galeri, laporan keuangan). */
+    .pager {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px 24px;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+    }
+    .pager-summary {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+    }
+    .pager-summary strong {
+        color: var(--green);
+        font-weight: 700;
+    }
+    .pager-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .pager-link {
+        display: inline-flex;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--green);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+    a.pager-link:hover {
+        border-color: var(--green);
+        background: var(--green-soft);
+    }
+    a.pager-link:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 2px;
+    }
+    .pager-link.is-active {
+        border-color: var(--green);
+        background: var(--green);
+        color: #fff;
+    }
+    .pager-link.is-disabled {
+        color: #a9b3ae;
+        cursor: not-allowed;
+    }
+    .pager-gap {
+        min-width: 32px;
+        padding: 0 4px;
+        border-color: transparent;
+        background: transparent;
+        color: var(--muted);
+    }
+    .pager-step span[aria-hidden="true"] {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    /* Tombol "Muat lebih banyak" untuk video dan artikel. */
+    .load-more {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-top: 28px;
+    }
+    .load-more-button {
+        min-width: 240px;
+        background: #fff;
+    }
+    .load-more-button:hover {
+        background: var(--green);
+        color: #fff;
+    }
+    .load-more-button:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 2px;
+    }
+    .load-more-button.is-loading {
+        cursor: progress;
+        opacity: 0.75;
+    }
+    .load-more-status {
+        min-height: 1em;
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+    @media (max-width: 640px) {
+        .pager {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .pager-summary {
+            text-align: center;
+        }
+        .pager-list {
+            justify-content: center;
+        }
+        .pager-step-text {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+        .load-more-button {
+            width: 100%;
+        }
+    }
 }
