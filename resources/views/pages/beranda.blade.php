@@ -34,7 +34,7 @@
                         </p>
                         <h1
                             class="[margin:22px_0_0] text-[clamp(48px,6vw,84px)] leading-[1.02] font-extrabold tracking-[-0.025em] text-[#0B3B2C]">
-                            {{ $hero?->hero_title }}
+                            {!! nl2br(e($hero?->hero_title)) !!}
                         </h1>
                         <p class="[margin:22px_0_0] max-w-[540px] text-[18px] leading-[1.7] text-[#42524B]">
                             {{ $hero?->hero_description }}
@@ -71,11 +71,18 @@
                     <div class="hero-media max-[640px]:pb-0 relative pb-[40px]">
                         <figure
                             class="[margin:0] aspect-[6/5] rounded-[320px_320px_28px_28px] overflow-hidden bg-[#E4ECE6]">
-                            <img src="{{ asset('images/beranda/hero-masjid-pintu-1200.jpg') }}"
-                                srcset="{{ asset('images/beranda/hero-masjid-pintu-720.jpg') }} 720w, {{ asset('images/beranda/hero-masjid-pintu-1200.jpg') }} 1200w"
-                                sizes="(min-width: 1100px) 640px, calc(100vw - 40px)" width="1200" height="1000"
-                                alt="Pintu masuk Masjid Nurul Haqq dengan papan nama dan fasad yang diterangi lampu pada malam hari"
-                                fetchpriority="high" decoding="async" class="block w-full h-[100%] object-cover">
+                            @if ($hero?->heroImage)
+                                <img src="{{ $hero->heroImage->url() }}"
+                                    @if ($hero->heroImage->width) width="{{ $hero->heroImage->width }}" height="{{ $hero->heroImage->height }}" @endif
+                                    alt="{{ $hero->heroImage->alt ?: 'Foto Masjid Nurul Haqq' }}"
+                                    fetchpriority="high" decoding="async" class="block w-full h-[100%] object-cover">
+                            @else
+                                <img src="{{ asset(\App\Models\HomePage::DEFAULT_HERO_IMAGE) }}"
+                                    srcset="{{ asset('images/beranda/hero-masjid-pintu-720.jpg') }} 720w, {{ asset(\App\Models\HomePage::DEFAULT_HERO_IMAGE) }} 1200w"
+                                    sizes="(min-width: 1100px) 640px, calc(100vw - 40px)" width="1200" height="1000"
+                                    alt="{{ \App\Models\HomePage::DEFAULT_HERO_ALT }}"
+                                    fetchpriority="high" decoding="async" class="block w-full h-[100%] object-cover">
+                            @endif
                         </figure>
                         <blockquote
                             class="hero-quote max-[640px]:[position:relative] max-[640px]:left-auto max-[640px]:bottom-auto max-[640px]:w-auto max-[640px]:[margin:-64px_16px_0] absolute left-[24px] bottom-[0] [margin:0] w-[min(400px,calc(100% - 48px))] [padding:22px_24px] rounded-[20px] bg-[#0B3B2C] text-[#FFFFFF] shadow-[0_20px_44px_rgba(11,59,44,0.28)]">
@@ -171,69 +178,20 @@
                                     <path d="m12 5 7 7-7 7"></path>
                                 </svg></a>
                         </div>
-                        <div class="grid [grid-template-columns:repeat(2,minmax(0,1fr))] [gap:16px]">
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path
-                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                                        </path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    270 m²</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Luas tanah</p>
+                        @if ($aboutStats->isNotEmpty())
+                            <div class="grid [grid-template-columns:repeat(2,minmax(0,1fr))] [gap:16px]">
+                                @foreach ($aboutStats as $stat)
+                                    <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
+                                        <span
+                                            class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><x-stat-icon :icon="$stat->icon" /></span>
+                                        <p
+                                            class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
+                                            {{ $stat->value }}</p>
+                                        <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">{{ $stat->label }}</p>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                        <path d="M9 22V12h6v10"></path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    150 m²</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Luas bangunan</p>
-                            </div>
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    600</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Daya tampung jamaah</p>
-                            </div>
-                            <div class="[padding:24px] rounded-[20px] bg-[#FFFFFF] [border:1px_solid_#E6E2D6]">
-                                <span
-                                    class="w-[46px] h-[46px] rounded-[14px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center"><svg
-                                        width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                        stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z">
-                                        </path>
-                                        <path d="M14 2v6h6"></path>
-                                        <path d="m9 15 2 2 4-4"></path>
-                                    </svg></span>
-                                <p
-                                    class="[margin:16px_0_0] text-[30px] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#0B3B2C]">
-                                    Wakaf</p>
-                                <p class="[margin:6px_0_0] text-[14px] text-[#4A5A53]">Status tanah</p>
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
                     <div class="mt-[64px]">
@@ -268,7 +226,7 @@
                                 class="[margin:14px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Ibadah dan kajian setiap pekan</h2>
                         </div>
-                        <a href="#jadwal"
+                        <a href="{{ route('jadwal') }}"
                             class="inline-flex items-center [gap:8px] min-h-[44px] text-[15px] font-bold text-[#0B3B2C] no-underline">Lihat
                             semua kegiatan<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -399,7 +357,8 @@
                                 <a href="{{ route('jadwal') }}"
                                     class="[flex:1_1_140px] inline-flex items-center justify-center [gap:8px] min-h-[48px] [padding:0_18px] rounded-[12px] bg-[#E2B84B] text-[#0B3B2C] text-[15px] font-bold no-underline">Detail
                                     agenda</a>
-                                <a href="#jadwal"
+                                @if ($nextAgenda)
+                                <a href="{{ route('agenda.calendar', $nextAgenda) }}" download
                                     class="[flex:1_1_160px] inline-flex items-center justify-center [gap:8px] min-h-[48px] [padding:0_18px] rounded-[12px] [border:1.5px_solid_rgba(255,255,255,0.45)] text-[#FFFFFF] text-[15px] font-bold no-underline"><svg
                                         width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -407,6 +366,7 @@
                                         <rect x="3" y="4" width="18" height="18" rx="2"></rect>
                                         <path d="M16 2v4M8 2v4M3 10h18"></path>
                                     </svg>Simpan ke kalender</a>
+                                @endif
                             </div>
                             @if ($nextAgenda)
                                 <p
@@ -434,70 +394,46 @@
                             <h2
                                 class="[margin:16px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Program TPQ</h2>
-                            <p class="[margin:14px_0_0] max-w-[560px] text-[17px] leading-[1.75] text-[#42524B]">
-                                TPQ Nurul Haqq membentuk generasi berkarakter Qur'ani melalui pembelajaran Al-Qur'an
-                                metode Tartil, dari jenjang Tartil 1–6 hingga Marhalah Ula, Wustha, Akhir, dan Diniyah.
-                            </p>
-                            <ul
-                                class="list-none [margin:24px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] [gap:12px_20px]">
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Membaca Al-Qur'an dengan tartil
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Menulis Al-Qur'an dengan benar
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Munaqosah setiap enam bulan
-                                </li>
-                                <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
-                                    <span
-                                        class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
-                                            width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
-                                            stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M20 6 9 17l-5-5"></path>
-                                        </svg></span>Ekstrakurikuler jujitsu, banjari &amp; drum band
-                                </li>
-                            </ul>
-                            <div
-                                class="mt-[28px] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        USIA</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">[rentang
-                                        usia]</p>
+                            @if ($tpq?->summary)
+                                <p class="[margin:14px_0_0] max-w-[560px] text-[17px] leading-[1.75] text-[#42524B]">
+                                    {{ $tpq->summary }}
+                                </p>
+                            @endif
+                            @if ($tpqPillars->isNotEmpty())
+                                <ul
+                                    class="list-none [margin:24px_0_0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] [gap:12px_20px]">
+                                    @foreach ($tpqPillars as $pillar)
+                                        <li class="flex items-center [gap:12px] text-[16px] font-semibold text-[#17231E]">
+                                            <span
+                                                class="w-[28px] h-[28px] rounded-[999px] bg-[#EEF5F1] text-[#0B3B2C] flex items-center justify-center shrink-0"><svg
+                                                    width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+                                                    stroke-linejoin="round" aria-hidden="true">
+                                                    <path d="M20 6 9 17l-5-5"></path>
+                                                </svg></span>{{ $pillar->title }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                            @php
+                                $tpqDetails = array_filter([
+                                    'USIA' => $tpq?->info_age_range,
+                                    'JADWAL' => $tpq?->info_schedule,
+                                    'BIAYA' => $tpq?->info_fee,
+                                ]);
+                            @endphp
+                            @if ($tpqDetails)
+                                <div
+                                    class="mt-[28px] grid [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))] [gap:12px]">
+                                    @foreach ($tpqDetails as $term => $value)
+                                        <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
+                                            <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
+                                                {{ $term }}</p>
+                                            <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">{{ $value }}</p>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        JADWAL</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">Senin–Jumat,
-                                        15.30–17.00 WIB</p>
-                                </div>
-                                <div class="[padding:14px_16px] rounded-[14px] bg-[#F8F6EF]">
-                                    <p class="[margin:0] text-[12px] font-bold tracking-[0.1em] text-[#4A5A53]">
-                                        BIAYA</p>
-                                    <p class="[margin:4px_0_0] text-[15px] font-bold text-[#17231E]">[biaya per
-                                        bulan]</p>
-                                </div>
-                            </div>
+                            @endif
                             <div class="mt-[28px] flex flex-wrap [gap:12px]">
                                 <a href="{{ route('tpq') }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] bg-[#0B3B2C] text-[#FFFFFF] text-[16px] font-bold no-underline"><svg
@@ -507,7 +443,7 @@
                                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                                         <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                                     </svg>Daftar TPQ</a>
-                                <a href="https://wa.me/6281239567390"
+                                <a href="{{ $tpq?->whatsappUrl() ?? 'https://wa.me/6281239567390' }}"
                                     class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] [border:1.5px_solid_#0B3B2C] text-[#0B3B2C] text-[16px] font-bold no-underline"><svg
                                         width="18" height="18" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -689,7 +625,7 @@
                                         LAPORAN DANA</h3>
                                     <p class="[margin:4px_0_0] text-[16px] font-bold">Periode Mei 2026</p>
                                 </div>
-                                <a href="#ziswaf"
+                                <a href="{{ route('ziswaf') }}"
                                     class="inline-flex items-center [gap:6px] min-h-[44px] [padding:0_14px] rounded-[12px] bg-[#EEF5F1] text-[#0B3B2C] text-[14px] font-bold no-underline"><svg
                                         width="16" height="16" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -775,7 +711,7 @@
                                 class="[margin:14px_0_0] text-[clamp(30px,3.4vw,44px)] leading-[1.15] font-extrabold tracking-[-0.02em] text-[#0B3B2C]">
                                 Momen kegiatan jamaah</h2>
                         </div>
-                        <a href="#galeri"
+                        <a href="{{ route('galeri') }}"
                             class="inline-flex items-center [gap:8px] min-h-[44px] text-[15px] font-bold text-[#0B3B2C] no-underline">Lihat
                             semua galeri<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -851,7 +787,7 @@
                                 ZISWAF, pendaftaran TPQ, dan kebutuhan ibadah lainnya.</p>
                             <ul class="list-none [margin:28px_0_0] [padding:0] flex flex-col [gap:10px]">
                                 @foreach ($phones as $phone)
-                                    <li><a href="{{ $phone->is_whatsapp == true ? 'https://wa.me/' . $phone->number : 'tel:' . $phone->number }}"
+                                    <li><a href="{{ $phone->is_whatsapp ? $phone->whatsappUrl() : 'tel:'.preg_replace('/[^0-9+]/', '', $phone->number) }}"
                                             class="flex items-center [gap:16px] [padding:14px_18px] rounded-[16px] bg-[#F8F6EF] text-[#17231E] no-underline">
                                             @if ($phone->is_whatsapp == true)
                                                 <span

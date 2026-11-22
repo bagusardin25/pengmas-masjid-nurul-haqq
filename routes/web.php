@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgendaCalendarController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Dashboard\BerandaController as DashboardBerandaController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -12,17 +13,21 @@ use App\Http\Controllers\Dashboard\Profil\AboutStatController;
 use App\Http\Controllers\Dashboard\Profil\FacilityController;
 use App\Http\Controllers\Dashboard\Profil\OrganizationMemberController;
 use App\Http\Controllers\Dashboard\ProfilController as DashboardProfilController;
+use App\Http\Controllers\Dashboard\Tpq\TpqDocumentationController;
+use App\Http\Controllers\Dashboard\Tpq\TpqFaqController;
+use App\Http\Controllers\Dashboard\Tpq\TpqPillarController;
+use App\Http\Controllers\Dashboard\TpqController as DashboardTpqController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TpqController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('home');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
-Route::get('/program-tpq', function () {
-    return view('pages.tpq');
-})->name('tpq');
+Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');
+Route::get('/agenda/{agenda:slug}/kalender.ics', AgendaCalendarController::class)->name('agenda.calendar');
 Route::get('/ziswaf', function () {
     return view('pages.ziswaf');
 })->name('ziswaf');
@@ -38,7 +43,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::name('dashboard.')->group(function () {
-        Route::get('/beranda', [DashboardBerandaController::class, 'index'])->name('beranda');
+        Route::get('/beranda', [DashboardBerandaController::class, 'edit'])->name('beranda');
+        Route::put('/beranda', [DashboardBerandaController::class, 'update'])->name('beranda.update');
 
         Route::get('/profil', [DashboardProfilController::class, 'edit'])->name('profil');
         Route::put('/profil', [DashboardProfilController::class, 'update'])->name('profil.update');
@@ -78,6 +84,24 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->only(['store', 'update', 'destroy'])
                 ->parameters(['agenda' => 'agenda'])
                 ->names('agendas');
+        });
+
+        Route::get('/tpq', [DashboardTpqController::class, 'edit'])->name('tpq');
+        Route::put('/tpq', [DashboardTpqController::class, 'update'])->name('tpq.update');
+
+        Route::prefix('tpq')->name('tpq.')->group(function () {
+            Route::resource('program', TpqPillarController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['program' => 'pillar'])
+                ->names('pillars');
+            Route::resource('pertanyaan', TpqFaqController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['pertanyaan' => 'faq'])
+                ->names('faqs');
+            Route::resource('dokumentasi', TpqDocumentationController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['dokumentasi' => 'documentation'])
+                ->names('documentations');
         });
     });
 });

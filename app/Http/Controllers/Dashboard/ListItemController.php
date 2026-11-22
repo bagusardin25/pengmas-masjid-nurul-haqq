@@ -41,13 +41,39 @@ abstract class ListItemController extends Controller
     abstract protected function attributes(): array;
 
     /**
+     * Aturan tambahan yang hanya berlaku saat menambah data (mis. foto wajib diunggah).
+     *
+     * @return array<string, mixed>
+     */
+    protected function createRules(): array
+    {
+        return [];
+    }
+
+    /**
+     * Pesan khusus untuk daftar ini, melengkapi pesan validasi umum.
+     *
+     * @return array<string, string>
+     */
+    protected function messages(): array
+    {
+        return [];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     protected function validateForm(Request $request, ?Model $model = null): array
     {
         $bag = $this->bag.'-'.($model?->getKey() ?? 'new');
+        $rules = $model === null ? [...$this->rules(), ...$this->createRules()] : $this->rules();
 
-        $validator = Validator::make($request->all(), $this->rules(), $this->validationMessages(), $this->attributes());
+        $validator = Validator::make(
+            $request->all(),
+            $rules,
+            [...$this->validationMessages(), ...$this->messages()],
+            $this->attributes(),
+        );
 
         if ($validator->fails()) {
             throw (new ValidationException($validator))
