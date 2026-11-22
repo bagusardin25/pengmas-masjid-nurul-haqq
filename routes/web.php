@@ -17,10 +17,16 @@ use App\Http\Controllers\Dashboard\Tpq\TpqDocumentationController;
 use App\Http\Controllers\Dashboard\Tpq\TpqFaqController;
 use App\Http\Controllers\Dashboard\Tpq\TpqPillarController;
 use App\Http\Controllers\Dashboard\TpqController as DashboardTpqController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafContactController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafFundController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafProgramController;
+use App\Http\Controllers\Dashboard\Ziswaf\ZiswafReportController;
+use App\Http\Controllers\Dashboard\ZiswafController as DashboardZiswafController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TpqController;
+use App\Http\Controllers\ZiswafController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BerandaController::class, 'index'])->name('home');
@@ -28,9 +34,8 @@ Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/jadwal-kegiatan', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/program-tpq', [TpqController::class, 'index'])->name('tpq');
 Route::get('/agenda/{agenda:slug}/kalender.ics', AgendaCalendarController::class)->name('agenda.calendar');
-Route::get('/ziswaf', function () {
-    return view('pages.ziswaf');
-})->name('ziswaf');
+Route::get('/ziswaf', [ZiswafController::class, 'index'])->name('ziswaf');
+Route::get('/ziswaf/laporan', [ZiswafController::class, 'reports'])->name('ziswaf.laporan');
 Route::get('/galeri', function () {
     return view('pages.galeri');
 })->name('galeri');
@@ -103,6 +108,28 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
                 ->parameters(['dokumentasi' => 'documentation'])
                 ->names('documentations');
         });
+
+        Route::get('/ziswaf', [DashboardZiswafController::class, 'edit'])->name('ziswaf');
+        Route::put('/ziswaf', [DashboardZiswafController::class, 'update'])->name('ziswaf.update');
+
+        Route::prefix('ziswaf')->name('ziswaf.')->group(function () {
+            Route::resource('jenis-dana', ZiswafFundController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['jenis-dana' => 'fund'])
+                ->names('funds');
+            Route::resource('program', ZiswafProgramController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['program' => 'program'])
+                ->names('programs');
+            Route::resource('kontak', ZiswafContactController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['kontak' => 'contact'])
+                ->names('contacts');
+            Route::resource('laporan', ZiswafReportController::class)
+                ->only(['store', 'update', 'destroy'])
+                ->parameters(['laporan' => 'report'])
+                ->names('reports');
+        });
     });
 });
 
@@ -112,4 +139,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

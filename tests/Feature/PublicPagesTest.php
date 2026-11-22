@@ -6,6 +6,7 @@ use App\Models\AboutPage;
 use App\Models\ActivityPage;
 use App\Models\HomePage;
 use App\Models\TpqPage;
+use App\Models\ZiswafPage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Http;
@@ -21,6 +22,7 @@ class PublicPagesTest extends TestCase
         AboutPage::factory()->create();
         ActivityPage::factory()->create();
         TpqPage::factory()->create();
+        ZiswafPage::factory()->create();
 
         Http::fake(function (ClientRequest $request) {
             $date = basename((string) parse_url($request->url(), PHP_URL_PATH));
@@ -50,6 +52,7 @@ class PublicPagesTest extends TestCase
             '/jadwal-kegiatan' => 'Ibadah dan kajian setiap pekan',
             '/program-tpq' => 'Tumbuh bersama Al-Qur\'an sejak dini',
             '/ziswaf' => 'Salurkan kebaikan, kuatkan kebersamaan',
+            '/ziswaf/laporan' => 'Laporan keuangan masjid',
             '/galeri' => 'Momen kebersamaan jamaah',
             '/kontak' => 'Hubungi pengurus masjid',
         ];

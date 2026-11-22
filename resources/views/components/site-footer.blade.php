@@ -22,7 +22,7 @@
                 <h2>Layanan</h2>
                 <a href="{{ route('tpq') }}">Program TPQ</a>
                 <a href="{{ route('ziswaf') }}">ZISWAF</a>
-                <a href="{{ route('ziswaf') }}">Laporan keuangan</a>
+                <a href="{{ route('ziswaf.laporan') }}">Laporan keuangan</a>
             </div>
             <div>
                 <h2>Ikuti kami</h2>
