@@ -1,6 +1,28 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import {
+    CategoryScale,
+    Chart,
+    Filler,
+    Legend,
+    LinearScale,
+    LineController,
+    LineElement,
+    PointElement,
+    Tooltip,
+} from 'chart.js';
+
+Chart.register(
+    LineController,
+    LineElement,
+    PointElement,
+    LinearScale,
+    CategoryScale,
+    Filler,
+    Tooltip,
+    Legend,
+);
 
 window.Alpine = Alpine;
 
@@ -456,6 +478,21 @@ Alpine.data('publicLoadMore', () => ({
             const data = await response.json();
             grid.insertAdjacentHTML('beforeend', data.html);
 
+            const added = Array.from(grid.children).slice(before);
+            added.forEach((node, index) => {
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    node.setAttribute('data-reveal', '');
+                    node.style.setProperty('--stagger-i', String(Math.min(index, 6)));
+                    node.classList.add('reveal-pending');
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            node.classList.remove('reveal-pending');
+                            node.classList.add('is-visible');
+                        });
+                    });
+                }
+            });
+
             // Pindahkan fokus ke kartu pertama yang baru, agar pengguna keyboard/pembaca layar tidak tersesat.
             grid.children[before]?.querySelector('a[href]:not([tabindex="-1"])')?.focus({ preventScroll: true });
 
@@ -476,6 +513,11 @@ const navToggle = document.querySelector('.nav-toggle');
 const primaryNav = document.querySelector('.primary-nav');
 
 if (navToggle && primaryNav) {
+    const closeNav = () => {
+        navToggle.setAttribute('aria-expanded', 'false');
+        primaryNav.classList.remove('is-open');
+    };
+
     navToggle.addEventListener('click', () => {
         const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
 
@@ -484,9 +526,345 @@ if (navToggle && primaryNav) {
     });
 
     primaryNav.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-            navToggle.setAttribute('aria-expanded', 'false');
-            primaryNav.classList.remove('is-open');
-        });
+        link.addEventListener('click', closeNav);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && primaryNav.classList.contains('is-open')) {
+            closeNav();
+            navToggle.focus();
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (
+            primaryNav.classList.contains('is-open') &&
+            !primaryNav.contains(event.target) &&
+            !navToggle.contains(event.target)
+        ) {
+            closeNav();
+        }
     });
 }
+
+const liveClockNodes = document.querySelectorAll('[data-live-clock]');
+if (liveClockNodes.length > 0) {
+    const wibFormatter = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    });
+    const tickClock = () => {
+        const formatted = `${wibFormatter.format(new Date()).replace(/\./g, ':')} WIB`;
+        liveClockNodes.forEach((node) => {
+            node.textContent = formatted;
+        });
+    };
+    tickClock();
+    window.setInterval(tickClock, 1000);
+}
+
+const siteHeader = document.querySelector('.site-header');
+if (siteHeader) {
+    const syncHeaderShadow = () => {
+        siteHeader.classList.toggle('is-scrolled', window.scrollY > 8);
+    };
+    syncHeaderShadow();
+    window.addEventListener('scroll', syncHeaderShadow, { passive: true });
+}
+
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const splitQuoteWords = (element, variant, baseDelayMs, stepMs) => {
+        const raw = element.textContent?.trim();
+        if (!raw) {
+            return 0;
+        }
+        const tokens = raw.split(/(\s+)/);
+        const fragment = document.createDocumentFragment();
+        let wordIndex = 0;
+
+        tokens.forEach((token) => {
+            if (/^\s+$/.test(token)) {
+                fragment.appendChild(document.createTextNode(token));
+                return;
+            }
+            const span = document.createElement('span');
+            span.className = `quote-word quote-word-${variant}`;
+            span.style.setProperty('--wi', String(wordIndex));
+            span.style.setProperty('--wd', `${baseDelayMs + wordIndex * stepMs}ms`);
+            span.textContent = token;
+            fragment.appendChild(span);
+            wordIndex += 1;
+        });
+
+        element.setAttribute('aria-label', raw);
+        element.replaceChildren(fragment);
+        return wordIndex;
+    };
+
+    const quoteBox = document.querySelector('[data-quote-carousel]');
+    const quoteAr = quoteBox?.querySelector('[data-quote-words="ar"]');
+    const quoteId = quoteBox?.querySelector('[data-quote-words="id"]');
+    const quoteCite = quoteBox?.querySelector('[data-quote-cite]');
+
+    const renderQuoteSlide = (slide, initialLoad = false) => {
+        if (!quoteAr || !quoteId || !quoteCite) {
+            return;
+        }
+        quoteAr.textContent = slide.ar;
+        quoteId.textContent = slide.id;
+        quoteCite.textContent = slide.cite;
+        quoteCite.classList.remove('quote-cite-enter');
+
+        const startDelay = initialLoad ? 360 : 40;
+        const arWords = splitQuoteWords(quoteAr, 'ar', startDelay, 68);
+        const idBaseDelay = startDelay + Math.min(arWords, 12) * 56;
+        const idWords = splitQuoteWords(quoteId, 'id', idBaseDelay, 28);
+        quoteCite.style.setProperty('--wd', `${idBaseDelay + Math.min(idWords, 18) * 24 + 80}ms`);
+        void quoteCite.offsetWidth;
+        quoteCite.classList.add('quote-cite-enter');
+    };
+
+    if (quoteBox && quoteAr && quoteId && quoteCite) {
+        let extraSlides = [];
+        try {
+            extraSlides = JSON.parse(quoteBox.dataset.quoteSlides || '[]');
+        } catch {
+            extraSlides = [];
+        }
+
+        const slides = [
+            {
+                ar: quoteAr.textContent?.trim() || '',
+                id: quoteId.textContent?.trim() || '',
+                cite: quoteCite.textContent?.trim() || '',
+            },
+            ...extraSlides,
+        ].filter((item) => item.ar && item.id);
+
+        let currentIndex = 0;
+        renderQuoteSlide(slides[0], true);
+
+        if (slides.length > 1) {
+            let switchTimer = null;
+            const goTo = (nextIndex) => {
+                const target = (nextIndex + slides.length) % slides.length;
+                if (target === currentIndex) {
+                    return;
+                }
+                currentIndex = target;
+                quoteBox.classList.add('is-switching');
+                window.clearTimeout(switchTimer);
+                switchTimer = window.setTimeout(() => {
+                    quoteBox.classList.remove('is-switching');
+                    renderQuoteSlide(slides[currentIndex], false);
+                }, 190);
+            };
+
+            let paused = false;
+            quoteBox.addEventListener('mouseenter', () => { paused = true; });
+            quoteBox.addEventListener('mouseleave', () => { paused = false; });
+
+            window.setInterval(() => {
+                if (!paused && !document.hidden) {
+                    goTo(currentIndex + 1);
+                }
+            }, 8500);
+        }
+    }
+
+    document.querySelectorAll('[data-led-prayer]').forEach((viewport) => {
+        const track = viewport.querySelector('.prayer-led-track');
+        if (!track) {
+            return;
+        }
+        const scroller = document.createElement('div');
+        scroller.className = 'prayer-led-scroller';
+        const clone = track.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelectorAll('[aria-current]').forEach((el) => el.removeAttribute('aria-current'));
+        scroller.appendChild(track);
+        scroller.appendChild(clone);
+        viewport.appendChild(scroller);
+    });
+
+    document.querySelectorAll('[data-reveal-group]').forEach((group) => {
+        group.querySelectorAll(':scope > [data-reveal], [data-reveal]').forEach((item, index) => {
+            if (!item.style.getPropertyValue('--stagger-i')) {
+                item.style.setProperty('--stagger-i', String(Math.min(index, 6)));
+            }
+        });
+    });
+
+    const revealTargets = Array.from(document.querySelectorAll('[data-reveal]'));
+
+    if (revealTargets.length > 0) {
+        document.documentElement.classList.add('motion-ready');
+        const viewportCutoff = window.innerHeight * 0.94;
+        const pending = [];
+
+        revealTargets.forEach((el) => {
+            if (el.getBoundingClientRect().top <= viewportCutoff) {
+                el.classList.add('is-visible');
+            } else {
+                el.classList.add('reveal-pending');
+                pending.push(el);
+            }
+        });
+
+        if (pending.length > 0 && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.remove('reveal-pending');
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.08, rootMargin: '0px 0px -36px 0px' },
+            );
+
+            pending.forEach((el) => observer.observe(el));
+        } else {
+            pending.forEach((el) => {
+                el.classList.remove('reveal-pending');
+                el.classList.add('is-visible');
+            });
+        }
+    }
+}
+
+document.querySelectorAll('[data-traffic-chart]').forEach((canvas) => {
+    let series = [];
+    try {
+        series = JSON.parse(canvas.dataset.trafficChart || '[]');
+    } catch {
+        series = [];
+    }
+
+    if (!Array.isArray(series) || series.length === 0) {
+        return;
+    }
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const renderChart = () => {
+        if (canvas.dataset.chartMounted === '1') {
+            return;
+        }
+        canvas.dataset.chartMounted = '1';
+
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 170);
+        gradient.addColorStop(0, 'rgba(226, 184, 75, 0.34)');
+        gradient.addColorStop(1, 'rgba(226, 184, 75, 0.01)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: series.map((item) => item.label),
+                datasets: [
+                    {
+                        label: 'Kunjungan',
+                        data: series.map((item) => item.hits),
+                        borderColor: '#E2B84B',
+                        backgroundColor: gradient,
+                        borderWidth: 2.5,
+                        tension: 0.35,
+                        fill: true,
+                        pointRadius: 3.5,
+                        pointHoverRadius: 5.5,
+                        pointBackgroundColor: '#082D22',
+                        pointBorderColor: '#E2B84B',
+                        pointBorderWidth: 2,
+                        pointHoverBackgroundColor: '#E2B84B',
+                    },
+                    {
+                        label: 'Pengunjung unik',
+                        data: series.map((item) => item.visitors),
+                        borderColor: '#5EEAD4',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [4, 4],
+                        tension: 0.35,
+                        fill: false,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: '#082D22',
+                        pointBorderColor: '#5EEAD4',
+                        pointBorderWidth: 2,
+                        pointHoverBackgroundColor: '#5EEAD4',
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: reducedMotion ? false : { duration: 750, easing: 'easeOutQuart' },
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        display: true,
+                        align: 'end',
+                        labels: {
+                            color: '#C5D4CC',
+                            boxWidth: 10,
+                            boxHeight: 10,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: { family: '"Plus Jakarta Sans", sans-serif', size: 11, weight: '600' },
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: '#062018',
+                        borderColor: 'rgba(226, 184, 75, 0.35)',
+                        borderWidth: 1,
+                        titleColor: '#E2B84B',
+                        bodyColor: '#FFFFFF',
+                        padding: 10,
+                        cornerRadius: 10,
+                    },
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        border: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: {
+                            color: '#9EB6AA',
+                            font: { family: '"Plus Jakarta Sans", sans-serif', size: 11, weight: '600' },
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 5,
+                        border: { display: false },
+                        grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                        ticks: {
+                            precision: 0,
+                            color: '#9EB6AA',
+                            font: { family: '"Plus Jakarta Sans", sans-serif', size: 11 },
+                        },
+                    },
+                },
+            },
+        });
+    };
+
+    if ('IntersectionObserver' in window) {
+        const chartObserver = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    renderChart();
+                    chartObserver.disconnect();
+                }
+            },
+            { threshold: 0.05 },
+        );
+        chartObserver.observe(canvas);
+    } else {
+        renderChart();
+    }
+});

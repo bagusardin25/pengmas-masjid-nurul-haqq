@@ -29,14 +29,14 @@
         <div class="section section-tight">
             <div class="site-container article-container">
                 @if ($article->coverImage)
-                    <figure class="article-cover">
+                    <figure data-reveal class="article-cover">
                         <img src="{{ $article->coverImage->url() }}" alt="{{ $article->coverImage->alt ?: $article->title }}"
                             @if ($article->coverImage->width) width="{{ $article->coverImage->width }}" height="{{ $article->coverImage->height }}" @endif
                             decoding="async">
                     </figure>
                 @endif
 
-                <div class="article-body">
+                <div data-reveal class="article-body">
                     @if ($article->excerpt)
                         <p class="article-lead">{{ $article->excerpt }}</p>
                     @endif
@@ -45,7 +45,7 @@
                     @endforeach
                 </div>
 
-                <p class="report-back"><a href="{{ route('galeri') }}">← Kembali ke galeri</a></p>
+                <p class="report-back"><a href="{{ route('galeri') }}"><i class="fa-solid fa-arrow-left text-[11px]" aria-hidden="true"></i> Kembali ke galeri</a></p>
             </div>
         </div>
     </article>
@@ -53,10 +53,10 @@
     @if ($otherArticles->isNotEmpty())
         <section class="section section-muted">
             <div class="site-container">
-                <x-section-heading eyebrow="Artikel lainnya" title="Tulisan dari jamaah" />
-                <ul class="article-list">
+                <div data-reveal><x-section-heading eyebrow="Artikel lainnya" title="Tulisan dari jamaah" /></div>
+                <ul class="article-list" data-reveal-group>
                     @foreach ($otherArticles as $other)
-                        <li>
+                        <li data-reveal>
                             <a href="{{ route('galeri.artikel', $other) }}">
                                 <strong>{{ $other->title }}</strong>
                                 <small>{{ collect([$other->author, $other->published_at?->locale('id')->translatedFormat('j F Y')])->filter()->join(' · ') }}</small>

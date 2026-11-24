@@ -52,7 +52,7 @@ class BerandaController extends Controller
             ->whereDate('date', '>=', $today->toDateString())
             ->orderBy('date')
             ->orderBy('id')
-            ->limit(2)
+            ->limit(3)
             ->get();
 
         $tpq = TpqPage::current();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrackSiteVisit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectUsersTo('/dashboard');
         $middleware->append(SecurityHeaders::class);
+        $middleware->web(append: [TrackSiteVisit::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

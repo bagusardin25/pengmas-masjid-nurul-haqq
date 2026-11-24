@@ -13,7 +13,7 @@
         <h1>{{ $title }}</h1>
         <p class="hero-description">{{ $description }}</p>
         @if ($actionUrl && $actionLabel)
-            <a class="button button-gold" href="{{ $actionUrl }}">{{ $actionLabel }} <span aria-hidden="true">→</span></a>
+            <a class="button button-gold link-arrow" href="{{ $actionUrl }}">{{ $actionLabel }} <i class="fa-solid fa-arrow-right text-[12px]" aria-hidden="true"></i></a>
         @endif
     </div>
 </section>

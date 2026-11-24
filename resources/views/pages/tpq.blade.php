@@ -19,10 +19,10 @@
     @if ($pillars->isNotEmpty())
         <section class="section">
             <div class="site-container">
-                <x-section-heading eyebrow="Program unggulan" title="Belajar mengaji, membangun akhlak" />
-                <div class="card-grid card-grid-two">
+                <div data-reveal><x-section-heading eyebrow="Program unggulan" title="Belajar mengaji, membangun akhlak" /></div>
+                <div class="card-grid card-grid-two" data-reveal-group>
                     @foreach ($pillars as $pillar)
-                        <article class="info-card"><span class="card-icon" aria-hidden="true">{{ $pillar->icon?->glyph() ?? '✓' }}</span><h3>{{ $pillar->title }}</h3>@if ($pillar->description)<p>{{ $pillar->description }}</p>@endif</article>
+                        <article data-reveal class="info-card"><span class="card-icon" aria-hidden="true">{{ $pillar->icon?->glyph() ?? '✓' }}</span><h3>{{ $pillar->title }}</h3>@if ($pillar->description)<p>{{ $pillar->description }}</p>@endif</article>
                     @endforeach
                 </div>
             </div>
@@ -30,25 +30,25 @@
     @endif
 
     <section class="section section-muted">
-        <div class="site-container registration-grid">
-            <div>
+        <div class="site-container registration-grid" data-reveal-group>
+            <div data-reveal>
                 <x-section-heading eyebrow="Informasi program" title="Kenali program sebelum mendaftar" :description="$tpq?->info_description" />
                 @if ($details)
-                    <dl class="detail-list">
+                    <dl class="detail-list surface-card">
                         @foreach ($details as $term => $value)
                             <div><dt>{{ $term }}</dt><dd>{{ $value }}</dd></div>
                         @endforeach
                     </dl>
                 @endif
             </div>
-            <aside class="registration-card">
+            <aside data-reveal class="registration-card">
                 <p class="eyebrow eyebrow-light">Pendaftaran TPQ</p>
                 <h2>{{ $tpq?->registration_title ?: 'Pendaftaran santri baru' }}</h2>
                 @if ($tpq?->registration_description)
                     <p>{{ $tpq->registration_description }}</p>
                 @endif
                 @if ($tpq?->registration_phone)
-                    <strong>{{ $tpq->registration_phone }}</strong>
+                    <strong class="tabular-nums">{{ $tpq->registration_phone }}</strong>
                 @endif
                 @if ($registrationUrl)
                     <a class="button button-gold button-full" href="{{ $registrationUrl }}">Daftar TPQ</a>
@@ -63,10 +63,10 @@
     @if ($faqs->isNotEmpty())
         <section class="section">
             <div class="site-container">
-                <x-section-heading eyebrow="Sebelum mendaftar" title="Pertanyaan yang sering diajukan" />
-                <div @class(['card-grid', 'card-grid-three' => $faqs->count() % 3 === 0, 'card-grid-two' => $faqs->count() % 3 !== 0])>
+                <div data-reveal><x-section-heading eyebrow="Sebelum mendaftar" title="Pertanyaan yang sering diajukan" /></div>
+                <div data-reveal-group @class(['card-grid', 'card-grid-three' => $faqs->count() % 3 === 0, 'card-grid-two' => $faqs->count() % 3 !== 0])>
                     @foreach ($faqs as $faq)
-                        <article class="question-card"><h3>{{ $faq->question }}</h3><p>{{ $faq->answer }}</p></article>
+                        <article data-reveal class="question-card"><h3>{{ $faq->question }}</h3><p>{{ $faq->answer }}</p></article>
                     @endforeach
                 </div>
             </div>
@@ -76,11 +76,11 @@
     @if ($documentations->isNotEmpty())
         <section @class(['section', 'section-muted' => $faqs->isNotEmpty()])>
             <div class="site-container">
-                <x-section-heading eyebrow="Dokumentasi" title="Kegiatan belajar santri" />
-                <ul class="documentation-grid">
+                <div data-reveal><x-section-heading eyebrow="Dokumentasi" title="Kegiatan belajar santri" /></div>
+                <ul class="documentation-grid" data-reveal-group>
                     @foreach ($documentations as $documentation)
                         @php $caption = $documentation->caption ?: $documentation->image->alt; @endphp
-                        <li>
+                        <li data-reveal>
                             <figure>
                                 <a href="{{ $documentation->image->url() }}" target="_blank" rel="noopener">
                                     <img src="{{ $documentation->image->url() }}" alt="{{ $caption ?: 'Dokumentasi kegiatan TPQ Nurul Haqq' }}"

@@ -17,11 +17,13 @@
         <section class="section">
             <div class="site-container">
                 @if ($funds->isNotEmpty())
-                    <p class="step-title"><span>{{ ++$step }}</span>Pilih jenis dana</p>
-                    <x-section-heading title="Setiap kebaikan punya peran" />
-                    <div class="fund-grid">
+                    <div data-reveal>
+                        <p class="step-title"><span>{{ ++$step }}</span>Pilih jenis dana</p>
+                        <x-section-heading title="Setiap kebaikan punya peran" />
+                    </div>
+                    <div class="fund-grid" data-reveal-group>
                         @foreach ($funds as $fund)
-                            <article class="fund-card">
+                            <article data-reveal class="fund-card">
                                 <span aria-hidden="true">{{ $fund->icon?->glyph() ?? '♡' }}</span>
                                 <h3>{{ $fund->name }}</h3>
                                 @if ($fund->description)
@@ -34,12 +36,14 @@
 
                 @if ($programs->isNotEmpty())
                     <div class="program-block">
-                        <x-section-heading eyebrow="Program sedekah" title="Pilih program penyaluran"
-                            description="Sebutkan program yang dipilih saat konfirmasi agar sedekah disalurkan sesuai niat Anda." />
-                        <div class="card-grid card-grid-three">
+                        <div data-reveal>
+                            <x-section-heading eyebrow="Program sedekah" title="Pilih program penyaluran"
+                                description="Sebutkan program yang dipilih saat konfirmasi agar sedekah disalurkan sesuai niat Anda." />
+                        </div>
+                        <div class="card-grid card-grid-three" data-reveal-group>
                             @foreach ($programs as $program)
-                                <article class="info-card">
-                                    <span class="card-icon" aria-hidden="true">♡</span>
+                                <article data-reveal class="info-card">
+                                    <span class="card-icon" aria-hidden="true"><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i></span>
                                     <h3>{{ $program->title }}</h3>
                                     @if ($program->description)
                                         <p>{{ $program->description }}</p>
@@ -56,10 +60,10 @@
     @if ($hasBankAccount || $contacts->isNotEmpty() || $ziswaf?->infaq_box_description)
         <section id="cara-menyalurkan" class="section section-muted">
             <div class="site-container">
-                <x-section-heading eyebrow="Cara menyalurkan dana" title="Mudah disalurkan, jelas dikonfirmasi" />
-                <div @class(['transfer-grid', 'transfer-grid-single' => ! ($hasBankAccount && $contacts->isNotEmpty())])>
+                <div data-reveal><x-section-heading eyebrow="Cara menyalurkan dana" title="Mudah disalurkan, jelas dikonfirmasi" /></div>
+                <div data-reveal-group @class(['transfer-grid', 'transfer-grid-single' => ! ($hasBankAccount && $contacts->isNotEmpty())])>
                     @if ($hasBankAccount)
-                        <div>
+                        <div data-reveal>
                             <p class="step-title"><span>{{ ++$step }}</span>{{ $ziswaf->qrisImage ? 'Transfer atau scan QRIS' : 'Transfer ke rekening masjid' }}</p>
                             <article class="content-panel transfer-card">
                                 @if ($ziswaf->qrisImage)
@@ -84,13 +88,19 @@
                                     @if ($ziswaf->account_note)
                                         <small>{{ $ziswaf->account_note }}</small>
                                     @endif
-                                    <button type="button" class="copy-button" x-cloak
+                                    <button type="button" class="copy-button" :class="{ 'is-copied': copied }" x-cloak
                                         @click="navigator.clipboard.writeText(@js($ziswaf->account_number)).then(() => { copied = true; setTimeout(() => copied = false, 2000) })">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                            <rect x="8" y="8" width="14" height="14" rx="2"></rect>
-                                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                                        </svg>
+                                        <span class="copy-icon-stack" :class="{ 'is-copied': copied }" aria-hidden="true">
+                                            <svg class="icon-copy" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="8" y="8" width="14" height="14" rx="2"></rect>
+                                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                            </svg>
+                                            <svg class="icon-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20 6 9 17l-5-5"></path>
+                                            </svg>
+                                        </span>
                                         <span x-text="copied ? 'Nomor disalin' : 'Salin nomor rekening'">Salin nomor rekening</span>
                                     </button>
                                 </div>
@@ -99,7 +109,7 @@
                     @endif
 
                     @if ($contacts->isNotEmpty())
-                        <div>
+                        <div data-reveal>
                             <p class="step-title"><span>{{ ++$step }}</span>Konfirmasi via WhatsApp</p>
                             <article class="content-panel content-panel-dark confirmation-card">
                                 <h3>Sampaikan konfirmasi donasi Anda</h3>
@@ -124,7 +134,7 @@
                 </div>
 
                 @if ($ziswaf?->infaq_box_description)
-                    <div class="report-note">
+                    <div data-reveal class="report-note">
                         <strong>Kotak infak</strong>
                         <p>{{ $ziswaf->infaq_box_description }}</p>
                     </div>
@@ -135,16 +145,16 @@
 
     <section id="laporan" class="section">
         <div class="site-container">
-            <div class="report-heading">
+            <div data-reveal class="report-heading">
                 <x-section-heading eyebrow="Amanah & transparan" title="Laporan keuangan masjid" :description="$ziswaf?->report_description" />
                 @if ($hasAnyReport)
                     <a class="button button-outline" href="{{ route('ziswaf.laporan') }}">Semua laporan</a>
                 @endif
             </div>
-            <div class="report-columns">
+            <div class="report-columns" data-reveal-group>
                 @foreach ($categories as $category)
                     @php $reports = $latestReports[$category->value]; @endphp
-                    <article class="report-group">
+                    <article data-reveal class="report-group">
                         <h3>{{ $category->label() }}</h3>
                         <p>{{ $category->description() }}</p>
                         @if ($reports->isEmpty())
@@ -155,8 +165,8 @@
                                     <x-report-item :report="$report" />
                                 @endforeach
                             </ul>
-                            <a class="report-more" href="{{ route('ziswaf.laporan', ['kategori' => $category->value]) }}">
-                                Lihat semua {{ Str::lower($category->shortLabel()) }} <span aria-hidden="true">→</span>
+                            <a class="report-more link-arrow" href="{{ route('ziswaf.laporan', ['kategori' => $category->value]) }}">
+                                Lihat semua {{ Str::lower($category->shortLabel()) }} <i class="fa-solid fa-arrow-right text-[11px]" aria-hidden="true"></i>
                             </a>
                         @endif
                     </article>

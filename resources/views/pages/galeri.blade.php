@@ -12,12 +12,12 @@
 
     <section id="album" class="section section-muted">
         <div class="site-container">
-            <div class="gallery-heading">
+            <div data-reveal class="gallery-heading">
                 <x-section-heading eyebrow="Galeri kegiatan" title="Dari ibadah hingga belajar mengaji" />
             </div>
 
             @if ($categories->isNotEmpty())
-                <nav class="filter-list" aria-label="Kategori galeri">
+                <nav data-reveal class="filter-list" aria-label="Kategori galeri">
                     <a href="{{ route('galeri') }}#album" @class(['filter-chip', 'filter-chip-active' => $activeCategory === null])
                         @if ($activeCategory === null) aria-current="page" @endif>Semua</a>
                     @foreach ($categories as $category)
@@ -37,10 +37,10 @@
                     @endif
                 </p>
             @else
-                <div class="gallery-grid">
+                <div class="gallery-grid" data-reveal-group>
                     @foreach ($albums as $album)
                         @php $cover = $album->cover(); @endphp
-                        <article class="gallery-card">
+                        <article data-reveal class="gallery-card">
                             <a class="gallery-cover" href="{{ route('galeri.album', $album) }}">
                                 @if ($cover)
                                     <img src="{{ $cover->url() }}" alt="" loading="lazy" decoding="async"
@@ -75,7 +75,7 @@
     @if ($videos->isNotEmpty() || filled($setting?->youtube_url))
         <section id="video" class="section">
             <div class="site-container">
-                <div class="gallery-heading">
+                <div data-reveal class="gallery-heading">
                     <x-section-heading eyebrow="Video kajian" title="Tonton kajian pilihan" />
                     @if (filled($setting?->youtube_url))
                         <a class="channel-card" href="{{ $setting->youtube_url }}" target="_blank" rel="noopener noreferrer">
@@ -88,7 +88,7 @@
                 @if ($videos->isEmpty())
                     <p class="gallery-empty">Video kajian belum tersedia di sini. Kunjungi kanal YouTube masjid untuk menonton kajian terbaru.</p>
                 @else
-                    <div class="card-grid card-grid-three" data-load-more-grid>
+                    <div class="card-grid card-grid-three" data-load-more-grid data-reveal-group>
                         @foreach ($videos as $video)
                             @include('pages.partials.video-card')
                         @endforeach
@@ -104,8 +104,8 @@
     @if ($articles->isNotEmpty())
         <section id="artikel" @class(['section', 'section-muted' => $videos->isNotEmpty() || filled($setting?->youtube_url)])>
             <div class="site-container">
-                <x-section-heading eyebrow="Artikel kegiatan" title="Tulisan dari jamaah" />
-                <div class="card-grid card-grid-two" data-load-more-grid>
+                <div data-reveal><x-section-heading eyebrow="Artikel kegiatan" title="Tulisan dari jamaah" /></div>
+                <div class="card-grid card-grid-two" data-load-more-grid data-reveal-group>
                     @foreach ($articles as $article)
                         @include('pages.partials.article-card')
                     @endforeach
@@ -118,7 +118,7 @@
     @endif
 
     <section class="section">
-        <div class="site-container gallery-contact">
+        <div data-reveal class="site-container gallery-contact">
             <div><h2>Ingin mengetahui kegiatan masjid?</h2><p>Lihat jadwal kegiatan rutin atau hubungi pengurus untuk informasi dokumentasi yang tersedia.</p></div>
             <div class="button-row">
                 <a class="button button-dark" href="{{ route('jadwal') }}">Lihat jadwal</a>

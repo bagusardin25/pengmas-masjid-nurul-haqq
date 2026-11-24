@@ -1,4 +1,4 @@
-<article class="article-card">
+<article data-reveal class="article-card">
     <a class="article-image" href="{{ route('galeri.artikel', $article) }}" tabindex="-1" aria-hidden="true">
         @if ($article->coverImage)
             <img src="{{ $article->coverImage->url() }}" alt="" loading="lazy" decoding="async">

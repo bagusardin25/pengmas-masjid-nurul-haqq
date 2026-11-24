@@ -1,4 +1,6 @@
 @import "./dashboard.css";
+@import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
+@import "@fortawesome/fontawesome-free/css/solid.min.css";
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -26,6 +28,16 @@
     --muted: #68766f;
     --line: #e6e2d6;
     --cream: #f8f6ef;
+    --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+    --shadow-border:
+        0 0 0 1px rgba(11, 59, 44, 0.06),
+        0 1px 2px -1px rgba(11, 59, 44, 0.06),
+        0 2px 6px 0 rgba(11, 59, 44, 0.04);
+    --shadow-border-hover:
+        0 0 0 1px rgba(11, 59, 44, 0.12),
+        0 8px 20px -6px rgba(11, 59, 44, 0.12),
+        0 2px 6px 0 rgba(11, 59, 44, 0.06);
 }
 @layer base {
     * {
@@ -38,7 +50,17 @@
         font:
             15px/1.65 "Plus Jakarta Sans",
             sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         @apply [margin:0] [color:var(--ink)];
+    }
+    h1,
+    h2,
+    h3 {
+        text-wrap: balance;
+    }
+    p {
+        text-wrap: pretty;
     }
     a {
         @apply [color:inherit];
@@ -59,6 +81,8 @@
         *,
         *::before,
         *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
         }
     }
@@ -71,7 +95,16 @@
         @apply [width:min(100%_-_64px,_1320px)] [margin-inline:auto];
     }
     .site-header {
-        @apply [position:sticky] [top:0] [z-index:20] [background:#fff] [border-bottom:1px_solid_var(--line)];
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: box-shadow 240ms var(--ease-snappy), border-color 240ms var(--ease-snappy), background-color 240ms var(--ease-snappy);
+        @apply [position:sticky] [top:0] [z-index:20] [border-bottom:1px_solid_var(--line)];
+    }
+    .site-header.is-scrolled {
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 6px 24px -8px rgba(11, 59, 44, 0.12);
+        border-bottom-color: rgba(11, 59, 44, 0.1);
     }
     .header-inner {
         @apply [min-height:72px] [display:flex] [align-items:center] [justify-content:space-between] [gap:18px];
@@ -80,7 +113,14 @@
         @apply [display:inline-flex] [align-items:center] [gap:10px] [text-decoration:none] [flex-shrink:0];
     }
     .brand-mark {
+        transition: transform 220ms var(--ease-premium), background-color 200ms var(--ease-snappy);
         @apply [width:42px] [height:42px] [display:grid] [place-items:center] [border-radius:12px] [background:var(--green)] [color:var(--gold)] [font-size:22px];
+    }
+    .brand:hover .brand-mark {
+        transform: scale(1.05);
+    }
+    .brand:active .brand-mark {
+        transform: scale(0.96);
     }
     .brand-copy {
         @apply [display:flex] [flex-direction:column] [line-height:1.2];
@@ -95,11 +135,15 @@
         @apply [display:flex] [align-items:center] [justify-content:center] [gap:2px] [flex:1_1_auto];
     }
     .primary-nav a {
+        transition: background-color 180ms var(--ease-snappy), color 180ms var(--ease-snappy), transform 150ms ease-out;
         @apply [padding:9px_12px] [border-radius:999px] [color:#3e4f47] [font-size:12px] [font-weight:600] [text-decoration:none] [white-space:nowrap];
     }
     .primary-nav a:hover,
     .primary-nav a[aria-current="page"] {
         @apply [background:var(--green-soft)] [color:var(--green)];
+    }
+    .primary-nav a:active {
+        transform: scale(0.96);
     }
     .header-login-link {
         @apply [display:inline-flex] [align-items:center] [justify-content:center] [margin-left:8px] [padding:8px_14px] [border:1px_solid_var(--green)] [border-radius:10px] [color:var(--green)] [font-weight:700];
@@ -111,10 +155,14 @@
         @apply [display:none];
     }
     .button {
-        @apply [min-height:44px] [display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [padding:0_18px] [border:1px_solid_transparent] [border-radius:10px] [font-size:13px] [font-weight:700] [text-decoration:none] [transition:transform_.18s_ease,_background_.18s_ease];
+        transition: transform 160ms var(--ease-snappy), background-color 180ms var(--ease-snappy), border-color 180ms var(--ease-snappy), color 180ms var(--ease-snappy), box-shadow 200ms var(--ease-snappy);
+        @apply [min-height:44px] [display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [padding:0_18px] [border:1px_solid_transparent] [border-radius:10px] [font-size:13px] [font-weight:700] [text-decoration:none];
     }
     .button:hover {
-        @apply [transform:translateY(-1px)];
+        transform: translateY(-1px);
+    }
+    .button:active {
+        transform: scale(0.96);
     }
     .button-dark {
         @apply [background:var(--green)] [color:#fff];
@@ -148,10 +196,6 @@
     }
     .eyebrow {
         @apply [margin:0] [color:#94700d] [font-size:10px] [font-weight:800] [letter-spacing:.08em] [text-transform:uppercase];
-    }
-    .eyebrow::before {
-        content: "";
-        @apply [display:inline-block] [width:22px] [height:2px] [margin:0_9px_3px_0] [background:var(--gold)];
     }
     .eyebrow-light {
         @apply [color:var(--gold)];
@@ -232,7 +276,7 @@
         @apply [display:flex] [align-items:center] [gap:12px] [min-height:58px] [padding:10px_14px] [border:1px_solid_var(--line)] [border-radius:12px] [font-size:13px] [font-weight:700];
     }
     .facility-mark {
-        @apply [width:30px] [height:30px] [display:grid] [place-items:center] [border-radius:8px] [background:var(--green)] [color:var(--gold)];
+        @apply [width:32px] [height:32px] [flex-shrink:0] [display:grid] [place-items:center] [border-radius:9px] [background:var(--green)] [color:var(--gold)] [font-size:13px];
     }
     .history-grid,
     .schedule-columns,
@@ -1131,10 +1175,19 @@
             @apply [transform:translateY(-7px)_rotate(-45deg)];
         }
         .primary-nav {
-            @apply [position:absolute] [top:calc(100%_+_10px)] [left:0] [right:0] [display:none] [flex-direction:column] [align-items:stretch] [gap:8px] [padding:14px] [border:1px_solid_var(--line)] [border-radius:16px] [background:rgba(255,_255,_255,_0.98)] [box-shadow:0_18px_40px_rgba(11,_59,_44,_0.12)];
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-8px) scale(0.98);
+            transform-origin: top center;
+            transition: opacity 180ms var(--ease-snappy), transform 220ms var(--ease-premium), visibility 220ms;
+            @apply [position:absolute] [top:calc(100%_+_10px)] [left:0] [right:0] [display:flex] [flex-direction:column] [align-items:stretch] [gap:8px] [padding:14px] [border:1px_solid_var(--line)] [border-radius:16px] [background:rgba(255,_255,_255,_0.98)] [box-shadow:0_18px_40px_rgba(11,_59,_44,_0.12)];
         }
         .primary-nav.is-open {
-            @apply [display:flex];
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
         }
         .primary-nav a {
             @apply [flex:0_0_auto] [width:100%] [padding:12px_14px] [border-radius:10px] [font-size:12px];
@@ -1999,6 +2052,685 @@
         }
         .load-more-button {
             width: 100%;
+        }
+    }
+
+    /* ==========================================================================
+       Motion Design & UI Polish (Premium Archetype — calm, dignified, 0% bounce)
+       ========================================================================== */
+    @keyframes nh-hero-enter {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+            filter: blur(4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+    }
+    @keyframes nh-media-enter {
+        from {
+            opacity: 0;
+            transform: translateY(18px) scale(0.97);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    @keyframes nh-quote-enter {
+        from {
+            opacity: 0;
+            transform: translateY(22px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes nh-live-pulse {
+        0%,
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(226, 184, 75, 0.55);
+        }
+        60% {
+            transform: scale(1.14);
+            box-shadow: 0 0 0 7px rgba(226, 184, 75, 0);
+        }
+    }
+    @keyframes nh-ornament-drift {
+        0% {
+            transform: rotate(0deg) scale(1);
+        }
+        50% {
+            transform: rotate(12deg) scale(1.03);
+        }
+        100% {
+            transform: rotate(0deg) scale(1);
+        }
+    }
+
+    /* First-load hero choreography (runs immediately on paint, no JS dependency) */
+    .hero-stagger {
+        animation: nh-hero-enter 540ms var(--ease-premium) var(--d, 0ms) both;
+    }
+    .hero-media-enter {
+        animation: nh-media-enter 680ms var(--ease-premium) var(--d, 100ms) both;
+    }
+    .hero-quote-enter {
+        animation: nh-quote-enter 600ms var(--ease-premium) var(--d, 300ms) both;
+    }
+
+    /* Sub-page hero depth & immediate staggered entrance */
+    .page-hero,
+    .album-hero,
+    .contact-page-hero {
+        position: relative;
+        overflow: hidden;
+        background-image: radial-gradient(circle at 86% 18%, rgba(226, 184, 75, 0.14), transparent 46%);
+    }
+    .page-hero .breadcrumb,
+    .album-hero .breadcrumb,
+    .contact-page-hero .breadcrumb {
+        animation: nh-hero-enter 440ms var(--ease-premium) 0ms both;
+    }
+    .page-hero .eyebrow,
+    .album-hero .eyebrow,
+    .contact-page-hero .eyebrow {
+        animation: nh-hero-enter 480ms var(--ease-premium) 60ms both;
+    }
+    .page-hero h1,
+    .album-hero h1,
+    .contact-page-hero h1 {
+        animation: nh-hero-enter 540ms var(--ease-premium) 120ms both;
+    }
+    .page-hero .hero-description,
+    .album-hero h1 + p,
+    .album-hero .article-byline,
+    .contact-page-hero p:last-of-type {
+        animation: nh-hero-enter 500ms var(--ease-premium) 180ms both;
+    }
+    .page-hero .button {
+        animation: nh-hero-enter 480ms var(--ease-premium) 240ms both;
+    }
+
+    /* Scroll-triggered reveals (progressive enhancement via JS IntersectionObserver) */
+    html.motion-ready [data-reveal].reveal-pending {
+        opacity: 0;
+        transform: translateY(18px);
+        filter: blur(3px);
+    }
+    [data-reveal] {
+        transition:
+            opacity 520ms var(--ease-premium),
+            transform 520ms var(--ease-premium),
+            filter 520ms var(--ease-premium);
+        transition-delay: calc(min(var(--stagger-i, 0), 6) * 65ms);
+    }
+    [data-reveal].is-visible {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+
+    /* Ambient motion layers */
+    .prayer-live-dot {
+        animation: nh-live-pulse 2.6s ease-in-out infinite;
+    }
+    .islamic-ornament {
+        animation: nh-ornament-drift 48s ease-in-out infinite;
+        transform-origin: center;
+    }
+
+    /* Tabular numbers for dynamic times, stats, dates, accounts, pagination */
+    .prayer-time strong,
+    .stat-card strong,
+    .date-card strong,
+    .account-number,
+    .pager-list,
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Image inset 1px pure-black outline (rule #11: rgba(0, 0, 0, 0.1)) */
+    .hero-media figure img,
+    .tpq-media img,
+    .gallery-cover img,
+    .video-thumb img,
+    .article-image img,
+    .album-photo-grid img,
+    .article-cover img,
+    .documentation-grid img,
+    .qris-image img,
+    .photo-framed img {
+        outline: 1px solid rgba(0, 0, 0, 0.1);
+        outline-offset: -1px;
+    }
+
+    /* Shadows over borders + smooth interactive lift & tactile press */
+    .stat-card,
+    .info-card,
+    .question-card,
+    .facility-item,
+    .content-panel:not(.content-panel-dark),
+    .gallery-card,
+    .video-card,
+    .article-card,
+    .article-list a,
+    .help-card,
+    .contact-item,
+    .fund-card,
+    .report-item,
+    .channel-card,
+    .location-card,
+    .surface-card {
+        border-color: transparent;
+        box-shadow: var(--shadow-border);
+        transition:
+            transform 220ms var(--ease-premium),
+            box-shadow 220ms var(--ease-snappy),
+            background-color 180ms var(--ease-snappy),
+            border-color 180ms var(--ease-snappy);
+    }
+    .stat-card:hover,
+    .info-card:hover,
+    .question-card:hover,
+    .facility-item:hover,
+    .gallery-card:hover,
+    .video-card:hover,
+    .article-card:hover,
+    .article-list a:hover,
+    .help-card:hover,
+    .contact-item:hover,
+    .fund-card:hover,
+    .report-item:hover,
+    .channel-card:hover,
+    .surface-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-border-hover);
+    }
+    .info-card:active,
+    .help-card:active,
+    .contact-item:active,
+    .article-list a:active,
+    .channel-card:active {
+        transform: scale(0.985);
+    }
+    .static-item:hover {
+        transform: none;
+        box-shadow: var(--shadow-border);
+    }
+
+    /* Interactive press scale (0.96) & specific transitions */
+    .home-cta,
+    .copy-button,
+    .filter-chip,
+    .report-download,
+    .pager-page,
+    .pager-step,
+    .nav-toggle {
+        transition:
+            transform 150ms var(--ease-snappy),
+            background-color 180ms var(--ease-snappy),
+            border-color 180ms var(--ease-snappy),
+            color 180ms var(--ease-snappy),
+            box-shadow 180ms var(--ease-snappy);
+    }
+    .home-cta:hover {
+        transform: translateY(-1px);
+    }
+    .home-cta:active,
+    .copy-button:active,
+    .filter-chip:active,
+    .report-download:active,
+    .pager-page:active,
+    .pager-step:active,
+    .nav-toggle:active {
+        transform: scale(0.96);
+    }
+
+    /* Minimum 40x40 hit areas & optical adjustments */
+    .filter-chip {
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .filter-chip:hover {
+        border-color: var(--green);
+        background: var(--green-soft);
+    }
+    .filter-chip-active:hover {
+        background: var(--green);
+        color: #fff;
+    }
+    .video-play {
+        padding-left: 2px; /* optical triangle centering */
+        transition: transform 240ms var(--ease-premium), background-color 180ms var(--ease-snappy);
+    }
+    .video-card:hover .video-play {
+        transform: scale(1.08);
+        background: #fff;
+    }
+    .contact-arrow,
+    .link-arrow svg {
+        transition: transform 200ms var(--ease-premium);
+    }
+    .contact-item:hover .contact-arrow,
+    .link-arrow:hover svg {
+        transform: translateX(3px);
+    }
+
+    /* Gallery photo hover zoom on Beranda & TPQ documentation */
+    .photo-zoom img,
+    .documentation-grid img {
+        transition: transform 340ms var(--ease-premium);
+    }
+    .photo-zoom:hover img,
+    .documentation-grid a:hover img {
+        transform: scale(1.035);
+    }
+
+    /* Contextual icon animation (copy <-> checkmark cross-fade) */
+    .copy-icon-stack {
+        position: relative;
+        display: inline-flex;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+    }
+    .copy-icon-stack svg {
+        position: absolute;
+        inset: 0;
+        transition:
+            opacity 300ms var(--ease-snappy),
+            transform 300ms var(--ease-snappy),
+            filter 300ms var(--ease-snappy);
+    }
+    .copy-icon-stack .icon-copy {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+    .copy-icon-stack .icon-check {
+        opacity: 0;
+        transform: scale(0.25);
+        filter: blur(4px);
+    }
+    .copy-icon-stack.is-copied .icon-copy {
+        opacity: 0;
+        transform: scale(0.25);
+        filter: blur(4px);
+    }
+    .copy-icon-stack.is-copied .icon-check {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+        color: #0b6e4f;
+    }
+    .copy-button.is-copied {
+        border-color: #0b6e4f;
+        background: var(--green-soft);
+    }
+
+    /* Prayer tiles subtle interactive state */
+    .prayer-tile {
+        transition: transform 200ms var(--ease-premium), background-color 180ms var(--ease-snappy);
+    }
+    .prayer-tile:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Word-by-word writing Quran quote carousel */
+    @keyframes nh-quote-word-ar {
+        0% {
+            opacity: 0;
+            transform: translateY(6px);
+            clip-path: inset(0 0 0 100%);
+        }
+        65% {
+            opacity: 1;
+            color: #fae59e;
+            text-shadow: 0 0 14px rgba(226, 184, 75, 0.42);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+            clip-path: inset(0 0 0 0);
+            text-shadow: none;
+        }
+    }
+    @keyframes nh-quote-word-id {
+        0% {
+            opacity: 0;
+            transform: translateY(5px);
+            clip-path: inset(0 100% 0 0);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes nh-quote-shimmer {
+        0%,
+        82%,
+        100% {
+            color: #e2b84b;
+            transform: translateY(0);
+            text-shadow: none;
+        }
+        90% {
+            color: #fbe69f;
+            transform: translateY(-1.5px);
+            text-shadow: 0 0 12px rgba(226, 184, 75, 0.38);
+        }
+    }
+    .hero-quote {
+        min-height: 174px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid rgba(226, 184, 75, 0.22);
+        transition: transform 280ms var(--ease-premium), box-shadow 280ms var(--ease-snappy), border-color 280ms var(--ease-snappy);
+    }
+    .hero-quote:hover {
+        transform: translateY(-3px);
+        border-color: rgba(226, 184, 75, 0.45);
+        box-shadow: 0 26px 52px rgba(11, 59, 44, 0.34);
+    }
+    .hero-quote.is-switching [data-quote-words],
+    .hero-quote.is-switching [data-quote-cite] {
+        opacity: 0;
+        transform: translateY(-4px);
+        transition: opacity 180ms ease-in, transform 180ms ease-in;
+    }
+    .quote-word {
+        display: inline-block;
+        will-change: transform, opacity;
+    }
+    .quote-word-ar {
+        animation:
+            nh-quote-word-ar 460ms var(--ease-premium) var(--wd, 0ms) both,
+            nh-quote-shimmer 7s ease-in-out calc(1.8s + var(--wi, 0) * 90ms) infinite;
+    }
+    .quote-word-id {
+        animation: nh-quote-word-id 360ms var(--ease-premium) var(--wd, 0ms) both;
+    }
+    .quote-cite-enter {
+        animation: nh-quote-word-id 400ms var(--ease-premium) var(--wd, 0ms) both;
+    }
+
+    /* Balanced layout columns on Profil & Jadwal (no awkward vertical gaps) */
+    .history-grid,
+    .schedule-columns {
+        align-items: stretch;
+    }
+    .history-story-panel,
+    .schedule-agenda-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        gap: 20px;
+    }
+    .history-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: auto;
+        padding-top: 18px;
+        border-top: 1px solid #eeece5;
+    }
+    .history-meta-box {
+        display: grid;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: var(--cream);
+    }
+    .history-meta-box small {
+        display: block;
+        color: #806313;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .history-meta-box strong {
+        display: block;
+        margin-top: 2px;
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.45;
+    }
+    .schedule-left-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+    .schedule-left-stack .quran-schedule {
+        margin-top: 0;
+    }
+    .schedule-agenda-panel .button-full {
+        margin-top: auto;
+    }
+
+    /* Footer visitor traffic line chart */
+    .footer-traffic-wrap {
+        padding-top: 28px;
+    }
+    .footer-traffic {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 24px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .footer-traffic-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px 24px;
+    }
+    .footer-traffic-head {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+    .footer-traffic-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--gold);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+    }
+    .footer-traffic-badge .prayer-live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #5eead4;
+        box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.55);
+    }
+    .footer-traffic-subtitle {
+        margin: 0;
+        color: #b9ccc3;
+        font-size: 12.5px;
+    }
+    .footer-traffic-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        color: #b9ccc3;
+        font-size: 12.5px;
+    }
+    .footer-traffic-metrics strong {
+        color: #ffffff;
+        font-weight: 800;
+    }
+    .footer-traffic-metrics small {
+        color: #9eb6aa;
+        font-size: 11px;
+    }
+    .footer-chart-box {
+        position: relative;
+        height: 170px;
+        width: 100%;
+    }
+    .footer-line-chart {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    @media (max-width: 700px) {
+        .footer-traffic {
+            padding: 16px;
+        }
+        .footer-chart-box {
+            height: 150px;
+        }
+    }
+
+    /* Under-navbar running LED prayer clock strip */
+    @keyframes nh-led-marquee {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+    .sticky-top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+    }
+    .sticky-top-bar .site-header {
+        position: static;
+    }
+    .prayer-led-bar {
+        background: var(--green-deep);
+        border-bottom: 1px solid rgba(226, 184, 75, 0.22);
+        color: #fff;
+    }
+    .prayer-led-bar-inner {
+        width: min(100% - 64px, 1320px);
+        margin-inline: auto;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .prayer-led-clock-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        padding-right: 16px;
+        border-right: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .prayer-led-clock-badge .prayer-live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--gold);
+    }
+    .prayer-led-clock-text {
+        color: var(--gold);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+    }
+    .prayer-led-viewport {
+        position: relative;
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+    }
+    .prayer-led-scroller {
+        display: flex;
+        width: max-content;
+        animation: nh-led-marquee 26s linear infinite;
+        will-change: transform;
+    }
+    .prayer-led-bar:hover .prayer-led-scroller {
+        animation-play-state: paused;
+    }
+    .prayer-led-track {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+        padding-right: 18px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .prayer-led-chip {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 7px;
+    }
+    .prayer-led-label {
+        color: #b9ccc3;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .prayer-led-time {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 800;
+    }
+    .prayer-led-chip.is-next .prayer-led-label,
+    .prayer-led-chip.is-next .prayer-led-time {
+        color: var(--gold);
+    }
+    .prayer-led-chip.is-next .prayer-led-time {
+        text-shadow: 0 0 12px rgba(226, 184, 75, 0.35);
+    }
+    .prayer-led-tag {
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: rgba(226, 184, 75, 0.16);
+        color: #f6dc90;
+        font-size: 10px;
+        font-weight: 700;
+    }
+    .prayer-led-sep {
+        color: rgba(226, 184, 75, 0.35);
+        font-size: 12px;
+    }
+    @media (max-width: 700px) {
+        .prayer-led-bar-inner {
+            width: min(100% - 28px, 1320px);
+            gap: 10px;
+        }
+        .prayer-led-clock-badge {
+            padding-right: 10px;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .prayer-led-scroller {
+            animation: none;
+            width: 100%;
+        }
+        .prayer-led-track {
+            flex-wrap: wrap;
+            white-space: normal;
+            gap: 6px 12px;
+            padding: 6px 0;
         }
     }
 }

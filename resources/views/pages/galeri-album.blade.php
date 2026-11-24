@@ -38,9 +38,9 @@
             @if ($photos->isEmpty())
                 <p class="gallery-empty">Foto album ini sedang disiapkan.</p>
             @else
-                <ul class="album-photo-grid">
+                <ul class="album-photo-grid" data-reveal-group>
                     @foreach ($photos as $photo)
-                        <li>
+                        <li data-reveal>
                             <figure>
                                 <a href="{{ $photo->image->url() }}" @click.prevent="show({{ $loop->index }})">
                                     <img src="{{ $photo->image->url() }}" alt="{{ $photo->caption ?: $album->title.' — foto '.$loop->iteration }}"
@@ -56,18 +56,32 @@
                 </ul>
             @endif
 
-            <p class="report-back"><a href="{{ route('galeri') }}#album">← Kembali ke galeri</a></p>
+            <p class="report-back"><a href="{{ route('galeri') }}#album"><i class="fa-solid fa-arrow-left text-[11px]" aria-hidden="true"></i> Kembali ke galeri</a></p>
         </div>
 
-        <div class="lightbox" x-show="open !== null" x-cloak x-transition.opacity role="dialog" aria-modal="true" aria-label="Foto album"
+        <div class="lightbox" x-show="open !== null" x-cloak
+            x-transition:enter="transition duration-200 ease-out"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition duration-150 ease-in"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            role="dialog" aria-modal="true" aria-label="Foto album"
             @click.self="close()">
             <button type="button" class="lightbox-close" @click="close()" aria-label="Tutup foto">&times;</button>
             <button type="button" class="lightbox-nav lightbox-prev" @click="prev()" x-show="items.length > 1" aria-label="Foto sebelumnya">‹</button>
-            <figure class="lightbox-figure">
+            <figure class="lightbox-figure"
+                x-show="open !== null"
+                x-transition:enter="transition duration-250 ease-out"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition duration-150 ease-in"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95">
                 <img :src="current?.src" :alt="current?.alt">
                 <figcaption>
                     <span x-text="current?.caption"></span>
-                    <small x-text="(open + 1) + ' / ' + items.length"></small>
+                    <small class="tabular-nums" x-text="(open + 1) + ' / ' + items.length"></small>
                 </figcaption>
             </figure>
             <button type="button" class="lightbox-nav lightbox-next" @click="next()" x-show="items.length > 1" aria-label="Foto berikutnya">›</button>
@@ -77,11 +91,11 @@
     @if ($otherAlbums->isNotEmpty())
         <section class="section section-muted">
             <div class="site-container">
-                <x-section-heading eyebrow="Album lainnya" title="Dokumentasi kegiatan lain" />
-                <div class="gallery-grid gallery-grid-three">
+                <div data-reveal><x-section-heading eyebrow="Album lainnya" title="Dokumentasi kegiatan lain" /></div>
+                <div class="gallery-grid gallery-grid-three" data-reveal-group>
                     @foreach ($otherAlbums as $other)
                         @php $cover = $other->cover(); @endphp
-                        <article class="gallery-card">
+                        <article data-reveal class="gallery-card">
                             <a class="gallery-cover" href="{{ route('galeri.album', $other) }}">
                                 @if ($cover)
                                     <img src="{{ $cover->url() }}" alt="" loading="lazy" decoding="async">

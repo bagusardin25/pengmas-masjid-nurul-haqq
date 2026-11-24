@@ -9,7 +9,7 @@
 
     <section class="section">
         <div class="site-container">
-            <nav class="filter-list" aria-label="Kategori laporan">
+            <nav data-reveal class="filter-list" aria-label="Kategori laporan">
                 <a href="{{ route('ziswaf.laporan') }}" @class(['filter-chip', 'filter-chip-active' => $activeCategory === null])
                     @if ($activeCategory === null) aria-current="true" @endif>Semua</a>
                 @foreach ($categories as $category)
@@ -28,9 +28,9 @@
                     {{ $activeCategory ? 'Belum ada laporan kategori '.$activeCategory->shortLabel().' yang diterbitkan.' : 'Belum ada laporan yang diterbitkan.' }}
                 </p>
             @else
-                <ul class="report-list report-list-page">
+                <ul class="report-list report-list-page" data-reveal-group>
                     @foreach ($reports as $report)
-                        <x-report-item :report="$report" :show-category="$activeCategory === null" />
+                        <x-report-item data-reveal :report="$report" :show-category="$activeCategory === null" />
                     @endforeach
                 </ul>
 
@@ -39,7 +39,7 @@
                 </div>
             @endif
 
-            <p class="report-back"><a href="{{ route('ziswaf') }}#cara-menyalurkan">← Kembali ke cara menyalurkan dana</a></p>
+            <p class="report-back"><a href="{{ route('ziswaf') }}#cara-menyalurkan"><i class="fa-solid fa-arrow-left text-[11px]" aria-hidden="true"></i> Kembali ke cara menyalurkan dana</a></p>
         </div>
     </section>
 @endsection

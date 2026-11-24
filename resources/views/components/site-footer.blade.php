@@ -1,9 +1,37 @@
 @php
     $footerContact = $siteContact->setting();
     $footerWhatsapp = $siteContact->whatsappUrl();
+    $traffic = $siteTraffic->stats();
 @endphp
 
 <footer class="site-footer">
+    <div class="site-container footer-traffic-wrap" data-reveal>
+        <div class="footer-traffic" aria-label="Statistik pengunjung situs">
+            <div class="footer-traffic-top">
+                <div class="footer-traffic-head">
+                    <span class="footer-traffic-badge">
+                        <span class="prayer-live-dot" aria-hidden="true"></span>
+                        STATISTIK PENGUNJUNG
+                    </span>
+                    <p class="footer-traffic-subtitle">Grafik kunjungan jamaah 7 hari terakhir</p>
+                </div>
+                <div class="footer-traffic-metrics tabular-nums">
+                    <span>Online: <strong>{{ number_format($traffic['online'], 0, ',', '.') }}</strong></span>
+                    <span>Hari ini: <strong>{{ number_format($traffic['today_hits'], 0, ',', '.') }}</strong> <small>({{ number_format($traffic['today_visitors'], 0, ',', '.') }} unik)</small></span>
+                    <span>Bulan ini: <strong>{{ number_format($traffic['month_hits'], 0, ',', '.') }}</strong></span>
+                    <span>Total: <strong>{{ number_format($traffic['total_hits'], 0, ',', '.') }}</strong></span>
+                </div>
+            </div>
+            <div class="footer-chart-box">
+                <canvas
+                    class="footer-line-chart"
+                    data-traffic-chart='@json($traffic["series"])'
+                    aria-label="Grafik kunjungan harian 7 hari terakhir"
+                    role="img"></canvas>
+            </div>
+        </div>
+    </div>
+
     <div class="site-container footer-inner">
         <div class="footer-about">
             <a class="brand brand-inverted" href="{{ route('home') }}">

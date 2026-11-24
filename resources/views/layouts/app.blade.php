@@ -13,7 +13,10 @@
 </head>
 <body>
     <div class="site-shell">
-        <x-site-header />
+        <div class="sticky-top-bar">
+            <x-site-header />
+            @yield('after-header')
+        </div>
         <main id="main-content">
             @yield('content')
         </main>
