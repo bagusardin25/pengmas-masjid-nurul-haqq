@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'ZISWAF')
-@section('description', 'Penyaluran sedekah, infak, zakat, dan wakaf serta laporan keuangan Masjid Jami Nurul Haqq.')
+@section('description', 'Penyaluran sedekah, infak, zakat, dan wakaf serta laporan keuangan Masjid Nurul Haqq.')
 
 @php
     $step = 0;

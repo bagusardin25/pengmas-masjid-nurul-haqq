@@ -3,12 +3,12 @@
     title, description, og_type (website/article), og_image (URL gambar 1200×630 bila ada).
 --}}
 @php
-    $siteName = 'Masjid Jami Nurul Haqq';
+    $siteName = 'Masjid Nurul Haqq';
     // Isi @section('judul', 'teks') sudah di-escape Blade; dikembalikan dulu agar tidak ter-escape dua kali (&amp;amp;).
     $plain = fn (string $section, string $default = '') => html_entity_decode(trim($__env->yieldContent($section, $default)), ENT_QUOTES | ENT_HTML5);
     $pageTitle = $plain('title', $siteName);
     $fullTitle = $pageTitle === $siteName ? $siteName.' — Griya Taman Asri, Sidoarjo' : $pageTitle.' — '.$siteName;
-    $description = $plain('description', 'Masjid Jami Nurul Haqq di Griya Taman Asri, Tawangsari, Taman, Sidoarjo: jadwal sholat dan kajian, program TPQ, ZISWAF, dan laporan keuangan.');
+    $description = $plain('description', 'Masjid Nurul Haqq di Griya Taman Asri, Tawangsari, Taman, Sidoarjo: jadwal sholat dan kajian, program TPQ, ZISWAF, dan laporan keuangan.');
     $ogImage = $plain('og_image') ?: asset('images/og-default.jpg');
     $canonical = url()->current();
 @endphp
@@ -29,7 +29,7 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 @endunless
-<meta property="og:image:alt" content="Masjid Jami Nurul Haqq">
+<meta property="og:image:alt" content="Masjid Nurul Haqq">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $pageTitle }}">
 <meta name="twitter:description" content="{{ $description }}">

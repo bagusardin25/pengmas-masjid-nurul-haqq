@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="refresh" content="300">
-    <title>@yield('title', 'Informasi Masjid Jami Nurul Haqq')</title>
+    <title>@yield('title', 'Informasi Masjid Nurul Haqq')</title>
     <meta name="theme-color" content="#0b3b2c">
     <link rel="icon" type="image/png" href="{{ asset('images/icons/icon-512.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">

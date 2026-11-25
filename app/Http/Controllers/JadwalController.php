@@ -18,12 +18,15 @@ class JadwalController extends Controller
         [
             'schedule' => $schedule,
             'prayers' => $prayers,
+            'next' => $nextPrayer,
         ] = $prayerSchedule->forDay($today);
 
         return view('pages.jadwal', [
             'page' => ActivityPage::current(),
             'prayerSchedule' => $schedule,
             'prayers' => $prayers,
+            'nextPrayer' => $nextPrayer,
+            'today' => $today,
             'routines' => RoutineActivity::query()->ordered()->get(),
             'kitabSchedules' => KitabSchedule::query()->ordered()->get(),
             'agendas' => Agenda::query()

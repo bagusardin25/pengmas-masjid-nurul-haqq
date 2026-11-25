@@ -15,7 +15,7 @@ beforeEach(function () {
 function heroPayload(array $overrides = []): array
 {
     return [
-        'hero_eyebrow' => 'MASJID JAMI · YAYASAN NURUL HAQQ',
+        'hero_eyebrow' => 'MASJID · YAYASAN NURUL HAQQ',
         'hero_title' => "Masjid\nNurul Haqq",
         'hero_description' => 'Tempat sholat berjamaah lima waktu.',
         'hero_arabic_text' => 'إِنَّمَا يَعْمُرُ مَسَاجِدَ اللَّهِ',

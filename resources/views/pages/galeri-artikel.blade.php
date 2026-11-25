@@ -3,7 +3,7 @@
 @section('title', $article->title)
 @section('og_type', 'article')
 @section('og_image', $article->coverImage?->url() ?? '')
-@section('description', $article->summary(160) ?: 'Artikel kegiatan Masjid Jami Nurul Haqq.')
+@section('description', $article->summary(160) ?: 'Artikel kegiatan Masjid Nurul Haqq.')
 
 @php
     $meta = collect([

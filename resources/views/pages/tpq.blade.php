@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Program TPQ')
-@section('description', 'Program Taman Pendidikan Al-Qur’an (TPQ) Nurul Haqq dengan metode Tartil di Masjid Jami Nurul Haqq.')
+@section('description', 'Program Taman Pendidikan Al-Qur’an (TPQ) Nurul Haqq dengan metode Tartil di Masjid Nurul Haqq.')
 
 @php
     $registrationUrl = $tpq?->registrationUrl();

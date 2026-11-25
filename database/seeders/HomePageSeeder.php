@@ -10,7 +10,7 @@ class HomePageSeeder extends Seeder
     public function run(): void
     {
         (HomePage::current() ?? new HomePage)->fill([
-            'hero_eyebrow' => 'MASJID JAMI · YAYASAN NURUL HAQQ',
+            'hero_eyebrow' => 'MASJID · YAYASAN NURUL HAQQ',
             'hero_title' => "Masjid\nNurul Haqq",
             'hero_description' => "Tempat sholat berjamaah lima waktu, sholat Jumat, kajian kitab, dan pendidikan Al-Qur'an bagi warga Griya Taman Asri, Tawangsari. Terbuka untuk umum.",
             'hero_arabic_text' => 'إِنَّمَا يَعْمُرُ مَسَاجِدَ اللَّهِ مَنْ آمَنَ بِاللَّهِ وَالْيَوْمِ الْآخِرِ',

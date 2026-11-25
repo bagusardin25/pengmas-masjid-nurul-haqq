@@ -1,9 +1,9 @@
 <header class="site-header">
     <div class="site-container header-inner">
-        <a class="brand" href="{{ route('home') }}" aria-label="Masjid Jami Nurul Haqq, beranda">
-            <img src="{{ asset('images/icons/icon-512.png') }}" width="54" height="54" alt="logo jami nurul haqq"
+        <a class="brand" href="{{ route('home') }}" aria-label="Masjid Nurul Haqq, beranda">
+            <img src="{{ asset('images/icons/icon-512.png') }}" width="54" height="54" alt="logo nurul haqq"
                 class="object-contain">
-            <span class="brand-copy"><span>MASJID JAMI</span><strong>Nurul Haqq</strong></span>
+            <span class="brand-copy"><span>MASJID</span><strong>Nurul Haqq</strong></span>
         </a>
 
         <nav id="primary-navigation" class="primary-nav" aria-label="Navigasi utama">

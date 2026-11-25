@@ -56,7 +56,7 @@ test('profil page hides inactive facilities and members and follows sort order',
 test('profil page still renders when no content has been saved yet', function () {
     $this->get(route('profil'))
         ->assertOk()
-        ->assertSee('Profil Masjid Jami Nurul Haqq')
+        ->assertSee('Profil Masjid Nurul Haqq')
         ->assertSee('Sejarah masjid belum ditambahkan.')
         ->assertSee('Data kepengurusan belum ditambahkan.');
 });

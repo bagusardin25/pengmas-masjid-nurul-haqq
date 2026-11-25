@@ -2,7 +2,7 @@
 
 @section('title', $album->title)
 @section('og_image', $album->cover()?->url() ?? '')
-@section('description', $album->description ?: 'Album foto '.$album->title.' di Masjid Jami Nurul Haqq.')
+@section('description', $album->description ?: 'Album foto '.$album->title.' di Masjid Nurul Haqq.')
 
 @php
     $photos = $album->photos;

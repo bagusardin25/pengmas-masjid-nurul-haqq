@@ -10,8 +10,8 @@ use App\Models\User;
 test('public pages have seo meta tags and icons', function () {
     $this->get(route('profil'))
         ->assertOk()
-        ->assertSee('<title>Profil Masjid — Masjid Jami Nurul Haqq</title>', false)
-        ->assertSee('<meta name="description" content="Profil, fasilitas, sejarah, dan kepengurusan Masjid Jami Nurul Haqq.">', false)
+        ->assertSee('<title>Profil Masjid — Masjid Nurul Haqq</title>', false)
+        ->assertSee('<meta name="description" content="Profil, fasilitas, sejarah, dan kepengurusan Masjid Nurul Haqq.">', false)
         ->assertSee('<link rel="canonical" href="'.route('profil').'">', false)
         ->assertSee('<meta property="og:image" content="'.asset('images/og-default.jpg').'">', false)
         ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
@@ -25,7 +25,7 @@ test('the home page describes the mosque with structured data', function () {
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('<title>Masjid Jami Nurul Haqq — Griya Taman Asri, Sidoarjo</title>', false)
+        ->assertSee('<title>Masjid Nurul Haqq — Griya Taman Asri, Sidoarjo</title>', false)
         ->assertSee('"@type":"Mosque"', false)
         ->assertSee('"email":"takmirmnh22@gmail.com"', false)
         ->assertSee('"telephone":"0812-3028-185"', false);
@@ -87,11 +87,11 @@ test('titles and descriptions with special characters are escaped only once', fu
     GalleryPhoto::factory()->for($album, 'album')->create();
 
     $this->get(route('jadwal'))
-        ->assertSee('<title>Jadwal &amp; Kegiatan — Masjid Jami Nurul Haqq</title>', false)
+        ->assertSee('<title>Jadwal &amp; Kegiatan — Masjid Nurul Haqq</title>', false)
         ->assertDontSee('&amp;amp;', false);
 
     $this->get(route('galeri.album', $album))
-        ->assertSee('<title>Isra Mi&#039;raj &amp; Maulid — Masjid Jami Nurul Haqq</title>', false)
+        ->assertSee('<title>Isra Mi&#039;raj &amp; Maulid — Masjid Nurul Haqq</title>', false)
         ->assertSee('content="Kajian &quot;Tafsir&quot; &amp; doa bersama"', false)
         ->assertDontSee('&amp;amp;', false)
         ->assertDontSee('&amp;#039;', false);

@@ -86,7 +86,7 @@
 
                 <fieldset class="dash-fieldset">
                     <legend>Teks</legend>
-                    <x-dashboard.field bag="hero" name="hero_eyebrow" label="Label kecil di atas judul" :value="$hero?->hero_eyebrow" placeholder="MASJID JAMI · YAYASAN NURUL HAQQ" />
+                    <x-dashboard.field bag="hero" name="hero_eyebrow" label="Label kecil di atas judul" :value="$hero?->hero_eyebrow" placeholder="MASJID · YAYASAN NURUL HAQQ" />
                     <x-dashboard.field bag="hero" name="hero_title" label="Judul" type="textarea" rows="2" :value="$hero?->hero_title" required
                         hint="Tekan Enter untuk memindahkan kata ke baris berikutnya." />
                     <x-dashboard.field bag="hero" name="hero_description" label="Deskripsi" type="textarea" rows="3" :value="$hero?->hero_description" />

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Galeri')
-@section('description', 'Album foto, video kajian, dan artikel kegiatan Masjid Jami Nurul Haqq.')
+@section('description', 'Album foto, video kajian, dan artikel kegiatan Masjid Nurul Haqq.')
 
 @php
     $setting = $siteContact->setting();
