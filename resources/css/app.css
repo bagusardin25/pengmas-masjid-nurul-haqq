@@ -80,7 +80,7 @@
         @apply [display:inline-flex] [align-items:center] [gap:10px] [text-decoration:none] [flex-shrink:0];
     }
     .brand-mark {
-        @apply [width:42px] [height:42px] [display:grid] [place-items:center] [border-radius:12px] [background:var(--green)] [color:var(--gold)] [font-size:22px];
+        @apply [width:72px] [height:72px] [display:grid] [place-items:center] [border-radius:12px] [background:var(--green)] [color:var(--gold)] [font-size:22px];
     }
     .brand-mark img {
         @apply [width:100%] [height:100%] [object-fit:contain] [border-radius:inherit];
@@ -292,6 +292,12 @@
     .brand-inverted .brand-mark {
         @apply [background:var(--gold)] [color:var(--green-deep)];
     }
+    .footer-brand-logos {
+        @apply [display:flex] [flex-shrink:0] [align-items:center] [gap:10px];
+    }
+    .footer-partner-logo {
+        @apply [width:72px] [height:72px] [border:1px_solid_#fff] [border-radius:8px] [background:#fff] [object-fit:contain];
+    }
     .brand-inverted .brand-copy span {
         @apply [color:var(--gold)];
     }
@@ -302,7 +308,7 @@
         @apply [max-width:390px];
     }
     .footer-about p {
-        @apply [margin:14px_0_0] [color:#bdcec5] [font-size:12px];
+        @apply [margin:14px_0_0] [color:#bdcec5] [font-size:14px];
     }
     .footer-links {
         @apply [display:flex] [gap:50px];
@@ -311,18 +317,18 @@
         @apply [display:flex] [flex-direction:column] [gap:9px];
     }
     .footer-links h2 {
-        @apply [margin:0_0_3px] [color:var(--gold)] [font-size:10px] [letter-spacing:.08em] [text-transform:uppercase];
+        @apply [margin:0_0_3px] [color:var(--gold)] [font-size:12px] [letter-spacing:.08em] [text-transform:uppercase];
     }
     .footer-links a,
     .footer-bottom a {
-        @apply [color:#d1ded7] [font-size:11px] [text-decoration:none];
+        @apply [color:#d1ded7] [font-size:13px] [text-decoration:none];
     }
     .footer-links a:hover,
     .footer-bottom a:hover {
         @apply [color:#fff];
     }
     .footer-bottom {
-        @apply [grid-column:1_/_-1] [display:flex] [justify-content:space-between] [gap:16px] [padding-top:18px] [border-top:1px_solid_#ffffff20] [color:#a9bdb3] [font-size:10px];
+        @apply [grid-column:1_/_-1] [display:flex] [justify-content:space-between] [gap:16px] [padding-top:18px] [border-top:1px_solid_#ffffff20] [color:#a9bdb3] [font-size:12px];
     }
     .home-hero {
         @apply [padding:66px_0] [background:#fff];
@@ -1074,32 +1080,35 @@
             @apply [min-height:355px] [gap:28px_36px] [padding-top:34px] [padding-bottom:18px];
         }
         .site-footer .brand-mark {
-            @apply [width:28px] [height:28px];
+            @apply [width:64px] [height:64px];
+        }
+        .site-footer .footer-partner-logo {
+            @apply [width:64px] [height:64px];
         }
         .site-footer .brand-copy span {
-            @apply [font-size:7px];
+            @apply [font-size:8px];
         }
         .site-footer .brand-copy strong {
-            @apply [font-size:12px];
+            @apply [font-size:13px];
         }
         .footer-about {
             @apply [max-width:300px];
         }
         .footer-about p {
-            @apply [margin-top:10px] [font-size:9px];
+            @apply [margin-top:10px] [font-size:12px];
         }
         .footer-links {
             @apply [gap:40px];
         }
         .footer-links h2 {
-            @apply [font-size:8px];
+            @apply [font-size:10px];
         }
         .footer-links a,
         .footer-bottom a {
-            @apply [font-size:8px];
+            @apply [font-size:11px];
         }
         .footer-bottom {
-            @apply [padding-top:14px] [font-size:8px];
+            @apply [padding-top:14px] [font-size:10px];
         }
     }
     @media (max-width: 700px) {
@@ -1597,7 +1606,12 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgb(8 45 34 / 96%) 8%, rgb(8 45 34 / 35%) 60%, rgb(8 45 34 / 10%));
+        background: linear-gradient(
+            to top,
+            rgb(8 45 34 / 96%) 8%,
+            rgb(8 45 34 / 35%) 60%,
+            rgb(8 45 34 / 10%)
+        );
     }
     .auth-visual-copy {
         position: absolute;
@@ -1920,7 +1934,10 @@
         font-size: 14px;
         font-weight: 700;
         text-decoration: none;
-        transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+        transition:
+            background 0.18s ease,
+            border-color 0.18s ease,
+            color 0.18s ease;
     }
     a.pager-link:hover {
         border-color: var(--green);
@@ -2021,7 +2038,11 @@
         overflow: hidden;
         padding: clamp(18px, 2.5vw, 40px);
         background:
-            radial-gradient(ellipse at 86% 0%, rgb(226 184 75 / 10%), transparent 34%),
+            radial-gradient(
+                ellipse at 86% 0%,
+                rgb(226 184 75 / 10%),
+                transparent 34%
+            ),
             #0b3b2c;
     }
     .tv-header {
