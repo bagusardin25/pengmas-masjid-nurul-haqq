@@ -82,6 +82,9 @@
     .brand-mark {
         @apply [width:42px] [height:42px] [display:grid] [place-items:center] [border-radius:12px] [background:var(--green)] [color:var(--gold)] [font-size:22px];
     }
+    .brand-mark img {
+        @apply [width:100%] [height:100%] [object-fit:contain] [border-radius:inherit];
+    }
     .brand-copy {
         @apply [display:flex] [flex-direction:column] [line-height:1.2];
     }
@@ -1999,6 +2002,460 @@
         }
         .load-more-button {
             width: 100%;
+        }
+    }
+
+    .tv-body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background: #0b3b2c;
+        color: #123d30;
+    }
+    .tv-screen {
+        display: grid;
+        height: 100vh;
+        min-height: 100vh;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        gap: clamp(14px, 1.7vh, 24px);
+        overflow: hidden;
+        padding: clamp(18px, 2.5vw, 40px);
+        background:
+            radial-gradient(ellipse at 86% 0%, rgb(226 184 75 / 10%), transparent 34%),
+            #0b3b2c;
+    }
+    .tv-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        color: #fff;
+    }
+    .tv-brand {
+        display: flex;
+        align-items: center;
+        gap: clamp(12px, 1.4vw, 22px);
+    }
+    .tv-brand img {
+        width: clamp(58px, 6vw, 92px);
+        height: clamp(58px, 6vw, 92px);
+        flex: 0 0 auto;
+        object-fit: contain;
+    }
+    .tv-brand p,
+    .tv-brand h1,
+    .tv-brand span,
+    .tv-clock-wrap p {
+        margin: 0;
+    }
+    .tv-brand p {
+        color: var(--gold);
+        font-size: clamp(11px, 1vw, 16px);
+        font-weight: 800;
+        letter-spacing: 0.1em;
+    }
+    .tv-brand h1 {
+        color: #fff;
+        font-size: clamp(28px, 3.2vw, 48px);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+    }
+    .tv-brand span {
+        display: block;
+        margin-top: 3px;
+        color: #c4d4cc;
+        font-size: clamp(12px, 1.1vw, 17px);
+    }
+    .tv-clock-wrap {
+        text-align: right;
+    }
+    .tv-clock {
+        display: block;
+        color: var(--gold);
+        font-size: clamp(30px, 3.5vw, 54px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        line-height: 1.1;
+    }
+    .tv-clock-wrap p {
+        margin-top: 5px;
+        color: #fff;
+        font-size: clamp(13px, 1.3vw, 19px);
+    }
+    .tv-clock-wrap p span {
+        color: #c7d7cf;
+    }
+    .tv-clock-wrap .tv-address {
+        max-width: 52vw;
+        margin-top: 2px;
+        color: #c7d7cf;
+        font-size: clamp(10px, 0.95vw, 14px);
+    }
+    .tv-prayer-panel,
+    .tv-panel {
+        min-width: 0;
+        border-radius: clamp(16px, 1.7vw, 26px);
+    }
+    .tv-prayer-panel {
+        padding: clamp(18px, 2vw, 30px);
+        background: var(--cream);
+    }
+    .tv-section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+    }
+    .tv-section-heading h2 {
+        margin: 0;
+        color: var(--green);
+        font-size: clamp(20px, 2vw, 30px);
+        font-weight: 800;
+        line-height: 1.2;
+    }
+    .tv-eyebrow {
+        margin: 0 0 3px;
+        color: #8a6a12;
+        font-size: clamp(10px, 0.9vw, 13px);
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .tv-prayer-meta {
+        display: grid;
+        gap: 2px;
+        text-align: right;
+    }
+    .tv-prayer-meta strong {
+        color: var(--green);
+        font-size: clamp(14px, 1.35vw, 20px);
+    }
+    .tv-prayer-meta span {
+        color: var(--muted);
+        font-size: clamp(10px, 0.9vw, 14px);
+    }
+    .tv-prayer-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: clamp(8px, 0.9vw, 14px);
+        margin: clamp(14px, 1.3vw, 20px) 0 0;
+        padding: 0;
+        list-style: none;
+    }
+    .tv-prayer-time {
+        display: flex;
+        min-height: clamp(78px, 10vh, 122px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        background: #204f40;
+        color: #fff;
+    }
+    .tv-prayer-time span {
+        color: #c5d6ce;
+        font-size: clamp(12px, 1.25vw, 19px);
+        font-weight: 600;
+    }
+    .tv-prayer-time strong {
+        font-size: clamp(27px, 3.8vw, 56px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.15;
+    }
+    .tv-prayer-time.is-next {
+        border-color: var(--gold);
+        background: #123d30;
+    }
+    .tv-prayer-note {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 12px 0 0;
+        color: var(--green);
+        font-size: clamp(10px, 0.9vw, 14px);
+        font-weight: 600;
+    }
+    .tv-prayer-note span {
+        color: var(--muted);
+        font-weight: 400;
+    }
+    .tv-content-grid {
+        display: grid;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: clamp(12px, 1.3vw, 20px);
+        overflow: hidden;
+    }
+    .tv-panel {
+        min-height: 0;
+        overflow: hidden;
+        padding: clamp(16px, 1.8vw, 28px);
+        background: #fff;
+    }
+    .tv-panel-heading {
+        margin-bottom: clamp(12px, 1.2vw, 18px);
+    }
+    .tv-panel-heading > span {
+        color: #8a6a12;
+        font-size: clamp(9px, 0.9vw, 13px);
+        font-weight: 800;
+        text-align: right;
+        text-transform: uppercase;
+    }
+    .tv-activity-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(12px, 1.2vw, 18px);
+    }
+    .tv-panel h3 {
+        margin: 0 0 8px;
+        color: var(--green);
+        font-size: clamp(13px, 1.1vw, 17px);
+        font-weight: 800;
+    }
+    .tv-list-row,
+    .tv-agenda-row,
+    .tv-report-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 0;
+        border-bottom: 1px solid #eeece5;
+    }
+    .tv-list-row:last-child,
+    .tv-agenda-row:last-child,
+    .tv-report-row:last-child {
+        border-bottom: 0;
+    }
+    .tv-list-mark {
+        width: 9px;
+        height: 9px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: var(--gold);
+    }
+    .tv-list-row > span:last-child,
+    .tv-agenda-row > div,
+    .tv-report-row > span:last-child {
+        min-width: 0;
+    }
+    .tv-list-row strong,
+    .tv-agenda-row > div > strong,
+    .tv-report-row strong {
+        display: block;
+        overflow: hidden;
+        color: var(--green);
+        font-size: clamp(11px, 0.98vw, 15px);
+        font-weight: 700;
+        text-overflow: ellipsis;
+    }
+    .tv-list-row small,
+    .tv-agenda-row small,
+    .tv-report-row small {
+        display: block;
+        overflow: hidden;
+        margin-top: 1px;
+        color: var(--muted);
+        font-size: clamp(9px, 0.8vw, 12px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .tv-agenda {
+        margin-top: clamp(10px, 1vw, 16px);
+        padding-top: clamp(10px, 1vw, 16px);
+        border-top: 1px solid #e8e5dc;
+    }
+    .tv-agenda-row time {
+        display: flex;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 auto;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: var(--green-soft);
+        color: var(--green);
+        line-height: 1.05;
+    }
+    .tv-agenda-row time strong {
+        font-size: 15px;
+    }
+    .tv-agenda-row time span {
+        font-size: 10px;
+        text-transform: uppercase;
+    }
+    .tv-fund-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .tv-fund-list li {
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: clamp(10px, 0.9vw, 13px);
+        font-weight: 700;
+    }
+    .tv-ziswaf-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: clamp(10px, 1.2vw, 18px);
+    }
+    .tv-agenda-side {
+        margin-top: 0;
+        padding-top: 0;
+        padding-left: clamp(10px, 1.1vw, 16px);
+        border-top: 0;
+        border-left: 1px solid #e8e5dc;
+    }
+    .tv-reports {
+        margin-top: clamp(14px, 1.4vw, 22px);
+        padding-top: clamp(12px, 1.2vw, 18px);
+        border-top: 1px solid #e8e5dc;
+    }
+    .tv-report-icon {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 9px;
+        background: #f7eddf;
+        color: #8a6a12;
+        font-size: 10px;
+        font-weight: 800;
+    }
+    .tv-finance-note {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: clamp(9px, 0.8vw, 12px);
+    }
+    .tv-empty {
+        margin: 4px 0;
+        color: var(--muted);
+        font-size: clamp(10px, 0.9vw, 13px);
+    }
+    .tv-prayer-unavailable {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 12px;
+        background: #fff;
+        text-align: center;
+    }
+    .tv-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: #bfd0c7;
+        font-size: clamp(9px, 0.8vw, 12px);
+    }
+    @media (max-height: 850px) and (min-width: 901px) {
+        .tv-screen {
+            gap: 12px;
+            padding-block: 16px;
+        }
+        .tv-brand img {
+            width: 54px;
+            height: 54px;
+        }
+        .tv-brand h1 {
+            font-size: 28px;
+        }
+        .tv-prayer-panel {
+            padding-block: 14px;
+        }
+        .tv-prayer-grid {
+            margin-top: 10px;
+        }
+        .tv-prayer-time {
+            min-height: 72px;
+        }
+        .tv-panel {
+            padding-block: 14px;
+        }
+        .tv-list-row,
+        .tv-agenda-row,
+        .tv-report-row {
+            padding-block: 4px;
+        }
+    }
+    @media (max-width: 900px) {
+        .tv-screen {
+            height: auto;
+            min-height: 100vh;
+            grid-template-rows: auto auto auto auto;
+            overflow: visible;
+        }
+        .tv-content-grid {
+            grid-template-columns: minmax(0, 1fr);
+            overflow: visible;
+        }
+        .tv-panel {
+            overflow: visible;
+        }
+        .tv-ziswaf-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .tv-agenda-side {
+            margin-top: 12px;
+            padding-top: 12px;
+            padding-left: 0;
+            border-top: 1px solid #e8e5dc;
+            border-left: 0;
+        }
+        .tv-prayer-time strong {
+            font-size: clamp(24px, 6vw, 42px);
+        }
+    }
+    @media (max-width: 600px) {
+        .tv-header {
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .tv-brand {
+            gap: 8px;
+        }
+        .tv-brand img {
+            width: 48px;
+            height: 48px;
+        }
+        .tv-brand h1 {
+            font-size: 22px;
+        }
+        .tv-brand span {
+            font-size: 10px;
+        }
+        .tv-clock {
+            font-size: 25px;
+        }
+        .tv-clock-wrap p {
+            font-size: 10px;
+        }
+        .tv-clock-wrap .tv-address {
+            display: none;
+        }
+        .tv-prayer-meta span {
+            max-width: 120px;
+        }
+        .tv-prayer-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .tv-prayer-note {
+            flex-direction: column;
+        }
+        .tv-activity-grid {
+            grid-template-columns: minmax(0, 1fr);
         }
     }
 }

@@ -39,6 +39,7 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\TpqController;
+use App\Http\Controllers\TvDisplayController;
 use App\Http\Controllers\ZiswafController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,7 @@ Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 Route::get('/galeri/album/{album:slug}', [GaleriController::class, 'album'])->name('galeri.album');
 Route::get('/galeri/artikel/{article:slug}', [GaleriController::class, 'article'])->name('galeri.artikel');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
+Route::get('/layar-tv', TvDisplayController::class)->name('tv.display');
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     // Nama "dashboard" dipakai controller auth bawaan Breeze untuk redirect.

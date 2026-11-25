@@ -1,15 +1,7 @@
 <aside class="dashboard-sidebar" aria-label="Navigasi dashboard" x-bind:class="{ 'is-open': sidebarOpen }">
     <a class="dashboard-brand" href="{{ route('home') }}">
-        <span class="dashboard-brand-mark" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 20.5h18"></path>
-                <path d="M5.5 20.5v-6.2a6.5 6.5 0 0 1 13 0v6.2"></path>
-                <path d="M12 7.8V4.6"></path>
-                <circle cx="12" cy="3.4" r="1"></circle>
-                <path d="M10 20.5v-3a2 2 0 0 1 4 0v3"></path>
-            </svg>
-        </span>
+        <img src="{{ asset('images/icons/icon-512.png') }}" width="54" height="54" alt="logo jami nurul haqq"
+            class="object-contain">
         <span class="dashboard-brand-copy">
             <span>MASJID JAMI</span>
             <strong>Nurul Haqq</strong>
@@ -27,6 +19,7 @@
         <x-dashboard.nav-item label="ZISWAF" icon="heart" :href="route('dashboard.ziswaf')" :active="request()->routeIs('dashboard.ziswaf*')" />
         <x-dashboard.nav-item label="Galeri & Media" icon="image" :href="route('dashboard.galeri')" :active="request()->routeIs('dashboard.galeri*')" />
         <x-dashboard.nav-item label="Kontak" icon="phone" :href="route('dashboard.kontak')" :active="request()->routeIs('dashboard.kontak*')" />
+        <x-dashboard.nav-item label="Tampilan Smart TV" icon="display" :href="route('tv.display')" />
     </nav>
 
     <p class="dashboard-sidebar-label">Pengaturan</p>
