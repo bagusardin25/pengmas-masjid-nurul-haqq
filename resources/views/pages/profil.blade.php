@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Profil Masjid')
-@section('description', 'Profil, fasilitas, sejarah, dan kepengurusan Masjid Jami Nurul Haqq.')
+@section('description', 'Profil, fasilitas, sejarah, dan kepengurusan Masjid Nurul Haqq.')
 
 @php
     $historyParagraphs = filled($about?->history_content)
@@ -10,12 +10,12 @@
 @endphp
 
 @section('content')
-    <x-page-hero eyebrow="Profil" :title="$about?->hero_title ?? 'Profil Masjid Jami Nurul Haqq'" :description="$about?->hero_description" />
+    <x-page-hero eyebrow="Profil" :title="$about?->hero_title ?? 'Profil Masjid Nurul Haqq'" :description="$about?->hero_description" />
 
-    <section class="section">
+    <section class="section profile-page-section">
         <div class="site-container profile-overview">
             <div>
-                <x-section-heading eyebrow="Tentang Nurul Haqq" :title="$about?->intro_title ?? 'Masjid Jami Nurul Haqq'" :description="$about?->intro_description" />
+                <x-section-heading eyebrow="Tentang Nurul Haqq" :title="$about?->intro_title ?? 'Masjid Nurul Haqq'" :description="$about?->intro_description" />
             </div>
             @if ($stats->isNotEmpty())
                 <div class="stat-grid">
@@ -28,7 +28,7 @@
     </section>
 
     @if ($roles->isNotEmpty())
-        <section class="section section-muted">
+        <section class="section section-muted profile-page-section profile-page-roles">
             <div class="site-container">
                 <x-section-heading eyebrow="Bersama jamaah" title="Lebih dari tempat sholat" />
                 <div class="card-grid card-grid-three">
@@ -41,7 +41,7 @@
     @endif
 
     @if ($facilities->isNotEmpty())
-        <section class="section">
+        <section class="section profile-page-section profile-page-facilities">
             <div class="site-container">
                 <x-section-heading eyebrow="Fasilitas" title="Nyaman untuk beribadah" description="Sarana yang tersedia untuk kenyamanan ibadah jamaah." />
                 <div class="facility-grid">
@@ -53,7 +53,7 @@
         </section>
     @endif
 
-    <section class="section section-muted">
+    <section class="section section-muted profile-page-section profile-page-history">
         <div class="site-container">
             <x-section-heading eyebrow="Sejarah & kepengurusan" title="Mengenal perjalanan masjid" />
             <div class="history-grid">

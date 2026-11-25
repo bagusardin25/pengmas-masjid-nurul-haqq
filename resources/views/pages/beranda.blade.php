@@ -103,54 +103,7 @@
 
             <section aria-labelledby="judul-sholat" class="relative mt-[-84px]">
                 <div class="max-w-[1440px] mx-auto px-[clamp(20px,4.5vw,64px)]">
-                    <div
-                        class="flex flex-wrap items-center [gap:24px_40px] [padding:28px_32px] rounded-[24px] bg-[#0B3B2C] text-[#FFFFFF] shadow-[0_24px_48px_rgba(11,59,44,0.18)]">
-                        <div class="[flex:1_1_260px]">
-                            <h2 id="judul-sholat"
-                                class="[margin:0] text-[12px] font-bold tracking-[0.14em] text-[#E2B84B]">
-                                JADWAL SHOLAT HARI INI</h2>
-                            <p class="[margin:6px_0_0] text-[21px] font-extrabold leading-[1.3]">
-                                {{ $prayerSchedule['date'] ?? $today->locale('id')->translatedFormat('l, d F Y') }}
-                            </p>
-                            <p class="[margin:2px_0_0] text-[14px] text-[#B9CCC3]">
-                                {{ $prayerSchedule['location'] ?? 'Sidoarjo' }} dan sekitarnya
-                            </p>
-                            @if ($nextPrayer)
-                                <p
-                                    class="[margin:12px_0_0] inline-flex items-center [gap:8px] [padding:6px_12px] rounded-[999px] bg-[rgba(226,184,75,0.16)] text-[#F3D88C] text-[13px] font-bold">
-                                    <span class="w-[8px] h-[8px] rounded-[999px] bg-[#E2B84B]"></span>
-                                    Sholat berikutnya: {{ $nextPrayer['name'] }} pukul {{ $nextPrayer['time'] }}
-                                </p>
-                            @elseif ($prayerSchedule)
-                                <p
-                                    class="[margin:12px_0_0] inline-flex items-center [gap:8px] [padding:6px_12px] rounded-[999px] bg-[rgba(226,184,75,0.16)] text-[#F3D88C] text-[13px] font-bold">
-                                    Semua waktu sholat hari ini telah berlalu
-                                </p>
-                            @else
-                                <p class="[margin:12px_0_0] text-[13px] text-[#F3D88C]">
-                                    Jadwal sholat belum dapat dimuat. Silakan coba beberapa saat lagi.
-                                </p>
-                            @endif
-                        </div>
-                        <ol
-                            class="[flex:3_1_560px] min-w-0 list-none [margin:0] [padding:0] grid [grid-template-columns:repeat(auto-fit,minmax(92px,1fr))] [gap:10px]">
-                            @forelse ($prayers as $prayer)
-                                <li
-                                    @if ($prayer['is_next']) aria-current="time" class="p-[14px_10px] rounded-2xl bg-[#E2B84B] text-[#0B3B2C] text-center" @else class="p-[14px_10px] rounded-2xl bg-[rgba(255,255,255,0.07)] text-center" @endif>
-                                    <span
-                                        @if ($prayer['is_next']) class="block text-[13px] font-extrabold" @else class="block text-[13px] font-semibold text-[#B9CCC3]" @endif>
-                                        {{ $prayer['name'] }}
-                                    </span>
-                                    <span
-                                        class="block mt-[2px] text-[23px] font-extrabold tracking-[-0.01em]">{{ $prayer['time'] }}</span>
-                                </li>
-                            @empty
-                                <li class="col-span-full [padding:14px_10px] text-[#B9CCC3] text-center">
-                                    Jadwal sholat tidak tersedia saat ini.
-                                </li>
-                            @endforelse
-                        </ol>
-                    </div>
+                    <x-prayer-schedule-card :prayer-schedule="$prayerSchedule" :prayers="$prayers" :next-prayer="$nextPrayer" :today="$today" />
                 </div>
             </section>
 
@@ -882,38 +835,7 @@
                         </div>
                     </div>
 
-                    <div
-                        class="relative overflow-hidden mt-[72px] flex flex-wrap items-center justify-between [gap:24px_40px] [padding:clamp(28px,4vw,48px)] rounded-[28px] bg-[#0B3B2C] text-[#FFFFFF]">
-                        <svg aria-hidden="true" viewBox="0 0 200 200" fill="none" stroke="#E2B84B"
-                            stroke-width="1.4"
-                            class="absolute left-[-90px] bottom-[-110px] w-[300px] h-[300px] opacity-[0.14]">
-                            <rect x="45" y="45" width="110" height="110"></rect>
-                            <rect x="45" y="45" width="110" height="110" transform="rotate(45 100 100)">
-                            </rect>
-                            <circle cx="100" cy="100" r="16"></circle>
-                        </svg>
-                        <div class="relative [flex:1_1_420px] min-w-0">
-                            <h2
-                                class="[margin:0] text-[clamp(26px,2.6vw,34px)] leading-[1.2] font-extrabold tracking-[-0.01em]">
-                                Mari bersama memakmurkan masjid</h2>
-                            <p class="[margin:8px_0_0] text-[17px] text-[#C9D8D1]">Untuk kebaikan dunia dan akhirat.
-                            </p>
-                        </div>
-                        <div class="relative flex flex-wrap [gap:12px]">
-                            <a href="/ziswaf"
-                                class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] bg-[#E2B84B] text-[#0B3B2C] text-[16px] font-extrabold no-underline"><svg
-                                    width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                                    stroke-linejoin="round" aria-hidden="true">
-                                    <path
-                                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
-                                    </path>
-                                </svg>Donasi ZISWAF</a>
-                            <a href="/jadwal-kegiatan"
-                                class="inline-flex items-center [gap:10px] min-h-[52px] [padding:0_24px] rounded-[14px] [border:1.5px_solid_rgba(255,255,255,0.5)] text-[#FFFFFF] text-[16px] font-bold no-underline">Lihat
-                                jadwal</a>
-                        </div>
-                    </div>
+                    <x-donation-cta />
                 </div>
             </section>
 
