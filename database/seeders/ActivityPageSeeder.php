@@ -82,7 +82,7 @@ class ActivityPageSeeder extends Seeder
     {
         (ActivityPage::current() ?? new ActivityPage)->fill([
             'hero_title' => 'Ibadah dan kajian setiap pekan',
-            'hero_description' => 'Temukan jadwal sholat, kegiatan rutin jamaah, dan informasi agenda Masjid Jami Nurul Haqq.',
+            'hero_description' => 'Temukan jadwal sholat, kegiatan rutin jamaah, dan informasi agenda Masjid Nurul Haqq.',
             'routine_note' => 'Untuk perubahan kegiatan rutin, silakan hubungi pengurus masjid.',
             'kitab_note' => 'Hubungi pengurus untuk konfirmasi jadwal ngaji kitab terkini.',
         ])->save();

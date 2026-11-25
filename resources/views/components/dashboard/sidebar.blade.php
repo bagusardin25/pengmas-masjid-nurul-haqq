@@ -1,9 +1,9 @@
 <aside class="dashboard-sidebar" aria-label="Navigasi dashboard" x-bind:class="{ 'is-open': sidebarOpen }">
     <a class="dashboard-brand" href="{{ route('home') }}">
-        <img src="{{ asset('images/icons/icon-512.png') }}" width="54" height="54" alt="logo jami nurul haqq"
+        <img src="{{ asset('images/icons/icon-512.png') }}" width="54" height="54" alt="logo nurul haqq"
             class="object-contain">
         <span class="dashboard-brand-copy">
-            <span>MASJID JAMI</span>
+            <span>MASJID</span>
             <strong>Nurul Haqq</strong>
         </span>
     </a>

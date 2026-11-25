@@ -16,7 +16,7 @@
             <p class="breadcrumb"><a href="{{ route('home') }}">Beranda</a> / Kontak</p>
             <p class="eyebrow eyebrow-light">Kontak</p>
             <h1>Hubungi pengurus masjid</h1>
-            <p>Untuk layanan ZISWAF, pendaftaran TPQ, dan kebutuhan ibadah lainnya. Mari terhubung dengan Masjid Jami Nurul Haqq.</p>
+            <p>Untuk layanan ZISWAF, pendaftaran TPQ, dan kebutuhan ibadah lainnya. Mari terhubung dengan Masjid Nurul Haqq.</p>
             @if ($whatsappUrl)
                 <a class="button button-gold" href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer">♡ Tanya via WhatsApp</a>
             @endif
@@ -110,7 +110,7 @@
                 @endif
 
                 <div class="location-card">
-                    <h3>Masjid Jami Nurul Haqq</h3>
+                    <h3>Masjid Nurul Haqq</h3>
                     @if (filled($contact?->address))
                         <p>{{ $contact->address }}</p>
                     @endif

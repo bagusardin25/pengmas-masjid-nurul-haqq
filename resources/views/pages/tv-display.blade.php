@@ -1,14 +1,14 @@
 @extends('layouts.tv')
 
-@section('title', 'Layar Informasi Masjid Jami Nurul Haqq')
+@section('title', 'Layar Informasi Masjid Nurul Haqq')
 
 @section('content')
     <main class="tv-screen">
         <header class="tv-header">
             <div class="tv-brand">
-                <img src="{{ asset('images/icons/icon-512.png') }}" alt="Logo Masjid Jami Nurul Haqq">
+                <img src="{{ asset('images/icons/icon-512.png') }}" alt="Logo Masjid Nurul Haqq">
                 <div>
-                    <p>MASJID JAMI</p>
+                    <p>MASJID</p>
                     <h1>Nurul Haqq</h1>
                     <span>Yayasan Nurul Haqq</span>
                 </div>
@@ -159,7 +159,7 @@
         </div>
 
         <footer class="tv-footer">
-            <span>Informasi Masjid Jami Nurul Haqq</span>
+            <span>Informasi Masjid Nurul Haqq</span>
         </footer>
     </main>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Laporan Keuangan')
-@section('description', 'Laporan keuangan Masjid Jami Nurul Haqq: rutin mingguan, kegiatan, dan pembangunan masjid.')
+@section('description', 'Laporan keuangan Masjid Nurul Haqq: rutin mingguan, kegiatan, dan pembangunan masjid.')
 
 @section('content')
     <x-page-hero eyebrow="Laporan keuangan" title="Laporan keuangan masjid"

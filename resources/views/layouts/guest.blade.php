@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
     @include('partials.favicons')
-    <title>{{ $title ?? 'Masuk' }} — Masjid Jami Nurul Haqq</title>
+    <title>{{ $title ?? 'Masuk' }} — Masjid Nurul Haqq</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
                     <span class="auth-brand-mark" aria-hidden="true">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20.5h18"></path><path d="M5.5 20.5v-6.2a6.5 6.5 0 0 1 13 0v6.2"></path><path d="M12 7.8V4.6"></path><circle cx="12" cy="3.4" r="1"></circle><path d="M10 20.5v-3a2 2 0 0 1 4 0v3"></path></svg>
                     </span>
-                    <span class="auth-brand-copy"><span>MASJID JAMI</span><strong>Nurul Haqq</strong></span>
+                    <span class="auth-brand-copy"><span>MASJID</span><strong>Nurul Haqq</strong></span>
                 </a>
 
                 {{ $slot }}

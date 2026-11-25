@@ -30,7 +30,7 @@ class AgendaCalendarController extends Controller
         $lines = [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
-            'PRODID:-//Masjid Jami Nurul Haqq//Agenda//ID',
+            'PRODID:-//Masjid Nurul Haqq//Agenda//ID',
             'CALSCALE:GREGORIAN',
             'METHOD:PUBLISH',
             'BEGIN:VEVENT',

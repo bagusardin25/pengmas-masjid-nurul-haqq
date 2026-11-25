@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Jadwal & Kegiatan')
-@section('description', 'Jadwal sholat dan kegiatan rutin jamaah Masjid Jami Nurul Haqq.')
+@section('description', 'Jadwal sholat dan kegiatan rutin jamaah Masjid Nurul Haqq.')
 
 @section('content')
     <x-page-hero eyebrow="Jadwal & kegiatan" :title="$page?->hero_title ?? 'Jadwal & Kegiatan'" :description="$page?->hero_description" :action-url="$siteContact->contactUrl()" action-label="Tanya jadwal ke pengurus" />
