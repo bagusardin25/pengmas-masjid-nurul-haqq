@@ -212,22 +212,77 @@ test('articles are not limited and can be loaded four at a time', function () {
 test('odd load more values never break the page', function () {
     publishedVideos(3);
 
-    foreach (['?video=abc', '?video=-5', '?video=999999', '?video[]=1', '?partial=video&dari=abc', '?partial=video&dari[]=1', '?partial=lain'] as $query) {
+    albumsWithPhotos(3);
+
+    foreach (['?video=abc', '?video=-5', '?video=999999', '?video[]=1', '?partial=video&dari=abc', '?partial=video&dari[]=1', '?partial=lain',
+        '?album=abc', '?album[]=1', '?partial=album&dari=-3', '?halaman=2'] as $query) {
         expect($this->get(route('galeri').$query)->status())->toBeLessThan(500, $query);
     }
 });
 
-test('album pagination uses the site design in indonesian', function () {
-    foreach (range(1, 11) as $index) {
-        albumWithPhotos(['title' => 'Album '.$index]);
+function albumsWithPhotos(int $count): void
+{
+    foreach (range(1, $count) as $index) {
+        albumWithPhotos([
+            'title' => sprintf('Album ke-%02d', $index),
+            'date' => now()->subDays($index)->toDateString(),
+        ]);
     }
+}
 
-    $this->get(route('galeri', ['halaman' => 2]))
+test('albums show four at a time with a load more link instead of pagination', function () {
+    albumsWithPhotos(6);
+
+    $this->get(route('galeri'))
         ->assertOk()
-        ->assertSee('Menampilkan')
-        ->assertSee('dari <strong>11</strong> album', false)
-        ->assertSee('aria-current="page"', false)
-        ->assertSee('Sebelumnya')
-        ->assertDontSee('Showing')
-        ->assertDontSee('results');
+        ->assertSee('Album ke-01')->assertSee('Album ke-04')->assertDontSee('Album ke-05')
+        ->assertSee('Muat lebih banyak album')
+        ->assertSee('album=8#album', false)
+        ->assertDontSee('Menampilkan');
+});
+
+test('the album load more link works without javascript', function () {
+    albumsWithPhotos(6);
+
+    $this->get(route('galeri', ['album' => 8]))
+        ->assertOk()
+        ->assertSee('Album ke-06')
+        ->assertDontSee('Muat lebih banyak album');
+});
+
+test('load more returns the next albums until all are shown', function () {
+    albumsWithPhotos(10);
+
+    $first = $this->getJson(route('galeri', ['partial' => 'album', 'dari' => 4]))
+        ->assertOk()
+        ->assertJsonPath('count', 4);
+
+    expect($first->json('html'))->toContain('Album ke-05')->toContain('Album ke-08')->not->toContain('Album ke-04')
+        ->and($first->json('next'))->toContain('album=12')
+        ->and($first->json('url'))->toContain('album=8');
+
+    $last = $this->getJson(route('galeri', ['partial' => 'album', 'dari' => 8]))->assertOk();
+
+    expect($last->json('count'))->toBe(2)
+        ->and($last->json('html'))->toContain('Album ke-10')
+        ->and($last->json('next'))->toBeNull();
+});
+
+test('album load more keeps the category filter', function () {
+    $kajian = GalleryCategory::factory()->create(['name' => 'Kajian']);
+    $lain = GalleryCategory::factory()->create(['name' => 'Lain']);
+    foreach (range(1, 5) as $index) {
+        albumWithPhotos([
+            'title' => sprintf('Album kajian %02d', $index),
+            'category_id' => $kajian->id,
+            'date' => now()->subDays($index)->toDateString(),
+        ]);
+    }
+    albumWithPhotos(['title' => 'Album kategori lain', 'category_id' => $lain->id]);
+
+    $response = $this->getJson(route('galeri', ['kategori' => $kajian->slug, 'partial' => 'album', 'dari' => 4]));
+
+    expect($response->json('count'))->toBe(1)
+        ->and($response->json('html'))->toContain('Album kajian 05')->not->toContain('Album kategori lain')
+        ->and($response->json('url'))->toContain('kategori='.$kajian->slug);
 });

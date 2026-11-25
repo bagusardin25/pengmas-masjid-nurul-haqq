@@ -15,9 +15,9 @@ use Illuminate\View\View;
 
 class GaleriController extends Controller
 {
-    private const ALBUMS_PER_PAGE = 8;
+    /** Jumlah album/video/artikel yang tampil pertama kali dan yang ditambahkan tiap klik "Muat lebih banyak". */
+    private const ALBUMS_STEP = 4;
 
-    /** Jumlah video/artikel yang tampil pertama kali dan yang ditambahkan tiap klik "Muat lebih banyak". */
     private const VIDEOS_STEP = 6;
 
     private const ARTICLES_STEP = 4;
@@ -42,21 +42,15 @@ class GaleriController extends Controller
         );
 
         // Album tanpa foto tidak ditampilkan agar tidak ada kartu kosong.
-        $albums = GalleryAlbum::query()
-            ->published()
-            ->has('photos')
-            ->tap($inCategory)
-            ->withCardData()
-            ->latestFirst()
-            ->paginate(self::ALBUMS_PER_PAGE, pageName: 'halaman')
-            ->withQueryString()
-            ->fragment('album');
-
+        $albumQuery = GalleryAlbum::query()->published()->has('photos')->tap($inCategory)->withCardData()->latestFirst();
         $videoQuery = GalleryVideo::query()->published()->tap($inCategory)->with('category')->latestFirst();
         $articleQuery = Article::query()->published()->with('coverImage')->latestFirst();
 
         // Tombol "Muat lebih banyak" meminta potongan berikutnya saja (lihat loadMore di app.js).
         $partial = self::stringQuery($request, 'partial');
+        if ($partial === 'album') {
+            return $this->moreItems($request, $albumQuery, 'album', self::ALBUMS_STEP, 'pages.partials.album-card', 'album');
+        }
         if ($partial === 'video') {
             return $this->moreItems($request, $videoQuery, 'video', self::VIDEOS_STEP, 'pages.partials.video-card', 'video');
         }
@@ -64,16 +58,17 @@ class GaleriController extends Controller
             return $this->moreItems($request, $articleQuery, 'artikel', self::ARTICLES_STEP, 'pages.partials.article-card', 'article');
         }
 
+        [$albums, $moreAlbumsUrl] = $this->firstItems($request, $albumQuery, 'album', self::ALBUMS_STEP);
         [$videos, $moreVideosUrl] = $this->firstItems($request, $videoQuery, 'video', self::VIDEOS_STEP);
         [$articles, $moreArticlesUrl] = $this->firstItems($request, $articleQuery, 'artikel', self::ARTICLES_STEP);
 
         return view('pages.galeri', compact(
-            'categories', 'activeCategory', 'albums', 'videos', 'articles', 'moreVideosUrl', 'moreArticlesUrl',
+            'categories', 'activeCategory', 'albums', 'videos', 'articles', 'moreAlbumsUrl', 'moreVideosUrl', 'moreArticlesUrl',
         ));
     }
 
     /**
-     * Item yang tampil saat halaman dibuka: sebanyak ?video=N / ?artikel=N (bawaan satu langkah).
+     * Item yang tampil saat halaman dibuka: sebanyak ?album=N / ?video=N / ?artikel=N (bawaan satu langkah).
      * Tautan "Muat lebih banyak" menambah satu langkah, jadi tetap berfungsi tanpa JavaScript.
      *
      * @return array{0: Collection, 1: ?string}

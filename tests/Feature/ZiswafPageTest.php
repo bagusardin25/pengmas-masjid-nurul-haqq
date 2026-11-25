@@ -151,6 +151,16 @@ test('the report list page filters by category and paginates', function () {
     ZiswafReport::factory()->published()->count(13)->create(['report_date' => '2026-01-01']);
 
     $this->get(route('ziswaf.laporan'))->assertOk()->assertSee('page=2', false);
+
+    // Desain pagination situs dalam bahasa Indonesia (sebelumnya diuji lewat album galeri).
+    $this->get(route('ziswaf.laporan', ['page' => 2]))
+        ->assertOk()
+        ->assertSee('Menampilkan')
+        ->assertSee('dari <strong>15</strong> laporan', false)
+        ->assertSee('aria-current="page"', false)
+        ->assertSee('Sebelumnya')
+        ->assertDontSee('Showing')
+        ->assertDontSee('results');
 });
 
 test('beranda shows the ziswaf summary, bank account, contacts, and latest reports', function () {
